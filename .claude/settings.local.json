@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pwsh:*)",
+      "Bash(Out-File -FilePath READY_FOR_GITHUB.md -Encoding UTF8)",
+      "Bash(Write-Host 'Created READY_FOR_GITHUB.md' -ForegroundColor Green \")"
+    ]
+  }
+}

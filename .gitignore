@@ -1,0 +1,58 @@
+# V executables and binaries
+*.exe
+*.so
+*.dylib
+*.dll
+*.a
+*.o
+
+# V build artifacts
+*.tmp
+*.log
+v.mod
+
+# Test outputs
+*.output
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+/temp/
+/tmp/
+*.tmp.v
+
+# Dependencies
+/modules/
+
+# OS specific
+Thumbs.db
+desktop.ini
+
+# Project specific
+msedgedriver.exe
+chromedriver.exe
+geckodriver.exe
+
+# Build directories
+/build/
+/dist/
+
+# Test results
+test-results/
+*.test
+
+# Screenshots
+screenshots/
+*.png
+*.jpg
+
+# Sensitive data
+.env
+credentials.json
+secrets/
