@@ -111,6 +111,13 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Get alert text | ✅ `get_alert_text()` | ✅ `.switch_to.alert.text` | Phase 2 ✅ |
 | Send text to alert | ✅ `send_alert_text()` | ✅ `.switch_to.alert.send_keys()` | Phase 2 ✅ |
 
+### Page Information (Phase 3 ✅)
+| Feature | V WebDriver | Selenium | Notes |
+|---------|-------------|----------|-------|
+| Get page title | ✅ `get_title()` | ✅ `.title` | Phase 3 ✅ |
+| Get current URL | ✅ `get_current_url()` | ✅ `.current_url` | Phase 3 ✅ |
+| Get page source | ✅ `get_page_source()` | ✅ `.page_source` | Phase 3 ✅ |
+
 ### Edge-Specific Features
 | Feature | V WebDriver | Selenium | Notes |
 |---------|-------------|----------|-------|
@@ -167,13 +174,6 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Script timeout | ❌ | ✅ `.set_script_timeout()` | **Medium** - For long scripts |
 | Get timeouts | ❌ | ✅ | **Low** |
 
-### Page Source & Title (MEDIUM PRIORITY)
-| Feature | V WebDriver | Selenium | Impact |
-|---------|-------------|----------|--------|
-| Get page source | ❌ | ✅ `.page_source` | **Medium** - Debugging |
-| Get title | Partial | ✅ `.title` | **High** - Very common |
-| Get current URL | Partial | ✅ `.current_url` | **High** - Very common |
-
 ### Shadow DOM (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
@@ -218,10 +218,10 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Actions API** | 8/10 | 2 | 80% ✅ |
 | **Waits** | 1/7 | 6 | 14% ❌ |
 | **Alerts** | 4/4 | 0 | 100% ✅ |
-| **Page Info** | 0/3 | 3 | 0% ❌ |
+| **Page Info** | 3/3 | 0 | 100% ✅ |
 | **Timeouts** | 0/3 | 3 | 0% ❌ |
 
-**Overall Coverage: ~73%** ⬆️ +18% from v0.90.0 (Phase 1 & 2 complete)
+**Overall Coverage: ~76%** ⬆️ +21% from v0.90.0 (Phase 1, 2 & 3 complete)
 
 ---
 
@@ -249,15 +249,15 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 
 **Completion**: 2026-02-14 | **Coverage**: 68% → 73%
 
-### Phase 3: Page Info 🔜 NEXT
-3. **Page Info**
-   - `get_title()` - Get page title (currently via JS)
-   - `get_current_url()` - Get current URL (currently via JS)
-   - `get_page_source()` - Get HTML source
+### Phase 3: Page Info ✅ COMPLETE
+3. **Page Info** ✅
+   - ✅ `get_title()` - Get page title
+   - ✅ `get_current_url()` - Get current URL
+   - ✅ `get_page_source()` - Get HTML source
 
-**Target**: 73% → 76%
+**Completion**: 2026-02-14 | **Coverage**: 73% → 76%
 
-### Phase 4: Advanced Window & Waits
+### Phase 4: Advanced Window & Waits 🔜 NEXT
 1. **Element Interaction**
    - `clear()` - Clear input field
    - `submit()` - Submit form
@@ -370,49 +370,52 @@ wd.accept_alert()!
 ## 📝 Recommendations
 
 ### For Production Use
-**Current state (v1.0.0)**: ✅ Good for intermediate automation
+**Current state (v1.10.0)**: ✅ Good for advanced automation
 - ✅ Navigation testing
 - ✅ Form filling with element properties
 - ✅ Screenshot capture
 - ✅ Cookie manipulation
 - ✅ Element inspection (text, attributes, state)
 - ✅ Alert/confirm/prompt handling
-- ⚠️ Still missing: page info, advanced waits
+- ✅ Page title, URL, and source access
+- ⚠️ Still missing: window switching, advanced waits
 
 ### To Reach Full Feature Parity
 Remaining phases:
 1. ✅ ~~Element text/attribute methods~~ (Phase 1 Complete)
 2. ✅ ~~Alert handling~~ (Phase 2 Complete)
-3. Page info methods (Phase 3 - Next)
-4. Window switching (Phase 4)
+3. ✅ ~~Page info methods~~ (Phase 3 Complete)
+4. Window switching (Phase 4 - Next)
 5. Expected conditions (Phase 4)
 
 ---
 
 ## Conclusion
 
-**Version 1.0.0 Status**: The V WebDriver library now has **strong core functionality** (~73% feature parity, up from 55%) and is **production-ready for intermediate automation tasks**.
+**Version 1.10.0 Status**: The V WebDriver library now has **robust functionality** (~76% feature parity, up from 55%) and is **production-ready for advanced automation tasks**.
 
-### ✅ What's Complete (v1.0.0)
+### ✅ What's Complete (v1.10.0)
 - ✅ **Element Properties** (Phase 1) - Get text, attributes, state
 - ✅ **Alert Handling** (Phase 2) - Full dialog control
-- ✅ All basic automation features
+- ✅ **Page Information** (Phase 3) - Title, URL, source
+- ✅ All basic and intermediate automation features
 
 ### 🔜 Still Missing
-- Page information (title, URL, source)
-- Advanced wait conditions
+- Advanced wait conditions (implicit waits, expected conditions)
 - Window/tab switching
+- Window state management (maximize, minimize)
 
 ### Use Cases
 **Perfect for**:
 - Form automation with full element inspection
 - UI testing with alert handling
-- Data extraction from web pages
+- Data extraction and web scraping
 - Screenshot-based testing
+- Page navigation verification
+- URL and title assertions
 
 **Not yet ideal for**:
 - Multi-window/tab workflows
 - Complex explicit wait scenarios
-- Page title/URL assertions (use JS workarounds)
 
-**Overall**: V WebDriver is now suitable for **most common web automation tasks**, with only a few advanced features remaining.
+**Overall**: V WebDriver is now suitable for **the vast majority of web automation tasks**, with only advanced multi-window and wait features remaining.

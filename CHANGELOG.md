@@ -1,5 +1,75 @@
 # WebDriver V Library - Changelog
 
+## [1.10.0] - 2026-02-14 - Phase 3 Complete ✅
+
+### 🎉 Major Feature Release: Page Information
+
+**Phase 3 Implementation Complete** - Added 3 essential page information methods for accessing page metadata.
+
+#### New Methods Added
+
+All methods added to `webdriver/client.v`:
+
+1. **`get_title() !string`**
+   - Get the current page title
+   - W3C Endpoint: `GET /session/{session id}/title`
+   - Example: `title := wd.get_title()!`
+
+2. **`get_current_url() !string`**
+   - Get the current page URL
+   - W3C Endpoint: `GET /session/{session id}/url`
+   - Example: `url := wd.get_current_url()!`
+
+3. **`get_page_source() !string`**
+   - Get the HTML source of the current page
+   - W3C Endpoint: `GET /session/{session id}/source`
+   - Example: `source := wd.get_page_source()!`
+
+#### New Files
+
+- **`webdriver/page_info_test.v`** - Comprehensive test suite with 7 test functions
+- **`example_phase3.v`** - Full demonstration application showing all Phase 3 features
+- **`PHASE3_COMPLETE.md`** - Complete Phase 3 documentation
+
+#### Impact
+
+- **Feature Coverage**: Increased from 73% → **76%** (+3%)
+- **Page Information**: 0% → **100%** (fully implemented)
+- **Enables**: Page title assertions, URL verification, HTML parsing/scraping
+
+#### Use Cases
+
+Page information methods are essential for:
+- ✅ Verifying page navigation and URLs
+- ✅ Asserting page titles in tests
+- ✅ Web scraping and data extraction
+- ✅ HTML structure analysis
+- ✅ Page state verification
+
+#### Example Usage
+
+```v
+// Get page information
+wd.get('https://example.com')!
+title := wd.get_title()!              // "Example Domain"
+url := wd.get_current_url()!          // "https://example.com/"
+source := wd.get_page_source()!       // Full HTML
+
+// Verify navigation
+wd.click(link)!
+new_url := wd.get_current_url()!
+assert new_url.contains('expected-path')
+```
+
+### Documentation Updates
+
+- Updated `CHANGELOG.md` with Phase 3 features
+- Updated `IMPLEMENTATION_PLAN.md` with Phase 3 completion status
+- Updated `COMPARISON_WITH_SELENIUM.md` with page info coverage
+- Created `PHASE3_COMPLETE.md` with full Phase 3 summary
+
+---
+
 ## [1.00.0] - 2026-02-14 - Phase 2 Complete ✅
 
 ### 🎉 Major Feature Release: Alert Handling

@@ -12,7 +12,7 @@ This document outlines a step-by-step plan to implement the most critical missin
 
 **Priority**: Focus on features used in 80%+ of automation scripts
 
-**Progress**: Phase 1 ✅ COMPLETE | Phase 2 ✅ COMPLETE | Phase 3-4 🔜 Pending
+**Progress**: Phase 1 ✅ COMPLETE | Phase 2 ✅ COMPLETE | Phase 3 ✅ COMPLETE | Phase 4 🔜 Pending
 
 ---
 
@@ -378,11 +378,22 @@ fn test_alerts() {
 
 ---
 
-## Phase 3: Page Information (MEDIUM PRIORITY)
+## Phase 3: Page Information ✅ COMPLETE
 
+**Status**: ✅ **COMPLETED** - All 3 methods implemented and tested
 **Impact**: High - Very commonly used
-**Effort**: Low (1-2 days)
+**Effort**: Completed in 1 session
 **Dependencies**: None
+**Date Completed**: 2026-02-14
+
+**Results**:
+- ✅ All 3 methods implemented in `webdriver/client.v`
+- ✅ Comprehensive test suite created (`webdriver/page_info_test.v`)
+- ✅ Demo application created (`example_phase3.v`)
+- ✅ All tests passed
+- ✅ Coverage increased from 73% → 76%
+
+See [PHASE3_COMPLETE.md](PHASE3_COMPLETE.md) for full details.
 
 ### 3.1 Get Page Title
 
@@ -691,12 +702,16 @@ fn (wd WebDriver) wait_for_element(selector string, timeout_ms int, condition fn
 **Test File**: `webdriver/alert_test.v`
 **Demo**: `example_phase2.v`
 
-### Phase 3: Page Information (Week 2)
-- [ ] `get_title()` - Get page title
-- [ ] `get_current_url()` - Get current URL
-- [ ] `get_page_source()` - Get HTML source
-- [ ] Write tests
-- [ ] Update documentation
+### Phase 3: Page Information ✅ COMPLETE
+- [x] `get_title()` - Get page title
+- [x] `get_current_url()` - Get current URL
+- [x] `get_page_source()` - Get HTML source
+- [x] Write tests
+- [x] Update documentation
+
+**Completion Date**: 2026-02-14
+**Test File**: `webdriver/page_info_test.v`
+**Demo**: `example_phase3.v`
 
 ### Phase 4: Window & Waits (Week 3)
 - [ ] `switch_to_window(handle)` - Switch windows
@@ -767,12 +782,12 @@ After each phase, update feature coverage:
 |-------|----------------|-----------------|----------------|--------|
 | 1 | Element Properties (8) | 55% | 68% ✅ | ✅ COMPLETE |
 | 2 | Alert Handling (4) | 68% | 73% ✅ | ✅ COMPLETE |
-| 3 | Page Info (3) | 73% | ~76% | 🔜 Next |
-| 4 | Window & Waits (8) | 76% | ~85% | 📋 Planned |
+| 3 | Page Info (3) | 73% | 76% ✅ | ✅ COMPLETE |
+| 4 | Window & Waits (8) | 76% | ~85% | 🔜 Next |
 
-**Current Coverage**: 73% (was 55%, Phase 1: 68%)
+**Current Coverage**: 76% (was 55%, Phase 1: 68%, Phase 2: 73%)
 **Target**: 85% feature parity with Selenium
-**Progress**: 2/4 phases complete (50%)
+**Progress**: 3/4 phases complete (75%)
 
 ---
 

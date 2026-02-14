@@ -70,6 +70,27 @@ pub fn (wd WebDriver) refresh() ! {
 	wd.post_void('/session/${wd.session_id}/refresh', map[string]json.Any{})!
 }
 
+// Get the current page title
+// W3C Endpoint: GET /session/{session id}/title
+pub fn (wd WebDriver) get_title() !string {
+	resp := wd.get_request[string]('/session/${wd.session_id}/title')!
+	return resp.value
+}
+
+// Get the current page URL
+// W3C Endpoint: GET /session/{session id}/url
+pub fn (wd WebDriver) get_current_url() !string {
+	resp := wd.get_request[string]('/session/${wd.session_id}/url')!
+	return resp.value
+}
+
+// Get the HTML source of the current page
+// W3C Endpoint: GET /session/{session id}/source
+pub fn (wd WebDriver) get_page_source() !string {
+	resp := wd.get_request[string]('/session/${wd.session_id}/source')!
+	return resp.value
+}
+
 fn (wd WebDriver) post[T](path string, payload json.Any) !WebDriverResponse[T] {
 	body := json.encode(payload)
 
