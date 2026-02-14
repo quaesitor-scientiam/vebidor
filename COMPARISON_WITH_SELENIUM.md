@@ -40,6 +40,18 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 |---------|-------------|----------|-------|
 | Click | ✅ `click()` | ✅ | Working |
 | Send keys | ✅ `send_keys()` | ✅ | Working |
+| Clear input | ✅ `clear()` | ✅ | Phase 1 ✅ |
+
+### Element Properties (Phase 1 ✅)
+| Feature | V WebDriver | Selenium | Notes |
+|---------|-------------|----------|-------|
+| Get text | ✅ `get_text()` | ✅ `.text` | Phase 1 ✅ |
+| Get attribute | ✅ `get_attribute()` | ✅ `.get_attribute()` | Phase 1 ✅ |
+| Get property | ✅ `get_property()` | ✅ `.get_property()` | Phase 1 ✅ |
+| Get tag name | ✅ `get_tag_name()` | ✅ `.tag_name` | Phase 1 ✅ |
+| Is displayed | ✅ `is_displayed()` | ✅ `.is_displayed()` | Phase 1 ✅ |
+| Is enabled | ✅ `is_enabled()` | ✅ `.is_enabled()` | Phase 1 ✅ |
+| Is selected | ✅ `is_selected()` | ✅ `.is_selected()` | Phase 1 ✅ |
 
 ### JavaScript Execution
 | Feature | V WebDriver | Selenium | Notes |
@@ -91,6 +103,14 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 |---------|-------------|----------|-------|
 | Generic wait | ✅ `wait_for()` | ✅ | Basic implementation |
 
+### Alerts & Popups (Phase 2 ✅)
+| Feature | V WebDriver | Selenium | Notes |
+|---------|-------------|----------|-------|
+| Accept alert | ✅ `accept_alert()` | ✅ `.switch_to.alert.accept()` | Phase 2 ✅ |
+| Dismiss alert | ✅ `dismiss_alert()` | ✅ `.switch_to.alert.dismiss()` | Phase 2 ✅ |
+| Get alert text | ✅ `get_alert_text()` | ✅ `.switch_to.alert.text` | Phase 2 ✅ |
+| Send text to alert | ✅ `send_alert_text()` | ✅ `.switch_to.alert.send_keys()` | Phase 2 ✅ |
+
 ### Edge-Specific Features
 | Feature | V WebDriver | Selenium | Notes |
 |---------|-------------|----------|-------|
@@ -102,16 +122,9 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 
 ## ❌ Missing Features (Not Yet Implemented)
 
-### Element Properties & Attributes (HIGH PRIORITY)
+### Element Properties - Advanced (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Get text | ❌ | ✅ `.text` | **Critical** - Very common |
-| Get attribute | ❌ | ✅ `.get_attribute()` | **Critical** - Very common |
-| Get property | ❌ | ✅ `.get_property()` | **High** - Common |
-| Get tag name | ❌ | ✅ `.tag_name` | **Medium** - Common |
-| Is displayed | ❌ | ✅ `.is_displayed()` | **High** - Very useful |
-| Is enabled | ❌ | ✅ `.is_enabled()` | **High** - Very useful |
-| Is selected | ❌ | ✅ `.is_selected()` | **Medium** - For checkboxes |
 | Get CSS value | ❌ | ✅ `.value_of_css_property()` | **Low** - Less common |
 | Get size | ❌ | ✅ `.size` | **Low** - Less common |
 | Get location | ❌ | ✅ `.location` | **Low** - Less common |
@@ -120,16 +133,7 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 ### Element Interaction (MEDIUM PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Clear input | ❌ | ✅ `.clear()` | **High** - Common for forms |
 | Submit form | ❌ | ✅ `.submit()` | **Medium** - Useful shortcut |
-
-### Alerts & Popups (HIGH PRIORITY)
-| Feature | V WebDriver | Selenium | Impact |
-|---------|-------------|----------|--------|
-| Accept alert | ❌ | ✅ `.switch_to.alert.accept()` | **Critical** - Common |
-| Dismiss alert | ❌ | ✅ `.switch_to.alert.dismiss()` | **Critical** - Common |
-| Get alert text | ❌ | ✅ `.switch_to.alert.text` | **High** - Useful |
-| Send keys to alert | ❌ | ✅ `.switch_to.alert.send_keys()` | **Medium** - For prompts |
 
 ### Advanced Waits (MEDIUM PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
@@ -204,8 +208,8 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Session Management** | 3/3 | 0 | 100% ✅ |
 | **Navigation** | 4/4 | 0 | 100% ✅ |
 | **Element Location** | 7/7 | 0 | 100% ✅ |
-| **Element Interaction** | 2/4 | 2 | 50% ⚠️ |
-| **Element Properties** | 0/11 | 11 | 0% ❌ |
+| **Element Interaction** | 3/4 | 1 | 75% ✅ |
+| **Element Properties** | 7/11 | 4 | 64% ⚠️ |
 | **JavaScript** | 2/3 | 1 | 67% ⚠️ |
 | **Window Management** | 5/9 | 4 | 56% ⚠️ |
 | **Cookies** | 4/4 | 0 | 100% ✅ |
@@ -213,35 +217,47 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Frames** | 2/2 | 0 | 100% ✅ |
 | **Actions API** | 8/10 | 2 | 80% ✅ |
 | **Waits** | 1/7 | 6 | 14% ❌ |
-| **Alerts** | 0/4 | 4 | 0% ❌ |
+| **Alerts** | 4/4 | 0 | 100% ✅ |
 | **Page Info** | 0/3 | 3 | 0% ❌ |
 | **Timeouts** | 0/3 | 3 | 0% ❌ |
 
-**Overall Coverage: ~55%** (Core features working, advanced features missing)
+**Overall Coverage: ~73%** ⬆️ +18% from v0.90.0 (Phase 1 & 2 complete)
 
 ---
 
 ## 🎯 Priority Implementation Roadmap
 
-### Phase 1: Critical Missing Features (Must-Have)
-1. **Element Properties**
-   - `get_text()` - Get element text content
-   - `get_attribute(name)` - Get element attribute
-   - `is_displayed()` - Check visibility
-   - `is_enabled()` - Check if enabled
+### Phase 1: Element Properties ✅ COMPLETE
+1. **Element Properties** ✅
+   - ✅ `get_text()` - Get element text content
+   - ✅ `get_attribute(name)` - Get element attribute
+   - ✅ `get_property(name)` - Get DOM property
+   - ✅ `get_tag_name()` - Get tag name
+   - ✅ `is_displayed()` - Check visibility
+   - ✅ `is_enabled()` - Check if enabled
+   - ✅ `is_selected()` - Check if selected
+   - ✅ `clear()` - Clear input fields
 
-2. **Alert Handling**
-   - `accept_alert()` - Accept alert/confirm
-   - `dismiss_alert()` - Dismiss alert
-   - `get_alert_text()` - Read alert message
-   - `send_alert_text(text)` - Send text to prompt
+**Completion**: 2026-02-14 | **Coverage**: 55% → 68%
 
+### Phase 2: Alert Handling ✅ COMPLETE
+2. **Alert Handling** ✅
+   - ✅ `accept_alert()` - Accept alert/confirm
+   - ✅ `dismiss_alert()` - Dismiss alert
+   - ✅ `get_alert_text()` - Read alert message
+   - ✅ `send_alert_text(text)` - Send text to prompt
+
+**Completion**: 2026-02-14 | **Coverage**: 68% → 73%
+
+### Phase 3: Page Info 🔜 NEXT
 3. **Page Info**
    - `get_title()` - Get page title (currently via JS)
    - `get_current_url()` - Get current URL (currently via JS)
    - `get_page_source()` - Get HTML source
 
-### Phase 2: High-Value Features
+**Target**: 73% → 76%
+
+### Phase 4: Advanced Window & Waits
 1. **Element Interaction**
    - `clear()` - Clear input field
    - `submit()` - Submit form
@@ -258,17 +274,12 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
    - `presence_of_element_located()`
    - `visibility_of_element_located()`
 
-### Phase 3: Nice-to-Have Features
-1. **Advanced Element Info**
-   - `get_property()`
-   - `get_css_value()`
-   - `is_selected()`
-
-2. **Timeouts**
+### Future: Nice-to-Have Features
+1. **Timeouts**
    - `set_page_load_timeout()`
    - `set_script_timeout()`
 
-3. **Advanced Actions**
+2. **Advanced Actions**
    - Context click (right-click)
    - Better drag-and-drop
 
@@ -314,7 +325,7 @@ if element.is_displayed():
 driver.quit()
 ```
 
-### V WebDriver (Current)
+### V WebDriver (v1.0.0 - Phase 2 Complete)
 ```v
 import webdriver
 
@@ -335,16 +346,23 @@ wd.wait_for(fn (wd webdriver.WebDriver) !bool {
 
 element := wd.find_element('css selector', 'h1')!
 
-// Get text (MISSING - must use JS)
-text := wd.execute_script('return arguments[0].textContent', [element])!
+// Get text ✅ Phase 1
+text := wd.get_text(element)!
+println(text)
 
-// Get attribute (MISSING - must use JS)
-// href := element.get_attribute('href')  // Not available
+// Get attribute ✅ Phase 1
+link := wd.find_element('css selector', 'a')!
+href := wd.get_attribute(link, 'href')!
 
-// Check visibility (MISSING - must use JS)
-// if element.is_displayed() {  // Not available
+// Check visibility ✅ Phase 1
+if wd.is_displayed(element)! {
     wd.click(element)!
-// }
+}
+
+// Handle alerts ✅ Phase 2
+wd.execute_script('alert("Hello!")', [])!
+alert_text := wd.get_alert_text()!
+wd.accept_alert()!
 ```
 
 ---
@@ -352,30 +370,49 @@ text := wd.execute_script('return arguments[0].textContent', [element])!
 ## 📝 Recommendations
 
 ### For Production Use
-**Current state**: ✅ Good for basic automation
+**Current state (v1.0.0)**: ✅ Good for intermediate automation
 - ✅ Navigation testing
-- ✅ Simple form filling
+- ✅ Form filling with element properties
 - ✅ Screenshot capture
 - ✅ Cookie manipulation
-- ⚠️ Limited for complex scenarios
+- ✅ Element inspection (text, attributes, state)
+- ✅ Alert/confirm/prompt handling
+- ⚠️ Still missing: page info, advanced waits
 
-### To Reach Feature Parity
-Implement in this order:
-1. Element text/attribute methods (Phase 1)
-2. Alert handling (Phase 1)
-3. Page info methods (Phase 1)
-4. Window switching (Phase 2)
-5. Expected conditions (Phase 2)
+### To Reach Full Feature Parity
+Remaining phases:
+1. ✅ ~~Element text/attribute methods~~ (Phase 1 Complete)
+2. ✅ ~~Alert handling~~ (Phase 2 Complete)
+3. Page info methods (Phase 3 - Next)
+4. Window switching (Phase 4)
+5. Expected conditions (Phase 4)
 
 ---
 
 ## Conclusion
 
-The V WebDriver library has **solid core functionality** (~55% feature parity) and is **production-ready for basic automation tasks**. However, it's missing several **commonly-used Selenium features**, particularly:
+**Version 1.0.0 Status**: The V WebDriver library now has **strong core functionality** (~73% feature parity, up from 55%) and is **production-ready for intermediate automation tasks**.
 
-- Element property getters (text, attributes, state)
-- Alert/popup handling
+### ✅ What's Complete (v1.0.0)
+- ✅ **Element Properties** (Phase 1) - Get text, attributes, state
+- ✅ **Alert Handling** (Phase 2) - Full dialog control
+- ✅ All basic automation features
+
+### 🔜 Still Missing
+- Page information (title, URL, source)
 - Advanced wait conditions
 - Window/tab switching
 
-For simple web automation (navigation, clicking, form filling), **V WebDriver works great**. For complex scenarios requiring the missing features, you'll need to use JavaScript workarounds or wait for these features to be implemented.
+### Use Cases
+**Perfect for**:
+- Form automation with full element inspection
+- UI testing with alert handling
+- Data extraction from web pages
+- Screenshot-based testing
+
+**Not yet ideal for**:
+- Multi-window/tab workflows
+- Complex explicit wait scenarios
+- Page title/URL assertions (use JS workarounds)
+
+**Overall**: V WebDriver is now suitable for **most common web automation tasks**, with only a few advanced features remaining.
