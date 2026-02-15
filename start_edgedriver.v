@@ -102,7 +102,8 @@ fn is_edgedriver_running() bool {
 fn get_edge_version() ?string {
 	// Try registry first (most reliable method)
 	// HKEY_CURRENT_USER\Software\Microsoft\Edge\BLBeacon
-	reg_result := os.execute('powershell -NoProfile -Command "(Get-ItemProperty -Path \'HKCU:\\SOFTWARE\\Microsoft\\Edge\\BLBeacon\' -ErrorAction SilentlyContinue).version"')
+	// Use pwsh instead of powershell for better compatibility
+	reg_result := os.execute('pwsh -NoProfile -Command "(Get-ItemProperty -Path \'HKCU:\\SOFTWARE\\Microsoft\\Edge\\BLBeacon\' -ErrorAction SilentlyContinue).version"')
 	if reg_result.exit_code == 0 {
 		version := reg_result.output.trim_space()
 		// Verify it looks like a version number
@@ -119,7 +120,7 @@ fn get_edge_version() ?string {
 	}
 
 	// Try HKEY_LOCAL_MACHINE as fallback
-	reg_lm := os.execute('powershell -NoProfile -Command "(Get-ItemProperty -Path \'HKLM:\\SOFTWARE\\Microsoft\\Edge\\BLBeacon\' -ErrorAction SilentlyContinue).version"')
+	reg_lm := os.execute('pwsh -NoProfile -Command "(Get-ItemProperty -Path \'HKLM:\\SOFTWARE\\Microsoft\\Edge\\BLBeacon\' -ErrorAction SilentlyContinue).version"')
 	if reg_lm.exit_code == 0 {
 		version := reg_lm.output.trim_space()
 		if version.len > 0 && version != '' && version.contains('.') {
