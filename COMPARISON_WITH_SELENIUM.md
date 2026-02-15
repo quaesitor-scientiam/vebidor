@@ -195,6 +195,19 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Context click | ❌ | ✅ `ActionChains` | **Low** - Right-click |
 | Drag and drop | Partial | ✅ `ActionChains` | **Low** - Drag/drop UIs |
 
+### WebDriver BiDi Protocol (FUTURE - NOT YET IMPLEMENTED)
+| Feature | V WebDriver | Selenium 4.x | Impact |
+|---------|-------------|--------------|--------|
+| BiDi session management | ❌ | ✅ (Selenium 4.0+) | **High** - Modern protocol |
+| Real-time console logs | ❌ | ✅ BiDi | **High** - Live monitoring |
+| Network interception | ❌ | ✅ BiDi | **High** - Request/response control |
+| Performance monitoring | ❌ | ✅ BiDi | **Medium** - Metrics collection |
+| Script evaluation with realms | ❌ | ✅ BiDi | **Medium** - Isolated contexts |
+| Event subscription | ❌ | ✅ BiDi | **High** - Real-time events |
+| Bidirectional communication | ❌ | ✅ BiDi | **High** - WebSocket-based |
+
+**Note**: WebDriver BiDi is the next-generation protocol supported by Selenium 4.x. It provides real-time bidirectional communication between tests and browsers, enabling features like live console monitoring, network interception, and event-driven testing. Planned for v-webdriver v4.0.0.
+
 ---
 
 ## 📊 Feature Coverage Summary
@@ -216,8 +229,11 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Alerts** | 4/4 | 0 | 100% ✅ |
 | **Page Info** | 3/3 | 0 | 100% ✅ |
 | **Timeouts** | 3/4 | 1 | 75% ✅ |
+| **BiDi Protocol** | 0/7 | 7 | 0% ❌ (Future) |
 
 **Overall Coverage: ~85%** 🎉 ⬆️ +30% from v0.90.0 (All 4 phases complete!)
+
+**Note**: Coverage percentage is for W3C WebDriver Classic Protocol. BiDi Protocol support is planned for future releases and not included in the current percentage calculation.
 
 ---
 

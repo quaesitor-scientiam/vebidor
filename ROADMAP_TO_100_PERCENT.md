@@ -425,33 +425,48 @@ pub fn (wd WebDriver) get_logs(log_type string) ![]LogEntry {
 
 ---
 
-### Phase 9: Multi-Browser Support (OPTIONAL - EXPANDING SCOPE)
+### Phase 9: Multi-Browser Support (HIGH PRIORITY - EXPANDING SCOPE)
 
-**Impact**: High - Browser diversity
-**Effort**: High (1-2 weeks)
-**Coverage Gain**: Scope expansion, not percentage
+**Impact**: High - Browser diversity and cross-platform support
+**Effort**: High (2-3 weeks)
+**Coverage Gain**: Scope expansion, platform compatibility
 
-#### 9.1 Chrome/Chromium Support
+#### 9.1 Chrome/Chromium Support (Windows, Linux, macOS)
 
 ```v
 // File: webdriver/capabilities.v
 
 pub struct ChromeOptions {
 pub mut:
-	args           []string
-	binary         string
-	extensions     []string
-	prefs          map[string]json.Any
-	detach         bool
-	debugger_address string
+	args              []string
+	binary            string
+	extensions        []string
+	prefs             map[string]json.Any
+	detach            bool
+	debugger_address  string
+	exclude_switches  []string
+	experimental_options map[string]json.Any
 }
 
 pub fn new_chrome_driver(url string, caps Capabilities) !WebDriver {
-	// Similar to new_edge_driver but for Chrome
+	// ChromeDriver implementation
+	// Platform detection for default binary paths:
+	// - Windows: C:\Program Files\Google\Chrome\Application\chrome.exe
+	// - Linux: /usr/bin/google-chrome
+	// - macOS: /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+	return WebDriver{
+		base_url: url
+		session_id: create_session(url, caps)!
+	}
 }
 ```
 
-#### 9.2 Firefox Support
+**Platform-specific paths**:
+- Windows: `C:\Program Files\Google\Chrome\Application\chrome.exe`
+- Linux: `/usr/bin/google-chrome` or `/usr/bin/chromium-browser`
+- macOS: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
+
+#### 9.2 Firefox Support (Windows, Linux, macOS)
 
 ```v
 // File: webdriver/capabilities.v
@@ -463,24 +478,310 @@ pub mut:
 	profile string
 	prefs   map[string]json.Any
 	log     map[string]string
+	env     map[string]string
 }
 
 pub fn new_firefox_driver(url string, caps Capabilities) !WebDriver {
 	// GeckoDriver implementation
+	// Platform detection for default binary paths:
+	// - Windows: C:\Program Files\Mozilla Firefox\firefox.exe
+	// - Linux: /usr/bin/firefox
+	// - macOS: /Applications/Firefox.app/Contents/MacOS/firefox
+	return WebDriver{
+		base_url: url
+		session_id: create_session(url, caps)!
+	}
 }
 ```
 
-#### 9.3 Safari Support
+**Platform-specific paths**:
+- Windows: `C:\Program Files\Mozilla Firefox\firefox.exe`
+- Linux: `/usr/bin/firefox`
+- macOS: `/Applications/Firefox.app/Contents/MacOS/firefox`
+
+#### 9.3 Safari Support (macOS only)
 
 ```v
-pub fn new_safari_driver(url string, caps Capabilities) !WebDriver {
-	// SafariDriver implementation
+// File: webdriver/capabilities.v
+
+pub struct SafariOptions {
+pub mut:
+	automatic_inspection bool
+	automatic_profiling  bool
+	use_technology_preview bool
+}
+
+$if macos {
+	pub fn new_safari_driver(url string, caps Capabilities) !WebDriver {
+		// SafariDriver implementation (macOS only)
+		// Safari is pre-installed on macOS
+		// SafariDriver at: /usr/bin/safaridriver
+		return WebDriver{
+			base_url: url
+			session_id: create_session(url, caps)!
+		}
+	}
 }
 ```
 
-**Methods Added**: 3 new driver constructors
-**Files**: `webdriver/capabilities.v`, `webdriver/client.v` (modified)
-**Tests**: Browser-specific test suites
+**Platform**: macOS only (Safari is not available on Windows/Linux)
+**Driver**: `/usr/bin/safaridriver` (built-in on macOS 10.12+)
+
+#### 9.4 Platform Detection Helper
+
+```v
+// File: webdriver/platform.v (new file)
+
+module webdriver
+
+import os
+
+pub enum Platform {
+	windows
+	linux
+	macos
+	unknown
+}
+
+pub fn detect_platform() Platform {
+	$if windows {
+		return .windows
+	} $else $if linux {
+		return .linux
+	} $else $if macos {
+		return .macos
+	} $else {
+		return .unknown
+	}
+}
+
+pub fn get_default_browser_path(browser string) ?string {
+	platform := detect_platform()
+
+	match browser {
+		'chrome' {
+			return match platform {
+				.windows { r'C:\Program Files\Google\Chrome\Application\chrome.exe' }
+				.linux { '/usr/bin/google-chrome' }
+				.macos { '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' }
+				else { none }
+			}
+		}
+		'firefox' {
+			return match platform {
+				.windows { r'C:\Program Files\Mozilla Firefox\firefox.exe' }
+				.linux { '/usr/bin/firefox' }
+				.macos { '/Applications/Firefox.app/Contents/MacOS/firefox' }
+				else { none }
+			}
+		}
+		'safari' {
+			return match platform {
+				.macos { '/Applications/Safari.app/Contents/MacOS/Safari' }
+				else { none }
+			}
+		}
+		'edge' {
+			return match platform {
+				.windows { r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe' }
+				.linux { '/usr/bin/microsoft-edge' }
+				.macos { '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge' }
+				else { none }
+			}
+		}
+		else { return none }
+	}
+}
+```
+
+**Methods Added**: 4 new driver constructors + platform utilities
+**Files**: `webdriver/capabilities.v`, `webdriver/client.v`, `webdriver/platform.v` (new)
+**Tests**: Browser-specific and platform-specific test suites
+
+---
+
+### Phase 10: WebDriver BiDi Protocol Support (ADVANCED - FUTURE)
+
+**Impact**: High - Modern bidirectional communication
+**Effort**: Very High (3-4 weeks)
+**Coverage Gain**: Advanced features, real-time capabilities
+
+**Background**: WebDriver BiDi is the next-generation protocol that provides bidirectional communication between the test script and browser, enabling real-time events and improved performance.
+
+#### 10.1 BiDi Session Management
+
+```v
+// File: webdriver/bidi.v (new file)
+
+module webdriver
+
+import net.websocket
+
+pub struct BiDiSession {
+mut:
+	ws           &websocket.Client
+	session_id   string
+	command_id   int
+	event_handlers map[string]fn(json.Any)
+}
+
+pub fn (mut wd WebDriver) enable_bidi() !BiDiSession {
+	// Upgrade HTTP session to BiDi WebSocket connection
+	// WebSocket URL: ws://localhost:port/session/{session_id}/bidi
+	ws_url := '${wd.base_url.replace('http://', 'ws://')}/session/${wd.session_id}/bidi'
+
+	mut ws := websocket.new_client(ws_url)!
+	ws.connect()!
+
+	return BiDiSession{
+		ws: ws
+		session_id: wd.session_id
+		command_id: 0
+		event_handlers: map[string]fn(json.Any){}
+	}
+}
+```
+
+#### 10.2 BiDi Commands
+
+```v
+// File: webdriver/bidi.v
+
+pub fn (mut bidi BiDiSession) send_command(method string, params json.Any) !json.Any {
+	bidi.command_id++
+
+	command := {
+		'id': bidi.command_id
+		'method': method
+		'params': params
+	}
+
+	bidi.ws.write_string(json.encode(command))!
+
+	// Wait for response
+	response := bidi.ws.read_string()!
+	result := json.decode(response)!
+
+	return result
+}
+
+// Example BiDi commands
+pub fn (mut bidi BiDiSession) subscribe_to_log_events() ! {
+	bidi.send_command('session.subscribe', {
+		'events': ['log.entryAdded']
+	})!
+}
+
+pub fn (mut bidi BiDiSession) navigate_with_wait(url string) ! {
+	bidi.send_command('browsingContext.navigate', {
+		'url': url
+		'wait': 'complete'
+	})!
+}
+```
+
+#### 10.3 BiDi Events (Real-time)
+
+```v
+// File: webdriver/bidi.v
+
+pub fn (mut bidi BiDiSession) on_console_log(handler fn(json.Any)) {
+	bidi.event_handlers['log.entryAdded'] = handler
+
+	// Start event listener in background
+	go bidi.listen_for_events()
+}
+
+fn (mut bidi BiDiSession) listen_for_events() {
+	for {
+		message := bidi.ws.read_string() or { break }
+
+		event := json.decode(message) or { continue }
+
+		if event_name := event['method'] {
+			if handler := bidi.event_handlers[event_name.str()] {
+				handler(event['params'])
+			}
+		}
+	}
+}
+```
+
+#### 10.4 BiDi Use Cases
+
+**Real-time Console Monitoring**:
+```v
+mut bidi := wd.enable_bidi()!
+defer { bidi.close() }
+
+// Subscribe to console logs in real-time
+bidi.on_console_log(fn (entry json.Any) {
+	println('Console: ${entry}')
+})
+
+wd.get('https://example.com')!
+// Console logs appear immediately as they happen
+```
+
+**Network Interception**:
+```v
+bidi.subscribe_to_network_events()!
+
+bidi.on_request_sent(fn (request json.Any) {
+	println('Request: ${request['url']}')
+})
+
+bidi.on_response_received(fn (response json.Any) {
+	println('Response: ${response['status']}')
+})
+```
+
+**Performance Monitoring**:
+```v
+bidi.subscribe_to_performance_events()!
+
+metrics := bidi.get_performance_metrics()!
+println('Page load time: ${metrics.dom_content_loaded}ms')
+```
+
+#### 10.5 BiDi Features Roadmap
+
+**Browsing Context**:
+- Navigation with wait conditions
+- Context creation/destruction
+- Frame handling
+- Window management
+
+**Network**:
+- Request/response interception
+- Network event monitoring
+- Cookie management
+- Authentication handling
+
+**Script**:
+- Script evaluation with realm support
+- Channel communication
+- Exception handling
+
+**Logging**:
+- Console log monitoring
+- JavaScript errors
+- Performance logs
+
+**Input**:
+- Actions API enhancement
+- File handling
+- Drag and drop improvements
+
+**Methods Added**: 15-20 BiDi methods
+**Files**: `webdriver/bidi.v` (new), `webdriver/bidi_test.v` (new)
+**Dependencies**: WebSocket support in V
+**Timeline**: 3-4 weeks (complex protocol)
+
+**Standards**:
+- [WebDriver BiDi Spec](https://w3c.github.io/webdriver-bidi/)
+- Chrome DevTools Protocol compatibility
+- Firefox Marionette compatibility
 
 ---
 
@@ -531,14 +832,32 @@ pub fn new_safari_driver(url string, caps Capabilities) !WebDriver {
 
 **Effort**: 1-2 days | **Gain**: +7%
 
-### Phase 9: Multi-Browser (Optional) ⏳
-- [ ] Chrome/Chromium driver
-- [ ] Firefox driver (GeckoDriver)
-- [ ] Safari driver
-- [ ] Browser-specific capabilities
+### Phase 9: Multi-Browser & Platform Support ⏳
+- [ ] Platform detection (Windows, Linux, macOS)
+- [ ] Chrome/Chromium driver (all platforms)
+- [ ] Firefox driver / GeckoDriver (all platforms)
+- [ ] Safari driver (macOS only)
+- [ ] Edge driver for Linux/macOS
+- [ ] Platform-specific binary path detection
+- [ ] Cross-platform capabilities
 - [ ] Cross-browser test suite
+- [ ] Platform-specific CI/CD workflows
 
-**Effort**: 1-2 weeks | **Scope expansion**
+**Effort**: 2-3 weeks | **Scope expansion + Platform compatibility**
+
+### Phase 10: WebDriver BiDi Protocol ⏳
+- [ ] WebSocket-based BiDi session
+- [ ] BiDi command/response handling
+- [ ] Event subscription system
+- [ ] Real-time console log monitoring
+- [ ] Network interception
+- [ ] Performance monitoring
+- [ ] Script evaluation with realms
+- [ ] Browsing context management
+- [ ] BiDi test suite
+- [ ] Documentation and examples
+
+**Effort**: 3-4 weeks | **Advanced features**
 
 ---
 
@@ -551,26 +870,49 @@ pub fn new_safari_driver(url string, caps Capabilities) !WebDriver {
 | 6 | 5 | 2-3 days | 87% | 91% | ⏳ Pending |
 | 7 | 6 | 2-3 days | 91% | 95% | ⏳ Pending |
 | 8 | 5 | 1-2 days | 95% | 100% | ⏳ Pending |
-| 9 | N/A | 1-2 weeks | Scope expansion | ⏳ Optional |
+| 9 | Platform utilities | 2-3 weeks | Multi-browser support | ⏳ High Priority |
+| 10 | 15-20 BiDi methods | 3-4 weeks | Advanced BiDi features | ⏳ Future |
 
-**Total Additional Methods**: 20
-**Total Estimated Time**: 6-10 days (1.5-2 weeks)
-**Final Coverage**: 100% 🎉
+**Total Additional Methods (Phases 5-8)**: 20
+**Time to 100% Feature Parity**: 6-10 days (1.5-2 weeks)
+**Time for Full Platform Support**: +2-3 weeks (Phase 9)
+**Time for BiDi Protocol**: +3-4 weeks (Phase 10)
+
+**Milestones**:
+- **v3.0.0**: 100% W3C WebDriver parity (Phases 5-8) - 1.5-2 weeks
+- **v3.5.0**: Multi-browser + Platform support (Phase 9) - 2-3 weeks
+- **v4.0.0**: WebDriver BiDi protocol (Phase 10) - 3-4 weeks
 
 ---
 
 ## 🎯 Recommended Priority Order
 
-### High Priority (Do First)
-1. **Phase 6: Expected Conditions** - Most commonly requested
-2. **Phase 7: Advanced Actions** - Common use cases
-3. **Phase 5: Element Properties** - Complete the category
+### High Priority (Core Features - Do First)
+1. **Phase 6: Expected Conditions** - Most commonly requested (2-3 days)
+2. **Phase 7: Advanced Actions** - Common use cases (2-3 days)
+3. **Phase 5: Element Properties** - Complete the category (1-2 days)
+4. **Phase 8: Advanced Features** - Nice to have (1-2 days)
 
-### Medium Priority (Do Second)
-4. **Phase 8: Advanced Features** - Nice to have
+**Total**: 6-10 days → **v3.0.0 (100% W3C WebDriver)**
 
-### Low Priority (Optional)
-5. **Phase 9: Multi-Browser** - Scope expansion, separate project phase
+### High Priority (Platform Expansion)
+5. **Phase 9: Multi-Browser & Platform Support** - Critical for adoption (2-3 weeks)
+   - Chrome/Chromium on all platforms
+   - Firefox on all platforms
+   - Safari on macOS
+   - Edge on Linux/macOS
+   - Platform detection and auto-configuration
+
+**Total**: 2-3 weeks → **v3.5.0 (Cross-platform + Multi-browser)**
+
+### Future (Advanced Features)
+6. **Phase 10: WebDriver BiDi Protocol** - Modern real-time capabilities (3-4 weeks)
+   - Real-time browser events
+   - Network interception
+   - Performance monitoring
+   - Modern web app testing
+
+**Total**: 3-4 weeks → **v4.0.0 (BiDi Protocol Support)**
 
 ---
 
@@ -591,20 +933,44 @@ touch webdriver/element_rect_test.v
 
 ---
 
-## 💡 Notes
+## 💡 Implementation Notes
 
-- Phases 5-8 build on existing infrastructure
-- No new files required except `expected_conditions.v`
-- All use standard W3C endpoints
-- Mobile features (Appium) are out of scope for desktop WebDriver
-- Focus on desktop browser automation first
-- Multi-browser support (Phase 9) could be a separate v3.5.0 or v4.0.0 release
+### Phases 5-8 (Core Features)
+- Build on existing infrastructure
+- Minimal new files (only `expected_conditions.v`)
+- All use standard W3C WebDriver classic protocol
+- Focus on completing desktop feature parity
+- No breaking changes to existing API
+
+### Phase 9 (Multi-Browser & Platform)
+- Platform detection using V's conditional compilation (`$if windows`, `$if linux`, `$if macos`)
+- Browser binary auto-detection per platform
+- Shared WebDriver interface across all browsers
+- Platform-specific test suites
+- Safari support is macOS-only (not available on other platforms)
+- Edge on Linux requires Microsoft's Edge for Linux package
+
+### Phase 10 (WebDriver BiDi)
+- Requires WebSocket support (V's `net.websocket` module)
+- Parallel protocol to classic HTTP-based WebDriver
+- Can run alongside classic WebDriver
+- Enables real-time browser events without polling
+- Modern alternative to Chrome DevTools Protocol (CDP)
+- Future-proof for next-generation web testing
+
+### Out of Scope
+- **Mobile features** (Appium) - Separate project
+- **Browser extensions** - Different use case
+- **UI automation** outside browsers - Use other tools
+- **Selenium Grid** - Server infrastructure (possible future addition)
 
 ---
 
-## ✅ Success Criteria for 100%
+## ✅ Success Criteria
 
-1. ✅ All W3C WebDriver desktop endpoints implemented
+### v3.0.0 - 100% W3C WebDriver Classic Protocol
+
+1. ✅ All W3C WebDriver classic endpoints implemented
 2. ✅ All common Selenium methods have V equivalents
 3. ✅ Comprehensive test coverage (>90%)
 4. ✅ All expected conditions helpers available
@@ -614,8 +980,38 @@ touch webdriver/element_rect_test.v
 8. ✅ Browser log access
 
 **Target Release**: v3.0.0
-**Timeline**: 1.5-2 weeks of focused development
-**Feature Parity**: 100% with Selenium WebDriver (desktop)
+**Timeline**: 1.5-2 weeks from v2.0.0
+**Feature Parity**: 100% with Selenium WebDriver Classic Protocol
+
+### v3.5.0 - Cross-Platform Multi-Browser Support
+
+1. ✅ Chrome/Chromium support on Windows, Linux, macOS
+2. ✅ Firefox support on Windows, Linux, macOS
+3. ✅ Safari support on macOS
+4. ✅ Edge support on Windows, Linux, macOS
+5. ✅ Platform auto-detection
+6. ✅ Default binary path resolution per platform
+7. ✅ Cross-platform test suite
+8. ✅ Platform-specific CI/CD pipelines
+
+**Target Release**: v3.5.0
+**Timeline**: 2-3 weeks from v3.0.0
+**Platform Parity**: All major browsers on all platforms
+
+### v4.0.0 - WebDriver BiDi Protocol
+
+1. ✅ WebSocket-based BiDi session management
+2. ✅ Real-time event subscription system
+3. ✅ Console log monitoring
+4. ✅ Network interception and monitoring
+5. ✅ Performance metrics collection
+6. ✅ Script evaluation with realms
+7. ✅ Bidirectional communication
+8. ✅ Modern web app testing features
+
+**Target Release**: v4.0.0
+**Timeline**: 3-4 weeks from v3.5.0
+**Feature Parity**: Modern Selenium 4.x BiDi features
 
 ---
 
