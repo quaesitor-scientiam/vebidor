@@ -3,7 +3,15 @@
     "allow": [
       "Bash(pwsh:*)",
       "Bash(Out-File -FilePath READY_FOR_GITHUB.md -Encoding UTF8)",
-      "Bash(Write-Host 'Created READY_FOR_GITHUB.md' -ForegroundColor Green \")"
+      "Bash(Write-Host 'Created READY_FOR_GITHUB.md' -ForegroundColor Green \")",
+      "Bash(dir:*)",
+      "Bash(v test:*)",
+      "Bash(v run:*)",
+      "Bash(v -check:*)",
+      "Bash(Get-Content \"S:\\\\temp\\\\claude\\\\S--vProjects-v-webdriver\\\\tasks\\\\bfcdc30.output\" -Wait -Tail 50)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

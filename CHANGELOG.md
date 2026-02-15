@@ -1,5 +1,115 @@
 # WebDriver V Library - Changelog
 
+## [2.0.0] - 2026-02-14 - Phase 4 Complete ✅ - 85% Feature Parity Achieved! 🎉
+
+### 🎉 Major Milestone: All 4 Phases Complete!
+
+**Phase 4 Implementation Complete** - Added 8 essential window management and timeout methods, achieving **85% feature parity with Selenium**!
+
+#### New Methods Added
+
+**Window Management** (5 methods in `webdriver/window.v`):
+
+1. **`switch_to_window(handle string) !`**
+   - Switch focus to a specific window or tab by handle
+   - W3C Endpoint: `POST /session/{session id}/window`
+   - Example: `wd.switch_to_window(tab_handle)!`
+
+2. **`new_window(window_type string) !NewWindowResult`**
+   - Create a new tab or window
+   - W3C Endpoint: `POST /session/{session id}/window/new`
+   - Example: `new_tab := wd.new_window('tab')!`
+
+3. **`maximize_window() !`**
+   - Maximize the current browser window
+   - W3C Endpoint: `POST /session/{session id}/window/maximize`
+   - Example: `wd.maximize_window()!`
+
+4. **`minimize_window() !`**
+   - Minimize the current browser window
+   - W3C Endpoint: `POST /session/{session id}/window/minimize`
+   - Example: `wd.minimize_window()!`
+
+5. **`fullscreen_window() !`**
+   - Set the browser window to fullscreen mode
+   - W3C Endpoint: `POST /session/{session id}/window/fullscreen`
+   - Example: `wd.fullscreen_window()!`
+
+**Timeouts** (3 methods in `webdriver/wait.v`):
+
+6. **`set_implicit_wait(milliseconds int) !`**
+   - Configure automatic waiting for elements to appear
+   - W3C Endpoint: `POST /session/{session id}/timeouts`
+   - Example: `wd.set_implicit_wait(10000)!`
+
+7. **`set_page_load_timeout(milliseconds int) !`**
+   - Configure maximum time to wait for page loads
+   - W3C Endpoint: `POST /session/{session id}/timeouts`
+   - Example: `wd.set_page_load_timeout(30000)!`
+
+8. **`set_script_timeout(milliseconds int) !`**
+   - Configure maximum time for script execution
+   - W3C Endpoint: `POST /session/{session id}/timeouts`
+   - Example: `wd.set_script_timeout(15000)!`
+
+#### New Files
+
+- **`webdriver/window_waits_test.v`** - Comprehensive test suite with 9 test functions
+- **`example_phase4.v`** - Full demonstration application showing all Phase 4 features
+- **`PHASE4_SUMMARY.md`** - Complete Phase 4 documentation
+
+#### Impact
+
+- **Feature Coverage**: Increased from 76% → **85%** (+9%)
+- **Window Management**: 56% → **100%** (fully implemented)
+- **Timeouts/Waits**: 14% → **57%** (+43%)
+- **Milestone**: **All 4 planned phases complete!**
+
+#### Use Cases
+
+Window and timeout methods enable:
+- ✅ Multi-tab and multi-window web applications
+- ✅ Automated window state management
+- ✅ Robust automation with configurable timeouts
+- ✅ Handling slow-loading pages gracefully
+- ✅ Complex workflows across multiple browser contexts
+
+#### Example Usage
+
+```v
+import webdriver
+
+// Multi-window workflow
+wd.maximize_window()!
+new_tab := wd.new_window('tab')!
+wd.switch_to_window(new_tab.handle)!
+wd.get('https://example.com')!
+
+// Configure timeouts for robust automation
+wd.set_implicit_wait(10000)!         // Auto-wait 10s for elements
+wd.set_page_load_timeout(30000)!     // 30s page load timeout
+wd.set_script_timeout(15000)!        // 15s script execution timeout
+```
+
+#### Testing
+
+All 9 test functions pass:
+- ✅ Window state management (maximize, minimize, fullscreen)
+- ✅ Multi-window navigation and switching
+- ✅ Timeout configuration (implicit, page load, script)
+
+#### Version Milestone
+
+**v2.0.0** marks the completion of the core implementation plan:
+- Phase 1 ✅ Element Properties (8 methods)
+- Phase 2 ✅ Alert Handling (4 methods)
+- Phase 3 ✅ Page Information (3 methods)
+- Phase 4 ✅ Window & Waits (8 methods)
+
+**Total**: 23 new methods added across all phases, bringing feature parity from 55% to **85%**!
+
+---
+
 ## [1.10.0] - 2026-02-14 - Phase 3 Complete ✅
 
 ### 🎉 Major Feature Release: Page Information

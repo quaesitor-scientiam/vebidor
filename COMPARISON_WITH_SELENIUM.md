@@ -59,7 +59,7 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Execute sync script | ✅ `execute_script()` | ✅ | Working |
 | Script with arguments | ✅ | ✅ | Working |
 
-### Window Management
+### Window Management (Phase 4 ✅)
 | Feature | V WebDriver | Selenium | Notes |
 |---------|-------------|----------|-------|
 | Get window handle | ✅ `get_window_handle()` | ✅ | Working (fixed) |
@@ -67,6 +67,11 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Get window rect | ✅ `get_window_rect()` | ✅ | Working (fixed) |
 | Set window rect | ✅ `set_window_rect()` | ✅ | Working |
 | Close window | ✅ `close()` | ✅ | Working |
+| Switch to window | ✅ `switch_to_window()` | ✅ | Phase 4 ✅ |
+| New window | ✅ `new_window()` | ✅ | Phase 4 ✅ |
+| Maximize window | ✅ `maximize_window()` | ✅ | Phase 4 ✅ |
+| Minimize window | ✅ `minimize_window()` | ✅ | Phase 4 ✅ |
+| Fullscreen window | ✅ `fullscreen_window()` | ✅ | Phase 4 ✅ |
 
 ### Cookies
 | Feature | V WebDriver | Selenium | Notes |
@@ -98,10 +103,13 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Release actions | ✅ `release_actions()` | ✅ | Working |
 | Type text | ✅ `type_text()` | ✅ | Convenience method |
 
-### Waits
+### Waits (Phase 4 ✅)
 | Feature | V WebDriver | Selenium | Notes |
 |---------|-------------|----------|-------|
 | Generic wait | ✅ `wait_for()` | ✅ | Basic implementation |
+| Implicit wait | ✅ `set_implicit_wait()` | ✅ `.implicitly_wait()` | Phase 4 ✅ |
+| Page load timeout | ✅ `set_page_load_timeout()` | ✅ `.set_page_load_timeout()` | Phase 4 ✅ |
+| Script timeout | ✅ `set_script_timeout()` | ✅ `.set_script_timeout()` | Phase 4 ✅ |
 
 ### Alerts & Popups (Phase 2 ✅)
 | Feature | V WebDriver | Selenium | Notes |
@@ -142,37 +150,25 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 |---------|-------------|----------|--------|
 | Submit form | ❌ | ✅ `.submit()` | **Medium** - Useful shortcut |
 
-### Advanced Waits (MEDIUM PRIORITY)
+### Advanced Waits (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Implicit waits | ❌ | ✅ `.implicitly_wait()` | **High** - Very convenient |
-| Explicit waits | Partial | ✅ `WebDriverWait` | **High** - Common patterns |
-| Expected conditions | ❌ | ✅ `EC.*` | **High** - Predefined conditions |
-| Element to be clickable | ❌ | ✅ `EC.element_to_be_clickable` | **High** - Common |
-| Presence of element | ❌ | ✅ `EC.presence_of_element_located` | **High** - Common |
-| Visibility of element | ❌ | ✅ `EC.visibility_of` | **High** - Common |
-| Text to be present | ❌ | ✅ `EC.text_to_be_present_in_element` | **Medium** |
-
-### Window/Tab Management (MEDIUM PRIORITY)
-| Feature | V WebDriver | Selenium | Impact |
-|---------|-------------|----------|--------|
-| Switch to window | ❌ | ✅ `.switch_to.window()` | **High** - Multi-tab apps |
-| New window | ❌ | ✅ `.switch_to.new_window()` | **Medium** - Useful |
-| Maximize window | ❌ | ✅ `.maximize_window()` | **Medium** - Common |
-| Minimize window | ❌ | ✅ `.minimize_window()` | **Low** |
-| Fullscreen | ❌ | ✅ `.fullscreen_window()` | **Low** |
+| Explicit waits | Partial | ✅ `WebDriverWait` | **Medium** - Common patterns |
+| Expected conditions | ❌ | ✅ `EC.*` | **Medium** - Predefined conditions |
+| Element to be clickable | ❌ | ✅ `EC.element_to_be_clickable` | **Medium** - Common |
+| Presence of element | ❌ | ✅ `EC.presence_of_element_located` | **Medium** - Common |
+| Visibility of element | ❌ | ✅ `EC.visibility_of` | **Medium** - Common |
+| Text to be present | ❌ | ✅ `EC.text_to_be_present_in_element` | **Low** |
 
 ### Advanced JavaScript (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
 | Execute async script | ❌ | ✅ `.execute_async_script()` | **Medium** - Async operations |
 
-### Timeouts (MEDIUM PRIORITY)
+### Timeouts (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Set timeouts | ❌ | ✅ `.set_page_load_timeout()` | **Medium** - Useful |
-| Script timeout | ❌ | ✅ `.set_script_timeout()` | **Medium** - For long scripts |
-| Get timeouts | ❌ | ✅ | **Low** |
+| Get timeouts | ❌ | ✅ | **Low** - Less commonly used |
 
 ### Shadow DOM (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
@@ -211,17 +207,17 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Element Interaction** | 3/4 | 1 | 75% ✅ |
 | **Element Properties** | 7/11 | 4 | 64% ⚠️ |
 | **JavaScript** | 2/3 | 1 | 67% ⚠️ |
-| **Window Management** | 5/9 | 4 | 56% ⚠️ |
+| **Window Management** | 10/10 | 0 | 100% ✅ |
 | **Cookies** | 4/4 | 0 | 100% ✅ |
 | **Screenshots** | 2/2 | 0 | 100% ✅ |
 | **Frames** | 2/2 | 0 | 100% ✅ |
 | **Actions API** | 8/10 | 2 | 80% ✅ |
-| **Waits** | 1/7 | 6 | 14% ❌ |
+| **Waits** | 4/7 | 3 | 57% ✅ |
 | **Alerts** | 4/4 | 0 | 100% ✅ |
 | **Page Info** | 3/3 | 0 | 100% ✅ |
-| **Timeouts** | 0/3 | 3 | 0% ❌ |
+| **Timeouts** | 3/4 | 1 | 75% ✅ |
 
-**Overall Coverage: ~76%** ⬆️ +21% from v0.90.0 (Phase 1, 2 & 3 complete)
+**Overall Coverage: ~85%** 🎉 ⬆️ +30% from v0.90.0 (All 4 phases complete!)
 
 ---
 
@@ -257,29 +253,31 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 
 **Completion**: 2026-02-14 | **Coverage**: 73% → 76%
 
-### Phase 4: Advanced Window & Waits 🔜 NEXT
+### Phase 4: Advanced Window & Waits ✅ COMPLETE
+1. **Window Management** ✅
+   - ✅ `switch_to_window(handle)` - Switch windows/tabs
+   - ✅ `new_window(type)` - Create new tab/window
+   - ✅ `maximize_window()` - Maximize browser
+   - ✅ `minimize_window()` - Minimize browser
+   - ✅ `fullscreen_window()` - Fullscreen mode
+
+2. **Timeouts** ✅
+   - ✅ `set_implicit_wait(ms)` - Auto-wait for elements
+   - ✅ `set_page_load_timeout(ms)` - Page load timeout
+   - ✅ `set_script_timeout(ms)` - Script execution timeout
+
+**Completion**: 2026-02-14 | **Coverage**: 76% → 85%
+
+### Future: Nice-to-Have Features
 1. **Element Interaction**
-   - `clear()` - Clear input field
    - `submit()` - Submit form
 
-2. **Window Management**
-   - `switch_to_window(handle)` - Switch windows/tabs
-   - `maximize_window()` - Maximize browser
-
-3. **Implicit Waits**
-   - `set_implicit_wait(seconds)` - Auto-wait for elements
-
-4. **Expected Conditions**
+2. **Expected Conditions**
    - `element_to_be_clickable()`
    - `presence_of_element_located()`
    - `visibility_of_element_located()`
 
-### Future: Nice-to-Have Features
-1. **Timeouts**
-   - `set_page_load_timeout()`
-   - `set_script_timeout()`
-
-2. **Advanced Actions**
+3. **Advanced Actions**
    - Context click (right-click)
    - Better drag-and-drop
 
@@ -325,7 +323,7 @@ if element.is_displayed():
 driver.quit()
 ```
 
-### V WebDriver (v1.0.0 - Phase 2 Complete)
+### V WebDriver (v2.0.0 - All Phases Complete)
 ```v
 import webdriver
 
@@ -392,18 +390,19 @@ Remaining phases:
 
 ## Conclusion
 
-**Version 1.10.0 Status**: The V WebDriver library now has **robust functionality** (~76% feature parity, up from 55%) and is **production-ready for advanced automation tasks**.
+**Version 2.0.0 Status**: The V WebDriver library has achieved **85% feature parity with Selenium** and is **production-ready for professional web automation**! 🎉
 
-### ✅ What's Complete (v1.10.0)
+### ✅ What's Complete (v2.0.0) - All 4 Phases Done!
 - ✅ **Element Properties** (Phase 1) - Get text, attributes, state
 - ✅ **Alert Handling** (Phase 2) - Full dialog control
 - ✅ **Page Information** (Phase 3) - Title, URL, source
-- ✅ All basic and intermediate automation features
+- ✅ **Window & Waits** (Phase 4) - Multi-window, timeouts, state management
+- ✅ All core and advanced automation features
 
-### 🔜 Still Missing
-- Advanced wait conditions (implicit waits, expected conditions)
-- Window/tab switching
-- Window state management (maximize, minimize)
+### 🔜 Still Missing (Future Enhancements)
+- Advanced expected conditions helpers
+- Form submit shortcut
+- Some advanced Actions API methods
 
 ### Use Cases
 **Perfect for**:
@@ -413,9 +412,8 @@ Remaining phases:
 - Screenshot-based testing
 - Page navigation verification
 - URL and title assertions
+- Multi-window/tab workflows ✨ NEW
+- Timeout-controlled automation ✨ NEW
+- Window state management ✨ NEW
 
-**Not yet ideal for**:
-- Multi-window/tab workflows
-- Complex explicit wait scenarios
-
-**Overall**: V WebDriver is now suitable for **the vast majority of web automation tasks**, with only advanced multi-window and wait features remaining.
+**Overall**: V WebDriver is now suitable for **virtually all common web automation tasks**, with 85% feature parity with Selenium WebDriver!
