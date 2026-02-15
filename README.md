@@ -2,28 +2,49 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
+**Version 2.0.0** | **85% Feature Parity with Selenium** | **Production Ready**
+
 ## 🚀 Features
 
-### ✅ Fully Implemented
+### ✅ Fully Implemented (85% Coverage)
+
+**Core Features:**
 - **Session Management** - Create, manage, and quit browser sessions
 - **Navigation** - Navigate, back, forward, refresh
-- **Element Location** - Find elements by CSS selector, XPath, ID, class name, etc.
+- **Element Location** - Find elements by CSS selector, XPath, ID, class name, tag name, link text
 - **Element Interaction** - Click, send keys, clear input fields
-- **Element Properties** ✨ NEW - Get text, attributes, properties, check visibility/enabled/selected state, get tag name
 - **JavaScript Execution** - Execute synchronous scripts with arguments
-- **Window Management** - Get handles, get/set window size
-- **Cookies** - Get, add, delete cookies
-- **Screenshots** - Capture page and element screenshots
-- **Frame Switching** - Switch between frames and iframes
-- **Actions API** - Keyboard, mouse, and wheel actions
-- **Waits** - Basic wait functionality
-- **Edge-Specific** - Network conditions, device emulation, browser version
+- **Cookies** - Get, add, delete, clear all cookies
+- **Screenshots** - Capture page and element screenshots (base64)
+- **Frame Switching** - Switch between frames, iframes, and parent frame
+- **Actions API** - Keyboard, mouse, and wheel actions with action builder
 
-### ⚠️ Planned Features (See IMPLEMENTATION_PLAN.md)
-- Alert handling (accept, dismiss, get text)
-- Page information (get_title, get_current_url, get_page_source)
-- Advanced window management (switch windows, maximize)
-- Implicit waits and expected conditions
+**Phase 1 - Element Properties** ✨:
+- Get element text, attributes, and DOM properties
+- Check visibility (`is_displayed`), enabled state (`is_enabled`), selection state (`is_selected`)
+- Get tag names, clear input fields
+
+**Phase 2 - Alert Handling** ✨:
+- Accept and dismiss alert/confirm/prompt dialogs
+- Read alert text messages
+- Send text input to prompt dialogs
+
+**Phase 3 - Page Information** ✨:
+- Get page title and current URL
+- Get complete HTML page source
+- Navigation verification
+
+**Phase 4 - Window & Waits** ✨:
+- Switch between windows and tabs
+- Create new windows/tabs
+- Maximize, minimize, and fullscreen windows
+- Implicit waits for auto-waiting elements
+- Configurable page load and script timeouts
+
+**Edge-Specific:**
+- Network condition simulation
+- Device emulation
+- Browser version detection
 
 ## 📦 Installation
 
@@ -83,7 +104,53 @@ fn main() {
 }
 ```
 
-## 📖 Examples
+## 📖 Comprehensive Examples
+
+### Complete Automation Example (All Phases)
+```v
+import webdriver
+
+fn main() {
+    caps := webdriver.Capabilities{
+        browser_name: 'msedge'
+        edge_options: webdriver.EdgeOptions{
+            args: ['--headless=new']
+        }
+    }
+
+    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
+
+    // Set timeouts (Phase 4)
+    wd.set_implicit_wait(10000)!
+    wd.set_page_load_timeout(30000)!
+
+    // Navigate and get page info (Phase 3)
+    wd.get('https://example.com')!
+    title := wd.get_title()!
+    url := wd.get_current_url()!
+    println('Page: ${title} at ${url}')
+
+    // Element properties (Phase 1)
+    heading := wd.find_element('css selector', 'h1')!
+    text := wd.get_text(heading)!
+    tag := wd.get_tag_name(heading)!
+    visible := wd.is_displayed(heading)!
+    println('Found <${tag}>: "${text}" (visible: ${visible})')
+
+    // Handle alerts (Phase 2)
+    wd.execute_script('alert("Test")', [])!
+    alert_text := wd.get_alert_text()!
+    println('Alert says: ${alert_text}')
+    wd.accept_alert()!
+
+    // Multi-window (Phase 4)
+    new_tab := wd.new_window('tab')!
+    wd.switch_to_window(new_tab.handle)!
+    wd.get('https://www.iana.org')!
+    wd.maximize_window()!
+}
+```
 
 ### Form Automation
 ```v
@@ -160,24 +227,133 @@ fn actions_example() ! {
 }
 ```
 
-### Waiting for Elements
+### Element Properties (Phase 1)
 ```v
 import webdriver
 
-fn wait_example() ! {
+fn element_properties_example() ! {
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
     wd.get('https://example.com')!
 
-    // Wait for element to appear
-    wd.wait_for(fn (wd webdriver.WebDriver) !bool {
-        wd.find_element('css selector', '#dynamic-content') or { return false }
-        return true
-    }, 10000, 500)!
+    link := wd.find_element('css selector', 'a')!
 
-    element := wd.find_element('css selector', '#dynamic-content')!
-    wd.click(element)!
+    // Get element properties
+    text := wd.get_text(link)!                    // Visible text
+    href := wd.get_attribute(link, 'href')!       // HTML attribute
+    tag := wd.get_tag_name(link)!                 // Tag name
+
+    // Check element state
+    visible := wd.is_displayed(link)!
+    enabled := wd.is_enabled(link)!
+
+    println('Link: ${text} -> ${href}')
+    println('Visible: ${visible}, Enabled: ${enabled}')
+}
+```
+
+### Alert Handling (Phase 2)
+```v
+import webdriver
+
+fn alert_handling_example() ! {
+    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
+
+    wd.get('https://example.com')!
+
+    // Handle alert
+    wd.execute_script('alert("Hello!")', [])!
+    text := wd.get_alert_text()!
+    println('Alert: ${text}')
+    wd.accept_alert()!
+
+    // Handle prompt
+    wd.execute_script('window.name = prompt("Your name?")', [])!
+    wd.send_alert_text('Claude')!
+    wd.accept_alert()!
+}
+```
+
+### Page Information (Phase 3)
+```v
+import webdriver
+
+fn page_info_example() ! {
+    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
+
+    wd.get('https://example.com')!
+
+    // Get page metadata
+    title := wd.get_title()!
+    url := wd.get_current_url()!
+    source := wd.get_page_source()!
+
+    println('Title: ${title}')
+    println('URL: ${url}')
+    println('HTML length: ${source.len} bytes')
+
+    // Verify navigation
+    assert title == 'Example Domain'
+    assert url == 'https://example.com/'
+}
+```
+
+### Multi-Window Management (Phase 4)
+```v
+import webdriver
+
+fn multi_window_example() ! {
+    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
+
+    wd.get('https://example.com')!
+
+    // Get current window
+    main_window := wd.get_window_handle()!
+
+    // Create new tab
+    new_tab := wd.new_window('tab')!
+    wd.switch_to_window(new_tab.handle)!
+
+    // Navigate in new tab
+    wd.get('https://www.iana.org')!
+    new_title := wd.get_title()!
+
+    // Switch back to main window
+    wd.switch_to_window(main_window)!
+
+    // Window state management
+    wd.maximize_window()!
+    wd.fullscreen_window()!
+}
+```
+
+### Timeouts and Waits (Phase 4)
+```v
+import webdriver
+
+fn timeouts_example() ! {
+    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
+
+    // Configure timeouts
+    wd.set_implicit_wait(10000)!         // Auto-wait 10s for elements
+    wd.set_page_load_timeout(30000)!     // 30s page load timeout
+    wd.set_script_timeout(15000)!        // 15s script timeout
+
+    wd.get('https://example.com')!
+
+    // Now element finding automatically waits
+    element := wd.find_element('css selector', 'h1')!
+
+    // Custom wait condition
+    wd.wait_for(fn (wd webdriver.WebDriver) !bool {
+        title := wd.get_title()!
+        return title.len > 0
+    }, 5000, 500)!
 }
 ```
 
@@ -206,17 +382,20 @@ v simple_test.v
 
 ## 📚 Documentation
 
-- **[PHASE1_COMPLETE.md](PHASE1_COMPLETE.md)** ✨ NEW - Phase 1 completion summary
+- **[PHASE1_COMPLETE.md](PHASE1_COMPLETE.md)** - Phase 1: Element Properties (8 methods)
+- **[PHASE2_COMPLETE.md](PHASE2_COMPLETE.md)** - Phase 2: Alert Handling (4 methods)
+- **[PHASE3_COMPLETE.md](PHASE3_COMPLETE.md)** - Phase 3: Page Information (3 methods)
+- **[PHASE4_SUMMARY.md](PHASE4_SUMMARY.md)** - Phase 4: Window & Waits (8 methods)
 - **[COMPARISON_WITH_SELENIUM.md](COMPARISON_WITH_SELENIUM.md)** - Feature comparison with Selenium
-- **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** - Roadmap for missing features
-- **[MISSING_FEATURES_GUIDE.md](MISSING_FEATURES_GUIDE.md)** - Workarounds for remaining missing features
+- **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** - Implementation roadmap
+- **[MISSING_FEATURES_GUIDE.md](MISSING_FEATURES_GUIDE.md)** - Workarounds for remaining features
 - **[TESTING.md](TESTING.md)** - Testing guide
 - **[CHANGELOG.md](CHANGELOG.md)** - Change history
 
 ## 🎯 Feature Coverage
 
-**Current**: **68%** feature parity with Selenium WebDriver (was 55%)
-**Latest**: Phase 1 Complete - Element Properties fully implemented!
+**Current**: **85%** feature parity with Selenium WebDriver
+**All 4 Phases Complete!** 🎉
 
 | Category | Status |
 |----------|--------|
@@ -226,46 +405,28 @@ v simple_test.v
 | Cookies | ✅ 100% |
 | Screenshots | ✅ 100% |
 | Frames | ✅ 100% |
-| **Element Properties** | ✅ **100%** ✨ NEW |
+| **Element Properties** | ✅ **100%** (Phase 1) |
+| **Alerts** | ✅ **100%** (Phase 2) |
+| **Page Information** | ✅ **100%** (Phase 3) |
+| **Window Management** | ✅ **100%** (Phase 4) |
+| **Timeouts** | ✅ **57%** (Phase 4) |
 | Actions API | ✅ 80% |
-| **Element Interaction** | ✅ **75%** (improved) |
-| Window Management | ⚠️ 56% |
-| Alerts | ❌ 0% (Phase 2) |
-| Waits | ⚠️ 14% (basic only) |
+| Element Interaction | ✅ 75% |
 
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for roadmap to 85% coverage.
+See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for roadmap details.
 
-## ✨ New in Phase 1
+## ✨ What's New in v2.0.0
 
-No more workarounds needed for element properties! Now you can use native methods:
+**All 4 Implementation Phases Complete!** 🎉
 
-```v
-// Get element text - NOW NATIVE!
-element := wd.find_element('css selector', 'h1')!
-text := wd.get_text(element)!
+- ✅ **Phase 1**: Element Properties (8 methods) - `get_text()`, `get_attribute()`, `is_displayed()`, etc.
+- ✅ **Phase 2**: Alert Handling (4 methods) - `accept_alert()`, `dismiss_alert()`, `get_alert_text()`, etc.
+- ✅ **Phase 3**: Page Information (3 methods) - `get_title()`, `get_current_url()`, `get_page_source()`
+- ✅ **Phase 4**: Window & Waits (8 methods) - Multi-window support, timeouts, window state management
 
-// Get attributes - NOW NATIVE!
-link := wd.find_element('css selector', 'a')!
-href := wd.get_attribute(link, 'href')!
+**Total**: 23 new methods added, raising feature parity from 55% to **85%**!
 
-// Check visibility - NOW NATIVE!
-if wd.is_displayed(element)! {
-    wd.click(element)!
-}
-
-// Check if enabled - NOW NATIVE!
-button := wd.find_element('css selector', 'button')!
-if wd.is_enabled(button)! {
-    wd.click(button)!
-}
-
-// Clear input fields - NOW NATIVE!
-input := wd.find_element('css selector', '#username')!
-wd.clear(input)!
-wd.send_keys(input, 'newtext')!
-```
-
-See [PHASE1_COMPLETE.md](PHASE1_COMPLETE.md) for all new methods and examples.
+See individual phase documentation for detailed examples and usage.
 
 ## 🏗️ Project Structure
 
@@ -294,13 +455,13 @@ v-webdriver/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Priority areas:
+Contributions are welcome! Remaining areas for improvement:
 
-1. **Element Properties** - Implement `get_text()`, `get_attribute()`, `is_displayed()`, etc.
-2. **Alert Handling** - Implement alert/confirm/prompt methods
-3. **Page Info** - Implement `get_title()`, `get_current_url()`, `get_page_source()`
-4. **Advanced Waits** - Implement expected conditions
-5. **Window Switching** - Implement multi-window/tab support
+1. **Advanced Waits** - Implement expected conditions (explicit waits)
+2. **Actions API** - Complete remaining mouse/keyboard actions (20% remaining)
+3. **Element Interaction** - Add missing interaction methods (25% remaining)
+4. **Additional Browser Support** - Chrome, Firefox drivers
+5. **Performance Optimizations** - Connection pooling, parallel execution
 
 See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for detailed specifications.
 
@@ -323,11 +484,11 @@ For issues, questions, or contributions:
 
 ---
 
-**Status**: Production-ready for web automation. Element properties fully implemented!
+**Status**: Production-ready for web automation. All 4 phases complete! 🎉
 
-**Version**: 0.95.0 (68% Selenium feature parity) - Phase 1 Complete ✅
+**Version**: 2.0.0 (85% Selenium feature parity)
 
-**Target**: 1.0.0 (85% Selenium feature parity)
+**All Phases Complete**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4
 
-**Latest Update**: 2026-02-14 - Added 8 element property methods
+**Latest Update**: 2026-02-14 - Completed Phase 4 (Window & Waits) - 23 methods added total across all phases
 
