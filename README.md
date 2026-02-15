@@ -53,15 +53,24 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 2. Microsoft Edge browser
 3. [EdgeDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) matching your Edge version
 
-### Setup
+### Quick Setup
+
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd W3C
+git clone https://github.com/quaesitor-scientiam/v-webdriver.git
+cd v-webdriver
 
-# Start EdgeDriver
+# Start EdgeDriver (automated)
+v run start_edgedriver.v
+```
+
+Or manually:
+```bash
+# Download EdgeDriver, then start it
 .\msedgedriver.exe --port=9515
 ```
+
+**Need help?** See [TEST_ENVIRONMENT_SETUP.md](TEST_ENVIRONMENT_SETUP.md) for detailed setup instructions.
 
 ## 🎯 Quick Start
 

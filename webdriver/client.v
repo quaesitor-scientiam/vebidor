@@ -22,7 +22,12 @@ pub fn new_edge_driver(base_url string, caps Capabilities) !WebDriver {
 	body := json.encode(params)
 
 	resp := http.post('${base_url}/session', body) or {
-		return error('Failed to create session: ${err}')
+		return error('Failed to connect to EdgeDriver at ${base_url}\n' +
+			'Make sure EdgeDriver is running:\n' +
+			'  .\\msedgedriver.exe --port=9515\n' +
+			'Or use the helper script:\n' +
+			'  v run start_edgedriver.v\n' +
+			'Error: ${err}')
 	}
 
 	if resp.status_code >= 400 {

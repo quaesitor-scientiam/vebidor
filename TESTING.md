@@ -6,10 +6,25 @@ This document describes how to run tests for the V WebDriver library.
 
 1. **Microsoft Edge** must be installed
 2. **EdgeDriver** must be running on port 9515
-   ```powershell
-   # Start EdgeDriver (from the directory where msedgedriver.exe is located)
-   .\msedgedriver.exe --port=9515
-   ```
+
+### Quick Start EdgeDriver
+
+**Automated (Recommended)**:
+```bash
+v run start_edgedriver.v
+```
+
+**Manual**:
+```powershell
+# Start EdgeDriver (from the directory where msedgedriver.exe is located)
+.\msedgedriver.exe --port=9515
+```
+
+**Need Help?** See [TEST_ENVIRONMENT_SETUP.md](TEST_ENVIRONMENT_SETUP.md) for:
+- Complete setup instructions
+- EdgeDriver installation guide
+- Troubleshooting common issues
+- CI/CD configuration examples
 
 ## Running Unit Tests
 
