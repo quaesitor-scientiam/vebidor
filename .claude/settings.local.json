@@ -11,7 +11,11 @@
       "Bash(Get-Content \"S:\\\\temp\\\\claude\\\\S--vProjects-v-webdriver\\\\tasks\\\\bfcdc30.output\" -Wait -Tail 50)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git rm:*)",
+      "Bash(v:*)",
+      "Bash(.main.exe)",
+      "Bash(./main.exe:*)"
     ]
   }
 }
