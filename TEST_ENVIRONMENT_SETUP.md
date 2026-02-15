@@ -16,9 +16,26 @@ v run start_edgedriver.v
 This script will:
 - ✅ Check if EdgeDriver is already running
 - ✅ Find msedgedriver.exe automatically
+- ✅ **Check version compatibility** between Edge and EdgeDriver
+- ✅ **Warn if versions don't match**
 - ✅ Start EdgeDriver on port 9515
 - ✅ Verify it's running correctly
 - ✅ Keep it running until you press Ctrl+C
+
+**Example output:**
+```
+========================================
+EdgeDriver Test Environment Starter
+========================================
+
+Found EdgeDriver: msedgedriver.exe
+Version Check:
+  Edge Browser:  131.0.2903.112
+  EdgeDriver:    131.0.2903.112
+  ✓ Versions compatible
+
+Starting EdgeDriver on port 9515...
+```
 
 Once EdgeDriver is running, open a new terminal and run tests:
 
@@ -142,10 +159,21 @@ v run example_phase4.v
 
 ### Problem: EdgeDriver version mismatch
 
+**Symptoms:**
+- `start_edgedriver.v` shows warning: "⚠⚠⚠ WARNING: Version Mismatch! ⚠⚠⚠"
+- Tests fail with "session not created" errors
+- Browser fails to start or crashes
+
 **Solution:**
-1. Check Edge version: See Step 1.2 above
-2. Download matching EdgeDriver version
-3. EdgeDriver and Edge versions must match
+1. The automated script (`v run start_edgedriver.v`) will detect this automatically
+2. Check Edge version manually:
+   ```bash
+   powershell -Command "(Get-Item 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe').VersionInfo.ProductVersion"
+   ```
+3. Download matching EdgeDriver version from:
+   https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+4. **Important**: Major versions MUST match (e.g., Edge 131.x needs EdgeDriver 131.x)
+5. Replace your old msedgedriver.exe with the new one
 
 ### Problem: Port 9515 already in use
 

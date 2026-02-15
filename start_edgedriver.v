@@ -31,6 +31,10 @@ fn main() {
 	}
 
 	println('Found EdgeDriver: ${edgedriver_path}')
+
+	// Check version compatibility
+	check_version_compatibility(edgedriver_path)
+
 	println('Starting EdgeDriver on port 9515...\n')
 
 	// Start EdgeDriver in background
@@ -93,4 +97,88 @@ fn is_edgedriver_running() bool {
 	// Try to connect to EdgeDriver status endpoint
 	resp := http.get('http://127.0.0.1:9515/status') or { return false }
 	return resp.status_code == 200
+}
+
+fn get_edge_version() ?string {
+	// Common Edge installation paths
+	edge_paths := [
+		r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe',
+		r'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
+	]
+
+	for edge_path in edge_paths {
+		if os.exists(edge_path) {
+			// Get version using PowerShell
+			result := os.execute('powershell -NoProfile -Command "(Get-Item \'${edge_path}\').VersionInfo.ProductVersion"')
+			if result.exit_code == 0 {
+				version := result.output.trim_space()
+				if version.len > 0 {
+					return version
+				}
+			}
+		}
+	}
+
+	return none
+}
+
+fn get_edgedriver_version(edgedriver_path string) ?string {
+	// Run EdgeDriver with --version flag
+	result := os.execute('"${edgedriver_path}" --version')
+	if result.exit_code == 0 {
+		// Output format: "MSEdgeDriver 131.0.2903.112 (abc123...)"
+		// Extract version number
+		output := result.output.trim_space()
+		parts := output.split(' ')
+		if parts.len >= 2 {
+			return parts[1]
+		}
+	}
+	return none
+}
+
+fn extract_major_version(version string) string {
+	// Extract major version number (e.g., "131.0.2903.112" -> "131")
+	parts := version.split('.')
+	if parts.len > 0 {
+		return parts[0]
+	}
+	return version
+}
+
+fn check_version_compatibility(edgedriver_path string) {
+	edge_version := get_edge_version() or {
+		println('⚠ Warning: Could not detect Microsoft Edge version')
+		println('  Make sure Edge is installed')
+		println('')
+		return
+	}
+
+	edgedriver_version := get_edgedriver_version(edgedriver_path) or {
+		println('⚠ Warning: Could not detect EdgeDriver version')
+		println('')
+		return
+	}
+
+	edge_major := extract_major_version(edge_version)
+	driver_major := extract_major_version(edgedriver_version)
+
+	println('Version Check:')
+	println('  Edge Browser:  ${edge_version}')
+	println('  EdgeDriver:    ${edgedriver_version}')
+
+	if edge_major != driver_major {
+		println('')
+		println('⚠⚠⚠ WARNING: Version Mismatch! ⚠⚠⚠')
+		println('  Edge major version (${edge_major}) does not match EdgeDriver major version (${driver_major})')
+		println('  This may cause compatibility issues!')
+		println('')
+		println('  Download matching EdgeDriver from:')
+		println('  https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/')
+		println('  Select version: ${edge_major}.x.x.x')
+		println('')
+	} else {
+		println('  ✓ Versions compatible')
+		println('')
+	}
 }
