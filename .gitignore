@@ -9,7 +9,6 @@
 # V build artifacts
 *.tmp
 *.log
-v.mod
 
 # Test outputs
 *.output
