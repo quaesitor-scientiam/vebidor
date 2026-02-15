@@ -106,14 +106,39 @@ fn get_edge_version() ?string {
 		r'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
 	]
 
+	// Try common paths first
 	for edge_path in edge_paths {
 		if os.exists(edge_path) {
 			// Get version using PowerShell
 			result := os.execute('powershell -NoProfile -Command "(Get-Item \'${edge_path}\').VersionInfo.ProductVersion"')
 			if result.exit_code == 0 {
 				version := result.output.trim_space()
-				if version.len > 0 {
+				if version.len > 0 && version != '' {
 					return version
+				}
+			}
+		}
+	}
+
+	// Try using registry to find Edge installation
+	reg_result := os.execute('powershell -NoProfile -Command "(Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}\').pv"')
+	if reg_result.exit_code == 0 {
+		version := reg_result.output.trim_space()
+		if version.len > 0 && version != '' {
+			return version
+		}
+	}
+
+	// Try using Edge itself to report version
+	for edge_path in edge_paths {
+		if os.exists(edge_path) {
+			ver_result := os.execute('"${edge_path}" --version')
+			if ver_result.exit_code == 0 {
+				output := ver_result.output.trim_space()
+				// Output format: "Microsoft Edge 131.0.2903.112"
+				parts := output.split(' ')
+				if parts.len >= 3 {
+					return parts[2]
 				}
 			}
 		}
