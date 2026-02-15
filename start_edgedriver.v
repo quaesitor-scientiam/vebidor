@@ -100,39 +100,53 @@ fn is_edgedriver_running() bool {
 }
 
 fn get_edge_version() ?string {
-	// Common Edge installation paths
-	edge_paths := [
-		r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe',
-		r'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
-	]
-
-	// Try common paths first
-	for edge_path in edge_paths {
-		if os.exists(edge_path) {
-			// Get version using PowerShell
-			result := os.execute('powershell -NoProfile -Command "(Get-Item \'${edge_path}\').VersionInfo.ProductVersion"')
-			if result.exit_code == 0 {
-				version := result.output.trim_space()
-				if version.len > 0 && version != '' {
+	// Try registry first (most reliable method)
+	// HKEY_CURRENT_USER\Software\Microsoft\Edge\BLBeacon
+	reg_result := os.execute('powershell -NoProfile -Command "(Get-ItemProperty -Path \'HKCU:\\SOFTWARE\\Microsoft\\Edge\\BLBeacon\' -ErrorAction SilentlyContinue).version"')
+	if reg_result.exit_code == 0 {
+		version := reg_result.output.trim_space()
+		// Verify it looks like a version number
+		if version.len > 0 && version != '' && version.contains('.') {
+			parts := version.split('.')
+			// Check first part is numeric
+			if parts.len >= 3 && parts[0].len > 0 {
+				first_char := parts[0][0]
+				if first_char >= `0` && first_char <= `9` {
 					return version
 				}
 			}
 		}
 	}
 
-	// Try using registry to find Edge installation
-	reg_result := os.execute('powershell -NoProfile -Command "(Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}\' -ErrorAction SilentlyContinue).pv"')
-	if reg_result.exit_code == 0 {
-		version := reg_result.output.trim_space()
-		// Verify it looks like a version number
+	// Try HKEY_LOCAL_MACHINE as fallback
+	reg_lm := os.execute('powershell -NoProfile -Command "(Get-ItemProperty -Path \'HKLM:\\SOFTWARE\\Microsoft\\Edge\\BLBeacon\' -ErrorAction SilentlyContinue).version"')
+	if reg_lm.exit_code == 0 {
+		version := reg_lm.output.trim_space()
 		if version.len > 0 && version != '' && version.contains('.') {
-			return version
+			parts := version.split('.')
+			if parts.len >= 3 && parts[0].len > 0 {
+				first_char := parts[0][0]
+				if first_char >= `0` && first_char <= `9` {
+					return version
+				}
+			}
 		}
 	}
 
-	// Try using Edge itself to report version
+	// Registry lookup failed, try other methods
+	return try_edge_version_fallback()
+}
+
+fn try_edge_version_fallback() ?string {
+	// Fallback: Try common Edge installation paths
+	edge_paths := [
+		r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe',
+		r'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
+	]
+
 	for edge_path in edge_paths {
 		if os.exists(edge_path) {
+			// Try using Edge itself to report version
 			ver_result := os.execute('"${edge_path}" --version')
 			if ver_result.exit_code == 0 {
 				output := ver_result.output.trim_space()
