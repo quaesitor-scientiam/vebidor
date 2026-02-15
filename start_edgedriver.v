@@ -121,10 +121,11 @@ fn get_edge_version() ?string {
 	}
 
 	// Try using registry to find Edge installation
-	reg_result := os.execute('powershell -NoProfile -Command "(Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}\').pv"')
+	reg_result := os.execute('powershell -NoProfile -Command "(Get-ItemProperty \'HKLM:\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}\' -ErrorAction SilentlyContinue).pv"')
 	if reg_result.exit_code == 0 {
 		version := reg_result.output.trim_space()
-		if version.len > 0 && version != '' {
+		// Verify it looks like a version number
+		if version.len > 0 && version != '' && version.contains('.') {
 			return version
 		}
 	}
@@ -136,9 +137,15 @@ fn get_edge_version() ?string {
 			if ver_result.exit_code == 0 {
 				output := ver_result.output.trim_space()
 				// Output format: "Microsoft Edge 131.0.2903.112"
+				// Find version pattern in output
 				parts := output.split(' ')
-				if parts.len >= 3 {
-					return parts[2]
+				for part in parts {
+					if part.contains('.') && part.split('.').len >= 3 {
+						// Verify first char is digit
+						if part.len > 0 && part[0] >= `0` && part[0] <= `9` {
+							return part
+						}
+					}
 				}
 			}
 		}
@@ -154,9 +161,22 @@ fn get_edgedriver_version(edgedriver_path string) ?string {
 		// Output format: "MSEdgeDriver 131.0.2903.112 (abc123...)"
 		// Extract version number
 		output := result.output.trim_space()
+
+		// Try to find version pattern (X.X.X.X)
 		parts := output.split(' ')
-		if parts.len >= 2 {
-			return parts[1]
+		for part in parts {
+			// Check if part looks like a version (contains dots and numbers)
+			if part.contains('.') && part.split('.').len >= 3 {
+				// Verify it's numeric
+				version_parts := part.split('.')
+				if version_parts.len >= 3 {
+					// Check first part is numeric
+					first := version_parts[0]
+					if first.len > 0 && first[0] >= `0` && first[0] <= `9` {
+						return part.trim_right(')')
+					}
+				}
+			}
 		}
 	}
 	return none
@@ -166,9 +186,27 @@ fn extract_major_version(version string) string {
 	// Extract major version number (e.g., "131.0.2903.112" -> "131")
 	parts := version.split('.')
 	if parts.len > 0 {
-		return parts[0]
+		major := parts[0]
+		// Verify it's numeric
+		if major.len > 0 && major[0] >= `0` && major[0] <= `9` {
+			return major
+		}
 	}
 	return version
+}
+
+fn is_valid_version(version string) bool {
+	// Check if version looks valid (contains dots and starts with digit)
+	if version.len == 0 || !version.contains('.') {
+		return false
+	}
+	// Check first character is digit
+	if version[0] < `0` || version[0] > `9` {
+		return false
+	}
+	// Should have at least 2 parts (major.minor)
+	parts := version.split('.')
+	return parts.len >= 2
 }
 
 fn check_version_compatibility(edgedriver_path string) {
@@ -181,6 +219,19 @@ fn check_version_compatibility(edgedriver_path string) {
 
 	edgedriver_version := get_edgedriver_version(edgedriver_path) or {
 		println('⚠ Warning: Could not detect EdgeDriver version')
+		println('')
+		return
+	}
+
+	// Validate versions before comparing
+	if !is_valid_version(edge_version) {
+		println('⚠ Warning: Detected invalid Edge version format: ${edge_version}')
+		println('')
+		return
+	}
+
+	if !is_valid_version(edgedriver_version) {
+		println('⚠ Warning: Detected invalid EdgeDriver version format: ${edgedriver_version}')
 		println('')
 		return
 	}
