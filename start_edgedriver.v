@@ -171,9 +171,10 @@ fn try_edge_version_fallback() ?string {
 
 fn get_edgedriver_version(edgedriver_path string) ?string {
 	// Run EdgeDriver with --version flag
-	result := os.execute('"${edgedriver_path}" --version')
+	result := os.execute('pwsh -NoProfile -Command "${edgedriver_path} --version"')
 	if result.exit_code == 0 {
-		// Output format: "MSEdgeDriver 131.0.2903.112 (abc123...)"
+		// Output format: "Microsoft Edge WebDriver 141.0.3537.57 (abc123...)"
+		// or "MSEdgeDriver 131.0.2903.112 (abc123...)"
 		// Extract version number
 		output := result.output.trim_space()
 
