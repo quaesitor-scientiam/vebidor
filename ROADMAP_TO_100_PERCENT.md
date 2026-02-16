@@ -1,8 +1,8 @@
 # Roadmap to 100% Feature Parity with Selenium
 
-**Current Status**: v2.0.0 - 85% feature parity
+**Current Status**: v2.1.0 - 91% feature parity
 **Target**: v3.0.0 - 100% feature parity
-**Remaining**: 15% (~18-20 additional methods)
+**Remaining**: 9% (~12-14 additional methods)
 
 ---
 
@@ -16,12 +16,12 @@
 | Element Interaction | 75% (3/4) | 100% (4/4) | 1 method |
 | JavaScript | 67% (2/3) | 100% (3/3) | 1 method |
 | Actions API | 80% (8/10) | 100% (10/10) | 2 methods |
-| Waits | 57% (4/7) | 100% (7/7) | 3 methods |
-| Timeouts | 75% (3/4) | 100% (4/4) | 1 method |
+| Waits & Expected Conditions | 100% (9/9) | 100% (9/9) | 0 methods ✅ |
+| Timeouts | 100% (4/4) | 100% (4/4) | 0 methods ✅ |
 | Shadow DOM | 0% (0/1) | 100% (1/1) | 1 method |
 | Browser Logs | ~50% (1/2) | 100% (2/2) | 1 method |
 
-**Total Missing**: ~18-20 methods
+**Total Missing**: ~12-14 methods
 
 ---
 
@@ -115,118 +115,53 @@ pub fn (wd WebDriver) get_element_rect(el ElementRef) !ElementRect {
 
 ---
 
-### Phase 6: Expected Conditions & Advanced Waits (HIGH PRIORITY)
+### Phase 6: Expected Conditions & Advanced Waits ✅ COMPLETE
 
 **Impact**: High - Very commonly used pattern
 **Effort**: Medium (2-3 days)
-**Coverage Gain**: 73% → 78% (+5%)
+**Coverage Gain**: 85% → 91% (+6%)
+**Completion Date**: 2026-02-15
 
-#### 6.1 Create Expected Conditions Module
+#### ✅ Implemented Methods
 
-```v
-// File: webdriver/expected_conditions.v (new file)
+1. **`wait_until_clickable(using, value, timeout_ms)`** ✅
+   - Waits for element to be both visible and enabled
+   - File: `webdriver/expected_conditions.v`
+   - Uses 500ms polling interval
 
-module webdriver
+2. **`wait_until_visible(using, value, timeout_ms)`** ✅
+   - Waits for element to be visible on page
+   - File: `webdriver/expected_conditions.v`
+   - Combines find_element + is_displayed checks
 
-import time
+3. **`wait_until_present(using, value, timeout_ms)`** ✅
+   - Waits for element to exist in DOM (no visibility check)
+   - File: `webdriver/expected_conditions.v`
+   - Simplest wait - just element presence
 
-// Wait for element to be clickable (visible and enabled)
-pub fn (wd WebDriver) wait_until_clickable(selector string, timeout_ms int) !ElementRef {
-	return wd.wait_for_condition(timeout_ms, 500, fn [wd, selector] () !(bool, ElementRef) {
-		el := wd.find_element('css selector', selector) or {
-			return false, ElementRef{}
-		}
-		visible := wd.is_displayed(el) or { return false, ElementRef{} }
-		enabled := wd.is_enabled(el) or { return false, ElementRef{} }
+4. **`wait_for_text_in_element(using, value, text, timeout_ms)`** ✅
+   - Waits for element to contain specific text
+   - File: `webdriver/expected_conditions.v`
+   - Case-sensitive substring match
 
-		if visible && enabled {
-			return true, el
-		}
-		return false, ElementRef{}
-	})!
-}
+5. **`get_timeouts()`** ✅
+   - Retrieve current timeout configuration
+   - File: `webdriver/wait.v`
+   - W3C Endpoint: `GET /session/{session id}/timeouts`
+   - Returns Timeouts struct with optional fields
 
-// Wait for element to be visible
-pub fn (wd WebDriver) wait_until_visible(selector string, timeout_ms int) !ElementRef {
-	return wd.wait_for_condition(timeout_ms, 500, fn [wd, selector] () !(bool, ElementRef) {
-		el := wd.find_element('css selector', selector) or {
-			return false, ElementRef{}
-		}
-		visible := wd.is_displayed(el) or { return false, ElementRef{} }
+**Implementation Details**:
+- All wait methods accept `using` and `value` parameters (not just CSS selectors)
+- Generic helper `wait_for_condition()` used internally
+- Timeout errors include helpful context (selector, duration, last error)
+- Uses V closures with `&WebDriver` reference for condition checking
 
-		if visible {
-			return true, el
-		}
-		return false, ElementRef{}
-	})!
-}
+**Files Created**:
+- `webdriver/expected_conditions.v` - 4 wait helper methods
+- `webdriver/expected_conditions_test.v` - 7 comprehensive tests
+- `example_phase6.v` - Full demonstration with 7 scenarios
 
-// Wait for element to be present (exists in DOM)
-pub fn (wd WebDriver) wait_until_present(selector string, timeout_ms int) !ElementRef {
-	return wd.wait_for_condition(timeout_ms, 500, fn [wd, selector] () !(bool, ElementRef) {
-		el := wd.find_element('css selector', selector) or {
-			return false, ElementRef{}
-		}
-		return true, el
-	})!
-}
-
-// Wait for text to be present in element
-pub fn (wd WebDriver) wait_for_text_in_element(selector string, text string, timeout_ms int) !ElementRef {
-	return wd.wait_for_condition(timeout_ms, 500, fn [wd, selector, text] () !(bool, ElementRef) {
-		el := wd.find_element('css selector', selector) or {
-			return false, ElementRef{}
-		}
-		elem_text := wd.get_text(el) or { return false, ElementRef{} }
-
-		if elem_text.contains(text) {
-			return true, el
-		}
-		return false, ElementRef{}
-	})!
-}
-
-// Generic condition helper
-fn (wd WebDriver) wait_for_condition(timeout_ms int, interval_ms int, condition fn () !(bool, ElementRef)) !ElementRef {
-	start := time.now()
-	for {
-		success, el := condition() or { false, ElementRef{} }
-		if success {
-			return el
-		}
-
-		if time.now().unix_milli() - start.unix_milli() > i64(timeout_ms) {
-			return error('Timeout waiting for condition after ${timeout_ms}ms')
-		}
-
-		time.sleep(interval_ms * time.millisecond)
-	}
-	return error('Unreachable')
-}
-```
-
-#### 6.2 Get Timeouts
-**W3C Endpoint**: `GET /session/{session id}/timeouts`
-
-```v
-// File: webdriver/wait.v
-
-pub struct Timeouts {
-pub:
-	implicit  int  // implicit wait timeout in ms
-	page_load int @[json: 'pageLoad']  // page load timeout in ms
-	script    int  // script timeout in ms
-}
-
-pub fn (wd WebDriver) get_timeouts() !Timeouts {
-	resp := wd.get_request[Timeouts]('/session/${wd.session_id}/timeouts')!
-	return resp.value
-}
-```
-
-**Methods Added**: 5 (4 expected conditions + 1 get_timeouts)
-**Files**: `webdriver/expected_conditions.v` (new), `webdriver/wait.v` (modified)
-**Tests**: `webdriver/expected_conditions_test.v` (new, 5 tests)
+**Testing**: All 7 tests pass (presence, visibility, clickability, text, timeouts, timeout behavior, intervals)
 
 ---
 
@@ -797,17 +732,18 @@ println('Page load time: ${metrics.dom_content_loaded}ms')
 
 **Effort**: 1-2 days | **Gain**: +9%
 
-### Phase 6: Expected Conditions ⏳
-- [ ] `wait_until_clickable(selector, timeout)` - Wait for clickable
-- [ ] `wait_until_visible(selector, timeout)` - Wait for visible
-- [ ] `wait_until_present(selector, timeout)` - Wait for present
-- [ ] `wait_for_text_in_element(selector, text, timeout)` - Wait for text
-- [ ] `get_timeouts()` - Get current timeouts
-- [ ] Create `expected_conditions.v`
-- [ ] Write 5 tests
-- [ ] Update documentation
+### Phase 6: Expected Conditions ✅ COMPLETE
+- [x] `wait_until_clickable(using, value, timeout_ms)` - Wait for clickable
+- [x] `wait_until_visible(using, value, timeout_ms)` - Wait for visible
+- [x] `wait_until_present(using, value, timeout_ms)` - Wait for present
+- [x] `wait_for_text_in_element(using, value, text, timeout_ms)` - Wait for text
+- [x] `get_timeouts()` - Get current timeouts
+- [x] Create `expected_conditions.v`
+- [x] Write 7 tests (5 wait methods + timeout retrieval + error handling)
+- [x] Create `example_phase6.v` demo
+- [x] Update documentation
 
-**Effort**: 2-3 days | **Gain**: +5%
+**Effort**: 2-3 days | **Gain**: +6% | **Status**: ✅ COMPLETE (2026-02-15)
 
 ### Phase 7: Advanced Actions ⏳
 - [ ] `submit(el)` - Submit form
@@ -866,20 +802,21 @@ println('Page load time: ${metrics.dom_content_loaded}ms')
 | Phase | Methods | Effort | Coverage Before | Coverage After | Status |
 |-------|---------|--------|-----------------|----------------|--------|
 | 1-4 | 23 | Done | 55% | 85% | ✅ COMPLETE |
-| 5 | 4 | 1-2 days | 85% | 87% | ⏳ Pending |
-| 6 | 5 | 2-3 days | 87% | 91% | ⏳ Pending |
-| 7 | 6 | 2-3 days | 91% | 95% | ⏳ Pending |
-| 8 | 5 | 1-2 days | 95% | 100% | ⏳ Pending |
+| 5 | 4 | 1-2 days | 91% | 93% | ⏳ Pending |
+| 6 | 5 | 2-3 days | 85% | 91% | ✅ COMPLETE |
+| 7 | 6 | 2-3 days | 93% | 97% | ⏳ Pending |
+| 8 | 5 | 1-2 days | 97% | 100% | ⏳ Pending |
 | 9 | Platform utilities | 2-3 weeks | Multi-browser support | ⏳ High Priority |
 | 10 | 15-20 BiDi methods | 3-4 weeks | Advanced BiDi features | ⏳ Future |
 
-**Total Additional Methods (Phases 5-8)**: 20
-**Time to 100% Feature Parity**: 6-10 days (1.5-2 weeks)
+**Total Additional Methods (Phases 5, 7-8)**: 15
+**Time to 100% Feature Parity**: 4-8 days (1-1.5 weeks)
 **Time for Full Platform Support**: +2-3 weeks (Phase 9)
 **Time for BiDi Protocol**: +3-4 weeks (Phase 10)
 
 **Milestones**:
-- **v3.0.0**: 100% W3C WebDriver parity (Phases 5-8) - 1.5-2 weeks
+- **v2.1.0**: 91% feature parity (Phase 6) - ✅ COMPLETE (2026-02-15)
+- **v3.0.0**: 100% W3C WebDriver parity (Phases 5, 7-8) - 1-1.5 weeks
 - **v3.5.0**: Multi-browser + Platform support (Phase 9) - 2-3 weeks
 - **v4.0.0**: WebDriver BiDi protocol (Phase 10) - 3-4 weeks
 
@@ -893,7 +830,9 @@ println('Page load time: ${metrics.dom_content_loaded}ms')
 3. **Phase 5: Element Properties** - Complete the category (1-2 days)
 4. **Phase 8: Advanced Features** - Nice to have (1-2 days)
 
-**Total**: 6-10 days → **v3.0.0 (100% W3C WebDriver)**
+**Total**: 4-8 days → **v3.0.0 (100% W3C WebDriver)**
+
+**Note**: Phase 6 was completed before Phase 5 due to higher priority and impact.
 
 ### High Priority (Platform Expansion)
 5. **Phase 9: Multi-Browser & Platform Support** - Critical for adoption (2-3 weeks)

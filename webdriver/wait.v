@@ -40,3 +40,12 @@ pub fn (wd WebDriver) set_script_timeout(milliseconds int) ! {
 	payload['script'] = json.Any(milliseconds)
 	wd.post_void('/session/${wd.session_id}/timeouts', json.Any(payload))!
 }
+
+// Get the current timeout configuration
+// Returns the current timeouts (implicit, page_load, script) in milliseconds
+// W3C Endpoint: GET /session/{session id}/timeouts
+// Note: Timeouts struct is defined in capabiities.v
+pub fn (wd WebDriver) get_timeouts() !Timeouts {
+	resp := wd.get_request[Timeouts]('/session/${wd.session_id}/timeouts')!
+	return resp.value
+}

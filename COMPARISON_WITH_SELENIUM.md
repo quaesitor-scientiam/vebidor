@@ -103,13 +103,18 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Release actions | ✅ `release_actions()` | ✅ | Working |
 | Type text | ✅ `type_text()` | ✅ | Convenience method |
 
-### Waits (Phase 4 ✅)
+### Waits (Phase 4 & 6 ✅ - FULLY IMPLEMENTED!)
 | Feature | V WebDriver | Selenium | Notes |
 |---------|-------------|----------|-------|
 | Generic wait | ✅ `wait_for()` | ✅ | Basic implementation |
 | Implicit wait | ✅ `set_implicit_wait()` | ✅ `.implicitly_wait()` | Phase 4 ✅ |
 | Page load timeout | ✅ `set_page_load_timeout()` | ✅ `.set_page_load_timeout()` | Phase 4 ✅ |
 | Script timeout | ✅ `set_script_timeout()` | ✅ `.set_script_timeout()` | Phase 4 ✅ |
+| Get timeouts | ✅ `get_timeouts()` | ✅ `.get_timeouts()` | Phase 6 ✅ |
+| Wait until clickable | ✅ `wait_until_clickable()` | ✅ `EC.element_to_be_clickable` | Phase 6 ✅ |
+| Wait until visible | ✅ `wait_until_visible()` | ✅ `EC.visibility_of_element_located` | Phase 6 ✅ |
+| Wait until present | ✅ `wait_until_present()` | ✅ `EC.presence_of_element_located` | Phase 6 ✅ |
+| Wait for text | ✅ `wait_for_text_in_element()` | ✅ `EC.text_to_be_present_in_element` | Phase 6 ✅ |
 
 ### Alerts & Popups (Phase 2 ✅)
 | Feature | V WebDriver | Selenium | Notes |
@@ -150,25 +155,25 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 |---------|-------------|----------|--------|
 | Submit form | ❌ | ✅ `.submit()` | **Medium** - Useful shortcut |
 
-### Advanced Waits (LOW PRIORITY)
+### Advanced Waits (Phase 6 ✅ - FULLY IMPLEMENTED!)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Explicit waits | Partial | ✅ `WebDriverWait` | **Medium** - Common patterns |
-| Expected conditions | ❌ | ✅ `EC.*` | **Medium** - Predefined conditions |
-| Element to be clickable | ❌ | ✅ `EC.element_to_be_clickable` | **Medium** - Common |
-| Presence of element | ❌ | ✅ `EC.presence_of_element_located` | **Medium** - Common |
-| Visibility of element | ❌ | ✅ `EC.visibility_of` | **Medium** - Common |
-| Text to be present | ❌ | ✅ `EC.text_to_be_present_in_element` | **Low** |
+| Explicit waits | ✅ | ✅ `WebDriverWait` | **High** - Common patterns |
+| Expected conditions | ✅ | ✅ `EC.*` | **High** - Predefined conditions |
+| Element to be clickable | ✅ `wait_until_clickable()` | ✅ `EC.element_to_be_clickable` | **High** - Very common |
+| Presence of element | ✅ `wait_until_present()` | ✅ `EC.presence_of_element_located` | **High** - Very common |
+| Visibility of element | ✅ `wait_until_visible()` | ✅ `EC.visibility_of` | **High** - Very common |
+| Text to be present | ✅ `wait_for_text_in_element()` | ✅ `EC.text_to_be_present_in_element` | **Medium** - Common |
 
 ### Advanced JavaScript (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
 | Execute async script | ❌ | ✅ `.execute_async_script()` | **Medium** - Async operations |
 
-### Timeouts (LOW PRIORITY)
+### Timeouts (Phase 6 ✅ - FULLY IMPLEMENTED!)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Get timeouts | ❌ | ✅ | **Low** - Less commonly used |
+| Get timeouts | ✅ `get_timeouts()` | ✅ | **Medium** - Verification & debugging |
 
 ### Shadow DOM (LOW PRIORITY)
 | Feature | V WebDriver | Selenium | Impact |
@@ -225,13 +230,13 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Screenshots** | 2/2 | 0 | 100% ✅ |
 | **Frames** | 2/2 | 0 | 100% ✅ |
 | **Actions API** | 8/10 | 2 | 80% ✅ |
-| **Waits** | 4/7 | 3 | 57% ✅ |
+| **Waits & Expected Conditions** | 9/9 | 0 | 100% ✅ |
 | **Alerts** | 4/4 | 0 | 100% ✅ |
 | **Page Info** | 3/3 | 0 | 100% ✅ |
-| **Timeouts** | 3/4 | 1 | 75% ✅ |
+| **Timeouts** | 4/4 | 0 | 100% ✅ |
 | **BiDi Protocol** | 0/7 | 7 | 0% ❌ (Future) |
 
-**Overall Coverage: ~85%** 🎉 ⬆️ +30% from v0.90.0 (All 4 phases complete!)
+**Overall Coverage: ~91%** 🎉 ⬆️ +36% from v0.90.0 (Phase 6 complete!)
 
 **Note**: Coverage percentage is for W3C WebDriver Classic Protocol. BiDi Protocol support is planned for future releases and not included in the current percentage calculation.
 
@@ -284,18 +289,30 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 
 **Completion**: 2026-02-14 | **Coverage**: 76% → 85%
 
+### Phase 6: Expected Conditions & Advanced Waits ✅ COMPLETE
+1. **Expected Conditions** ✅
+   - ✅ `wait_until_clickable(using, value, timeout_ms)` - Wait for element to be clickable
+   - ✅ `wait_until_visible(using, value, timeout_ms)` - Wait for element to be visible
+   - ✅ `wait_until_present(using, value, timeout_ms)` - Wait for element in DOM
+   - ✅ `wait_for_text_in_element(using, value, text, timeout_ms)` - Wait for text
+
+2. **Timeouts** ✅
+   - ✅ `get_timeouts()` - Retrieve current timeout configuration
+
+**Completion**: 2026-02-15 | **Coverage**: 85% → 91%
+
 ### Future: Nice-to-Have Features
 1. **Element Interaction**
    - `submit()` - Submit form
 
-2. **Expected Conditions**
-   - `element_to_be_clickable()`
-   - `presence_of_element_located()`
-   - `visibility_of_element_located()`
-
-3. **Advanced Actions**
+2. **Advanced Actions**
    - Context click (right-click)
    - Better drag-and-drop
+   - Click and hold
+
+3. **Advanced Element Properties**
+   - `get_css_value()` - Get computed CSS
+   - `get_element_rect()` - Get position and size
 
 ---
 
@@ -406,19 +423,21 @@ Remaining phases:
 
 ## Conclusion
 
-**Version 2.0.0 Status**: The V WebDriver library has achieved **85% feature parity with Selenium** and is **production-ready for professional web automation**! 🎉
+**Version 2.1.0 Status**: The V WebDriver library has achieved **91% feature parity with Selenium** and is **production-ready for professional web automation**! 🎉
 
-### ✅ What's Complete (v2.0.0) - All 4 Phases Done!
+### ✅ What's Complete (v2.1.0) - Phase 6 Done!
 - ✅ **Element Properties** (Phase 1) - Get text, attributes, state
 - ✅ **Alert Handling** (Phase 2) - Full dialog control
 - ✅ **Page Information** (Phase 3) - Title, URL, source
 - ✅ **Window & Waits** (Phase 4) - Multi-window, timeouts, state management
+- ✅ **Expected Conditions** (Phase 6) - Wait helpers, timeout retrieval ← NEW
 - ✅ All core and advanced automation features
+- ✅ **Waits/Timeouts category 100% complete!**
 
 ### 🔜 Still Missing (Future Enhancements)
-- Advanced expected conditions helpers
 - Form submit shortcut
-- Some advanced Actions API methods
+- Some advanced Actions API methods (context click, drag-and-drop enhancements)
+- Advanced element properties (CSS values, rect)
 
 ### Use Cases
 **Perfect for**:
@@ -428,8 +447,11 @@ Remaining phases:
 - Screenshot-based testing
 - Page navigation verification
 - URL and title assertions
-- Multi-window/tab workflows ✨ NEW
-- Timeout-controlled automation ✨ NEW
-- Window state management ✨ NEW
+- Multi-window/tab workflows
+- Timeout-controlled automation
+- Window state management
+- Robust waiting strategies ✨ NEW
+- Expected conditions patterns ✨ NEW
+- Dynamic content handling ✨ NEW
 
-**Overall**: V WebDriver is now suitable for **virtually all common web automation tasks**, with 85% feature parity with Selenium WebDriver!
+**Overall**: V WebDriver is now suitable for **virtually all common web automation tasks**, with 91% feature parity with Selenium WebDriver!
