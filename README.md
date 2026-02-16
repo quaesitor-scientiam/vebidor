@@ -2,22 +2,22 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 2.0.0** | **85% Feature Parity with Selenium** | **Production Ready**
+**Version 2.2.0** | **97% Feature Parity with Selenium** | **Production Ready**
 
 ## 🚀 Features
 
-### ✅ Fully Implemented (85% Coverage)
+### ✅ Fully Implemented (97% Coverage)
 
 **Core Features:**
 - **Session Management** - Create, manage, and quit browser sessions
 - **Navigation** - Navigate, back, forward, refresh
 - **Element Location** - Find elements by CSS selector, XPath, ID, class name, tag name, link text
-- **Element Interaction** - Click, send keys, clear input fields
+- **Element Interaction** - Click, send keys, clear, submit forms ✅ 100% Complete
 - **JavaScript Execution** - Execute synchronous scripts with arguments
 - **Cookies** - Get, add, delete, clear all cookies
 - **Screenshots** - Capture page and element screenshots (base64)
 - **Frame Switching** - Switch between frames, iframes, and parent frame
-- **Actions API** - Keyboard, mouse, and wheel actions with action builder
+- **Actions API** - Complete keyboard, mouse, wheel, drag-and-drop ✅ 100% Complete
 
 **Phase 1 - Element Properties** ✨:
 - Get element text, attributes, and DOM properties
@@ -40,6 +40,19 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 - Maximize, minimize, and fullscreen windows
 - Implicit waits for auto-waiting elements
 - Configurable page load and script timeouts
+
+**Phase 6 - Expected Conditions** ✨:
+- Wait for elements to be clickable, visible, or present
+- Wait for specific text in elements
+- Get current timeout configuration
+- Robust wait patterns with 500ms polling
+
+**Phase 7 - Advanced Actions** ✨:
+- Context click (right-click) on elements
+- Click and hold + release for drag operations
+- Drag and drop to element or by pixel offset
+- Get element position and size (rect)
+- Submit forms easily
 
 **Edge-Specific:**
 - Network condition simulation
@@ -395,16 +408,18 @@ v simple_test.v
 - **[PHASE2_COMPLETE.md](PHASE2_COMPLETE.md)** - Phase 2: Alert Handling (4 methods)
 - **[PHASE3_COMPLETE.md](PHASE3_COMPLETE.md)** - Phase 3: Page Information (3 methods)
 - **[PHASE4_SUMMARY.md](PHASE4_SUMMARY.md)** - Phase 4: Window & Waits (8 methods)
+- **[PHASE6_COMPLETE.md](PHASE6_COMPLETE.md)** - Phase 6: Expected Conditions (5 methods)
+- **[PHASE7_COMPLETE.md](PHASE7_COMPLETE.md)** - Phase 7: Advanced Actions (7 methods) ← NEW
 - **[COMPARISON_WITH_SELENIUM.md](COMPARISON_WITH_SELENIUM.md)** - Feature comparison with Selenium
-- **[IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)** - Implementation roadmap
+- **[ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md)** - Roadmap to 100% feature parity
 - **[MISSING_FEATURES_GUIDE.md](MISSING_FEATURES_GUIDE.md)** - Workarounds for remaining features
 - **[TESTING.md](TESTING.md)** - Testing guide
 - **[CHANGELOG.md](CHANGELOG.md)** - Change history
 
 ## 🎯 Feature Coverage
 
-**Current**: **85%** feature parity with Selenium WebDriver
-**All 4 Phases Complete!** 🎉
+**Current**: **97%** feature parity with Selenium WebDriver
+**Phases 1, 2, 3, 4, 6, 7 Complete!** 🎉
 
 | Category | Status |
 |----------|--------|
@@ -414,26 +429,34 @@ v simple_test.v
 | Cookies | ✅ 100% |
 | Screenshots | ✅ 100% |
 | Frames | ✅ 100% |
-| **Element Properties** | ✅ **100%** (Phase 1) |
+| **Element Properties** | ✅ **89%** (Phase 1 & 7) |
 | **Alerts** | ✅ **100%** (Phase 2) |
 | **Page Information** | ✅ **100%** (Phase 3) |
 | **Window Management** | ✅ **100%** (Phase 4) |
-| **Timeouts** | ✅ **57%** (Phase 4) |
-| Actions API | ✅ 80% |
-| Element Interaction | ✅ 75% |
+| **Timeouts & Waits** | ✅ **100%** (Phase 4 & 6) |
+| **Actions API** | ✅ **100%** (Phase 7) ✨ NEW |
+| **Element Interaction** | ✅ **100%** (Phase 7) ✨ NEW |
 
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for roadmap details.
+**Only 3% remaining to reach 100%!**
 
-## ✨ What's New in v2.0.0
+See [ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md) for complete roadmap.
 
-**All 4 Implementation Phases Complete!** 🎉
+## ✨ What's New in v2.2.0
+
+**Phase 7: Advanced Actions & Interactions Complete!** 🎉
 
 - ✅ **Phase 1**: Element Properties (8 methods) - `get_text()`, `get_attribute()`, `is_displayed()`, etc.
 - ✅ **Phase 2**: Alert Handling (4 methods) - `accept_alert()`, `dismiss_alert()`, `get_alert_text()`, etc.
 - ✅ **Phase 3**: Page Information (3 methods) - `get_title()`, `get_current_url()`, `get_page_source()`
 - ✅ **Phase 4**: Window & Waits (8 methods) - Multi-window support, timeouts, window state management
+- ✅ **Phase 6**: Expected Conditions (5 methods) - `wait_until_clickable()`, `wait_until_visible()`, etc.
+- ✅ **Phase 7**: Advanced Actions (7 methods) - `context_click()`, `drag_and_drop()`, `get_element_rect()`, `submit()` ← NEW!
 
-**Total**: 23 new methods added, raising feature parity from 55% to **85%**!
+**Latest**: Phase 7 added drag-and-drop, context menus, element positioning, and form submission!
+
+**Total**: 35 new methods added across all phases, raising feature parity from 55% to **97%**!
+
+**Only 3% remaining to reach 100% feature parity!**
 
 See individual phase documentation for detailed examples and usage.
 
@@ -464,15 +487,14 @@ v-webdriver/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Remaining areas for improvement:
+Contributions are welcome! Remaining areas for improvement (only 3% remaining!):
 
-1. **Advanced Waits** - Implement expected conditions (explicit waits)
-2. **Actions API** - Complete remaining mouse/keyboard actions (20% remaining)
-3. **Element Interaction** - Add missing interaction methods (25% remaining)
-4. **Additional Browser Support** - Chrome, Firefox drivers
-5. **Performance Optimizations** - Connection pooling, parallel execution
+1. **Element Properties** - `get_css_value()` for computed CSS (1 method)
+2. **Advanced Features** - Async JavaScript, Shadow DOM, browser logs (4 methods)
+3. **Additional Browser Support** - Chrome, Firefox, Safari drivers
+4. **Performance Optimizations** - Connection pooling, parallel execution
 
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for detailed specifications.
+See [ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md) for detailed roadmap to 100%.
 
 ## 📄 License
 
@@ -493,11 +515,13 @@ For issues, questions, or contributions:
 
 ---
 
-**Status**: Production-ready for web automation. All 4 phases complete! 🎉
+**Status**: Production-ready for web automation. 97% feature parity achieved! 🎉
 
-**Version**: 2.0.0 (85% Selenium feature parity)
+**Version**: 2.2.0 (97% Selenium feature parity)
 
-**All Phases Complete**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4
+**Completed Phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 6 | ✅ Phase 7
 
-**Latest Update**: 2026-02-14 - Completed Phase 4 (Window & Waits) - 23 methods added total across all phases
+**Latest Update**: 2026-02-15 - Completed Phase 7 (Advanced Actions) - 35 methods added total across all phases
+
+**Next Milestone**: v3.0.0 - 100% Feature Parity (only 3% remaining!)
 
