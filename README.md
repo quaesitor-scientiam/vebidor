@@ -2,11 +2,11 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 2.2.0** | **97% Feature Parity with Selenium** | **Production Ready**
+**Version 2.3.0** | **98% Feature Parity with Selenium** | **Production Ready**
 
 ## 🚀 Features
 
-### ✅ Fully Implemented (97% Coverage)
+### ✅ Fully Implemented (98% Coverage)
 
 **Core Features:**
 - **Session Management** - Create, manage, and quit browser sessions
@@ -19,10 +19,11 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 - **Frame Switching** - Switch between frames, iframes, and parent frame
 - **Actions API** - Complete keyboard, mouse, wheel, drag-and-drop ✅ 100% Complete
 
-**Phase 1 - Element Properties** ✨:
+**Phase 1 & 5 - Element Properties** ✨ ✅ 100% Complete:
 - Get element text, attributes, and DOM properties
 - Check visibility (`is_displayed`), enabled state (`is_enabled`), selection state (`is_selected`)
 - Get tag names, clear input fields
+- Get computed CSS property values (`get_css_value`) - colors, fonts, dimensions, spacing
 
 **Phase 2 - Alert Handling** ✨:
 - Accept and dismiss alert/confirm/prompt dialogs
@@ -408,8 +409,9 @@ v simple_test.v
 - **[PHASE2_COMPLETE.md](PHASE2_COMPLETE.md)** - Phase 2: Alert Handling (4 methods)
 - **[PHASE3_COMPLETE.md](PHASE3_COMPLETE.md)** - Phase 3: Page Information (3 methods)
 - **[PHASE4_SUMMARY.md](PHASE4_SUMMARY.md)** - Phase 4: Window & Waits (8 methods)
+- **[PHASE5_COMPLETE.md](PHASE5_COMPLETE.md)** - Phase 5: CSS Properties (1 method) ← NEW
 - **[PHASE6_COMPLETE.md](PHASE6_COMPLETE.md)** - Phase 6: Expected Conditions (5 methods)
-- **[PHASE7_COMPLETE.md](PHASE7_COMPLETE.md)** - Phase 7: Advanced Actions (7 methods) ← NEW
+- **[PHASE7_COMPLETE.md](PHASE7_COMPLETE.md)** - Phase 7: Advanced Actions (7 methods)
 - **[COMPARISON_WITH_SELENIUM.md](COMPARISON_WITH_SELENIUM.md)** - Feature comparison with Selenium
 - **[ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md)** - Roadmap to 100% feature parity
 - **[MISSING_FEATURES_GUIDE.md](MISSING_FEATURES_GUIDE.md)** - Workarounds for remaining features
@@ -429,7 +431,7 @@ v simple_test.v
 | Cookies | ✅ 100% |
 | Screenshots | ✅ 100% |
 | Frames | ✅ 100% |
-| **Element Properties** | ✅ **89%** (Phase 1 & 7) |
+| **Element Properties** | ✅ **100%** (Phase 1, 5 & 7) ✨ NEW |
 | **Alerts** | ✅ **100%** (Phase 2) |
 | **Page Information** | ✅ **100%** (Phase 3) |
 | **Window Management** | ✅ **100%** (Phase 4) |
@@ -437,24 +439,25 @@ v simple_test.v
 | **Actions API** | ✅ **100%** (Phase 7) ✨ NEW |
 | **Element Interaction** | ✅ **100%** (Phase 7) ✨ NEW |
 
-**Only 3% remaining to reach 100%!**
+**Only 2% remaining to reach 100%!**
 
 See [ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md) for complete roadmap.
 
-## ✨ What's New in v2.2.0
+## ✨ What's New in v2.3.0
 
-**Phase 7: Advanced Actions & Interactions Complete!** 🎉
+**Phase 5: CSS Properties Complete - Element Properties Now 100%!** 🎉
 
 - ✅ **Phase 1**: Element Properties (8 methods) - `get_text()`, `get_attribute()`, `is_displayed()`, etc.
 - ✅ **Phase 2**: Alert Handling (4 methods) - `accept_alert()`, `dismiss_alert()`, `get_alert_text()`, etc.
 - ✅ **Phase 3**: Page Information (3 methods) - `get_title()`, `get_current_url()`, `get_page_source()`
 - ✅ **Phase 4**: Window & Waits (8 methods) - Multi-window support, timeouts, window state management
+- ✅ **Phase 5**: CSS Properties (1 method) - `get_css_value()` for computed CSS inspection ← NEW!
 - ✅ **Phase 6**: Expected Conditions (5 methods) - `wait_until_clickable()`, `wait_until_visible()`, etc.
-- ✅ **Phase 7**: Advanced Actions (7 methods) - `context_click()`, `drag_and_drop()`, `get_element_rect()`, `submit()` ← NEW!
+- ✅ **Phase 7**: Advanced Actions (7 methods) - `context_click()`, `drag_and_drop()`, `get_element_rect()`, `submit()`
 
-**Latest**: Phase 7 added drag-and-drop, context menus, element positioning, and form submission!
+**Latest**: Phase 5 added CSS value retrieval, completing Element Properties at 100%!
 
-**Total**: 35 new methods added across all phases, raising feature parity from 55% to **97%**!
+**Total**: 36 new methods added across all phases, raising feature parity from 55% to **98%**!
 
 **Only 3% remaining to reach 100% feature parity!**
 
@@ -487,10 +490,9 @@ v-webdriver/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Remaining areas for improvement (only 3% remaining!):
+Contributions are welcome! Remaining areas for improvement (only 2% remaining!):
 
-1. **Element Properties** - `get_css_value()` for computed CSS (1 method)
-2. **Advanced Features** - Async JavaScript, Shadow DOM, browser logs (4 methods)
+1. **Advanced Features** - Async JavaScript, Shadow DOM, browser logs (3-4 methods)
 3. **Additional Browser Support** - Chrome, Firefox, Safari drivers
 4. **Performance Optimizations** - Connection pooling, parallel execution
 

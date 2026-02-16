@@ -106,3 +106,12 @@ pub fn (wd WebDriver) get_element_rect(el ElementRef) !ElementRect {
 	resp := wd.get_request[ElementRect]('/session/${wd.session_id}/element/${el.element_id}/rect')!
 	return resp.value
 }
+
+// Get the computed CSS value of an element property
+// Returns the computed value of the specified CSS property
+// W3C Endpoint: GET /session/{session id}/element/{element id}/css/{property name}
+// Example: get_css_value(element, 'color') returns 'rgba(0, 0, 0, 1)'
+pub fn (wd WebDriver) get_css_value(el ElementRef, property_name string) !string {
+	resp := wd.get_request[string]('/session/${wd.session_id}/element/${el.element_id}/css/${property_name}')!
+	return resp.value
+}

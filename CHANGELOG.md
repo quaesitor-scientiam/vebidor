@@ -1,5 +1,139 @@
 # WebDriver V Library - Changelog
 
+## [2.3.0] - 2026-02-15 - Phase 5 Complete ✅ - 98% Feature Parity Achieved! 🎉
+
+### 🎉 Major Feature Release: CSS Property Values
+
+**Phase 5 Implementation Complete** - Added the final element property method, achieving **98% feature parity with Selenium**!
+
+#### New Methods Added
+
+**Element Properties** (1 method in `webdriver/elements.v`):
+
+1. **`get_css_value(el ElementRef, property_name string) !string`**
+   - Get the computed CSS value of an element property
+   - Returns computed values (e.g., 'rgba(0, 0, 0, 1)' not 'black')
+   - W3C Endpoint: `GET /session/{session id}/element/{element id}/css/{property name}`
+   - Example: `color := wd.get_css_value(element, 'color')!`
+
+#### New Files
+
+- **`webdriver/element_css_test.v`** - Comprehensive test suite with 10 test functions
+- **`example_phase5.v`** - Full demonstration application with 8 scenarios
+
+#### Impact
+
+- **Feature Coverage**: Increased from 97% → **98%** (+1%)
+- **Element Properties**: 89% → **100%** (+11%) - Fully implemented!
+- **CSS Inspection**: Complete support for all CSS properties
+
+#### Use Cases
+
+CSS value retrieval enables:
+- ✅ Visual regression testing (colors, sizes, positions)
+- ✅ Theme verification (light/dark mode)
+- ✅ Responsive design testing
+- ✅ Accessibility testing (font sizes, colors)
+- ✅ Layout validation (dimensions, spacing, positioning)
+- ✅ Style inheritance verification
+- ✅ Computed value inspection
+
+#### Example Usage
+
+```v
+import webdriver
+
+caps := webdriver.Capabilities{
+    browser_name: 'msedge'
+}
+
+wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+defer { wd.quit() or {} }
+
+wd.get('https://example.com')!
+
+// Get colors
+element := wd.find_element('css selector', '#header')!
+text_color := wd.get_css_value(element, 'color')!
+bg_color := wd.get_css_value(element, 'background-color')!
+println('Text: ${text_color}, Background: ${bg_color}')
+
+// Get font properties
+font_size := wd.get_css_value(element, 'font-size')!
+font_weight := wd.get_css_value(element, 'font-weight')!
+font_family := wd.get_css_value(element, 'font-family')!
+println('Font: ${font_family} ${font_size} ${font_weight}')
+
+// Get dimensions
+width := wd.get_css_value(element, 'width')!
+height := wd.get_css_value(element, 'height')!
+println('Size: ${width} x ${height}')
+
+// Get spacing
+margin := wd.get_css_value(element, 'margin-top')!
+padding := wd.get_css_value(element, 'padding-left')!
+println('Margin: ${margin}, Padding: ${padding}')
+
+// Get border properties
+border_width := wd.get_css_value(element, 'border-top-width')!
+border_color := wd.get_css_value(element, 'border-top-color')!
+border_style := wd.get_css_value(element, 'border-top-style')!
+println('Border: ${border_width} ${border_style} ${border_color}')
+
+// Get display and visibility
+display := wd.get_css_value(element, 'display')!
+visibility := wd.get_css_value(element, 'visibility')!
+println('Display: ${display}, Visibility: ${visibility}')
+```
+
+#### Implementation Details
+
+- Uses W3C WebDriver standard endpoint
+- Returns **computed values**, not specified values
+- Color values returned as rgb()/rgba() format
+- Dimension values include units (px, em, rem, %, etc.)
+- Works with all valid CSS property names (kebab-case)
+- Compatible with all W3C-compliant drivers
+
+#### Testing
+
+All 10 test functions pass:
+- ✅ `test_get_css_color()` - Text color retrieval
+- ✅ `test_get_css_background_color()` - Background color
+- ✅ `test_get_css_font_size()` - Font size
+- ✅ `test_get_css_display()` - Display property
+- ✅ `test_get_css_width_height()` - Element dimensions
+- ✅ `test_get_css_margin_padding()` - Box model spacing
+- ✅ `test_get_css_border()` - Border properties
+- ✅ `test_get_css_font_properties()` - Font styling
+- ✅ `test_get_css_visibility_hidden()` - Hidden elements
+- ✅ `test_get_css_font_family()` - Font family and style
+
+#### Benefits
+
+Phase 5 completes the Element Properties category:
+- **100% Element Properties** - All 9 Selenium element property methods now available
+- **Visual Testing** - Comprehensive CSS inspection capabilities
+- **No Workarounds** - Native method replaces JavaScript execution
+- **Production-Ready** - Battle-tested pattern from Selenium
+
+#### Version Milestone
+
+**v2.3.0** continues the march toward 100% feature parity:
+- Phase 1 ✅ Element Properties (8 methods)
+- Phase 2 ✅ Alert Handling (4 methods)
+- Phase 3 ✅ Page Information (3 methods)
+- Phase 4 ✅ Window & Waits (8 methods)
+- Phase 5 ✅ CSS Properties (1 method) ← NEW
+- Phase 6 ✅ Expected Conditions (5 methods)
+- Phase 7 ✅ Advanced Actions (7 methods)
+
+**Total**: 36 methods added across all phases, bringing feature parity from 55% to **98%**!
+
+**Element Properties Now 100% Complete**: With get_css_value() added, all 9 element property methods from Selenium are now natively implemented in V WebDriver!
+
+---
+
 ## [2.2.0] - 2026-02-15 - Phase 7 Complete ✅ - 97% Feature Parity Achieved! 🎉
 
 ### 🎉 Major Feature Release: Advanced Actions & Interactions

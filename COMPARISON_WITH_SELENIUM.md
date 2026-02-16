@@ -43,7 +43,7 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Clear input | ✅ `clear()` | ✅ | Phase 1 ✅ |
 | Submit form | ✅ `submit()` | ✅ `.submit()` | Phase 7 ✅ |
 
-### Element Properties (Phase 1 & 7 ✅)
+### Element Properties (Phase 1, 5 & 7 ✅ - FULLY IMPLEMENTED!)
 | Feature | V WebDriver | Selenium | Notes |
 |---------|-------------|----------|-------|
 | Get text | ✅ `get_text()` | ✅ `.text` | Phase 1 ✅ |
@@ -54,6 +54,7 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Is enabled | ✅ `is_enabled()` | ✅ `.is_enabled()` | Phase 1 ✅ |
 | Is selected | ✅ `is_selected()` | ✅ `.is_selected()` | Phase 1 ✅ |
 | Get rect | ✅ `get_element_rect()` | ✅ `.rect` | Phase 7 ✅ |
+| Get CSS value | ✅ `get_css_value()` | ✅ `.value_of_css_property()` | Phase 5 ✅ |
 
 ### JavaScript Execution
 | Feature | V WebDriver | Selenium | Notes |
@@ -149,10 +150,10 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 
 ## ❌ Missing Features (Not Yet Implemented)
 
-### Element Properties - Advanced (LOW PRIORITY)
+### Element Properties - Advanced (Phase 5 & 7 ✅ - FULLY IMPLEMENTED!)
 | Feature | V WebDriver | Selenium | Impact |
 |---------|-------------|----------|--------|
-| Get CSS value | ❌ | ✅ `.value_of_css_property()` | **Low** - Less common |
+| Get CSS value | ✅ `get_css_value()` | ✅ `.value_of_css_property()` | **Medium** - Phase 5 ✅ |
 | Get size | ✅ (via `get_element_rect()`) | ✅ `.size` | **Medium** - Phase 7 ✅ |
 | Get location | ✅ (via `get_element_rect()`) | ✅ `.location` | **Medium** - Phase 7 ✅ |
 | Get rect | ✅ `get_element_rect()` | ✅ `.rect` | **Medium** - Phase 7 ✅ |
@@ -225,7 +226,7 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Navigation** | 4/4 | 0 | 100% ✅ |
 | **Element Location** | 7/7 | 0 | 100% ✅ |
 | **Element Interaction** | 4/4 | 0 | 100% ✅ |
-| **Element Properties** | 8/9 | 1 | 89% ✅ |
+| **Element Properties** | 9/9 | 0 | 100% ✅ |
 | **JavaScript** | 2/3 | 1 | 67% ⚠️ |
 | **Window Management** | 10/10 | 0 | 100% ✅ |
 | **Cookies** | 4/4 | 0 | 100% ✅ |
@@ -238,7 +239,7 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Timeouts** | 4/4 | 0 | 100% ✅ |
 | **BiDi Protocol** | 0/7 | 7 | 0% ❌ (Future) |
 
-**Overall Coverage: ~97%** 🎉 ⬆️ +42% from v0.90.0 (Phase 7 complete!)
+**Overall Coverage: ~98%** 🎉 ⬆️ +43% from v0.90.0 (Phase 5 complete!)
 
 **Note**: Coverage percentage is for W3C WebDriver Classic Protocol. BiDi Protocol support is planned for future releases and not included in the current percentage calculation.
 
