@@ -16,15 +16,14 @@ fn (wd WebDriver) log(msg string) {
 	}
 }
 
-// Create a new session
-pub fn new_edge_driver(base_url string, caps Capabilities) !WebDriver {
+// new_session - Create a new WebDriver session (shared helper for all browsers)
+pub fn new_session(base_url string, caps Capabilities) !WebDriver {
 	params := caps.to_session_params()
 	body := json.encode(params)
 
 	resp := http.post('${base_url}/session', body) or {
-		return error('Failed to connect to EdgeDriver at ${base_url}\n' +
-			'Make sure EdgeDriver is running:\n' + '  .\\msedgedriver.exe --port=9515\n' +
-			'Or use the helper script:\n' + '  v run start_edgedriver.v\n' + 'Error: ${err}')
+		return error('Failed to connect to WebDriver at ${base_url}\n' +
+			'Make sure the WebDriver is running.\n' + 'Error: ${err}')
 	}
 
 	if resp.status_code >= 400 {

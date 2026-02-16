@@ -1,5 +1,62 @@
 # WebDriver V Library - Changelog
 
+## [3.1.1] - 2026-02-15 - Multi-Browser Bug Fixes 🐛
+
+### 🐛 Critical Bug Fixes
+
+Fixed critical issues in v3.1.0 multi-browser support that prevented compilation and runtime functionality.
+
+#### Fixes Applied
+
+1. **COMPILE ERROR FIXED**: Created `new_session()` helper function
+   - All browser drivers (`chrome.v`, `firefox.v`, `safari.v`) were calling undefined `new_session()` function
+   - Extracted session creation logic from `new_edge_driver()` into shared `new_session()` helper in `client.v`
+   - All browser drivers now properly call this helper function
+   - Module now compiles successfully
+
+2. **RUNTIME ERROR FIXED**: Corrected Safari W3C JSON tags
+   - Changed `safari_options` JSON tag from `'safari:automaticInspection'` to `'safari:options'`
+   - Updated serialization key in `to_session_params()` to use correct W3C namespace
+   - Safari driver now sends properly formatted capabilities to SafariDriver
+
+3. **DESIGN CONSISTENCY**: Moved `new_edge_driver()` to `edge.v`
+   - Edge driver function was in `client.v` while other browsers were in dedicated files
+   - Moved to `edge.v` to match Chrome/Firefox/Safari pattern
+   - Improved code organization and consistency
+
+4. **PARAMETER NAMING**: Standardized parameter names across all drivers
+   - Changed parameter from `url` to `base_url` in Chrome, Firefox, and Safari drivers
+   - Now consistent with Edge driver and WebDriver struct field name
+   - Improves code readability and maintenance
+
+5. **TEST COVERAGE**: Added multi-browser compilation tests
+   - Created `webdriver/multi_browser_test.v` with 10 tests
+   - Tests verify all browser driver functions exist and have correct signatures
+   - Tests verify all browser options structs can be instantiated
+   - Ensures future changes don't break multi-browser support
+
+#### Files Modified
+
+- `webdriver/client.v` - Added `new_session()` helper function
+- `webdriver/edge.v` - Moved `new_edge_driver()` from client.v
+- `webdriver/chrome.v` - Fixed parameter name (`url` → `base_url`)
+- `webdriver/firefox.v` - Fixed parameter name (`url` → `base_url`)
+- `webdriver/safari.v` - Fixed parameter name (`url` → `base_url`)
+- `webdriver/capabiities.v` - Fixed Safari W3C JSON tags (lines 62, 194)
+
+#### Files Added
+
+- `webdriver/multi_browser_test.v` - Multi-browser compilation and struct tests
+
+#### Impact
+
+- **Compilation**: Module now compiles without errors ✅
+- **Safari Support**: Safari driver now functional with correct W3C capabilities ✅
+- **Code Quality**: Consistent architecture across all browser drivers ✅
+- **Test Coverage**: Basic tests ensure browser driver API correctness ✅
+
+---
+
 ## [3.1.0] - 2026-02-15 - Multi-Browser Support Added 🌐
 
 ### 🌐 Multi-Browser Support

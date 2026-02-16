@@ -59,7 +59,7 @@ pub mut:
 	edge_options              ?EdgeOptions    @[json: 'ms:edgeOptions']
 	chrome_options            ?ChromeOptions  @[json: 'goog:chromeOptions']
 	firefox_options           ?FirefoxOptions @[json: 'moz:firefoxOptions']
-	safari_options            ?SafariOptions  @[json: 'safari:automaticInspection']
+	safari_options            ?SafariOptions  @[json: 'safari:options']
 }
 
 pub struct NewSessionCaps {
@@ -191,7 +191,7 @@ pub fn (caps Capabilities) to_session_params() NewSessionParams {
 		if ap := so.automatic_profiling {
 			safari_map['automaticProfiling'] = json.Any(ap)
 		}
-		m['safari:automaticInspection'] = json.Any(safari_map)
+		m['safari:options'] = json.Any(safari_map)
 	}
 
 	return NewSessionParams{
