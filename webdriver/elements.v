@@ -11,6 +11,12 @@ pub:
 	height f64
 }
 
+// ShadowRoot represents a shadow DOM root
+pub struct ShadowRoot {
+pub:
+	shadow_id string @[json: 'shadow-6066-11e4-a52e-4f735466cecf']
+}
+
 pub fn (wd WebDriver) find_element(using string, value string) !ElementRef {
 	mut params := map[string]json.Any{}
 	params['using'] = json.Any(using)
@@ -113,5 +119,39 @@ pub fn (wd WebDriver) get_element_rect(el ElementRef) !ElementRect {
 // Example: get_css_value(element, 'color') returns 'rgba(0, 0, 0, 1)'
 pub fn (wd WebDriver) get_css_value(el ElementRef, property_name string) !string {
 	resp := wd.get_request[string]('/session/${wd.session_id}/element/${el.element_id}/css/${property_name}')!
+	return resp.value
+}
+
+// Get the shadow root of an element
+// Returns a ShadowRoot object that can be used to find elements within the shadow DOM
+// W3C Endpoint: GET /session/{session id}/element/{element id}/shadow
+// Example: shadow := wd.get_shadow_root(host_element)!
+pub fn (wd WebDriver) get_shadow_root(el ElementRef) !ShadowRoot {
+	resp := wd.get_request[ShadowRoot]('/session/${wd.session_id}/element/${el.element_id}/shadow')!
+	return resp.value
+}
+
+// Find an element within a shadow root
+// Uses the same locator strategies as find_element (css selector, xpath, etc.)
+// W3C Endpoint: POST /session/{session id}/shadow/{shadow id}/element
+// Example: element := wd.find_element_in_shadow_root(shadow, 'css selector', '.inner-element')!
+pub fn (wd WebDriver) find_element_in_shadow_root(shadow ShadowRoot, using string, value string) !ElementRef {
+	mut params := map[string]json.Any{}
+	params['using'] = json.Any(using)
+	params['value'] = json.Any(value)
+	resp := wd.post[ElementRef]('/session/${wd.session_id}/shadow/${shadow.shadow_id}/element',
+		json.Any(params))!
+	return resp.value
+}
+
+// Find all elements within a shadow root matching the locator
+// W3C Endpoint: POST /session/{session id}/shadow/{shadow id}/elements
+// Example: elements := wd.find_elements_in_shadow_root(shadow, 'css selector', '.items')!
+pub fn (wd WebDriver) find_elements_in_shadow_root(shadow ShadowRoot, using string, value string) ![]ElementRef {
+	mut params := map[string]json.Any{}
+	params['using'] = json.Any(using)
+	params['value'] = json.Any(value)
+	resp := wd.post[[]ElementRef]('/session/${wd.session_id}/shadow/${shadow.shadow_id}/elements',
+		json.Any(params))!
 	return resp.value
 }
