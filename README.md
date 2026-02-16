@@ -13,7 +13,7 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 - **Navigation** - Navigate, back, forward, refresh
 - **Element Location** - Find elements by CSS selector, XPath, ID, class name, tag name, link text
 - **Element Interaction** - Click, send keys, clear, submit forms ✅ 100% Complete
-- **JavaScript Execution** - Execute synchronous scripts with arguments
+- **JavaScript Execution** - Execute synchronous and asynchronous scripts ✅ 100% Complete
 - **Cookies** - Get, add, delete, clear all cookies
 - **Screenshots** - Capture page and element screenshots (base64)
 - **Frame Switching** - Switch between frames, iframes, and parent frame
