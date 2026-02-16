@@ -24,17 +24,42 @@ pub mut:
 	binary     ?string
 }
 
+pub struct ChromeOptions {
+pub mut:
+	args       ?[]string
+	extensions ?[]string
+	binary     ?string
+	prefs      ?map[string]json.Any
+}
+
+pub struct FirefoxOptions {
+pub mut:
+	args    ?[]string
+	binary  ?string
+	prefs   ?map[string]json.Any
+	profile ?string
+}
+
+pub struct SafariOptions {
+pub mut:
+	automatic_inspection ?bool @[json: 'automaticInspection']
+	automatic_profiling  ?bool @[json: 'automaticProfiling']
+}
+
 pub struct Capabilities {
 pub mut:
-	browser_name              ?string      @[json: 'browserName']
-	browser_version           ?string      @[json: 'browserVersion']
-	platform_name             ?string      @[json: 'platformName']
-	accept_insecure_certs     ?bool        @[json: 'acceptInsecureCerts']
-	page_load_strategy        ?string      @[json: 'pageLoadStrategy']
-	unhandled_prompt_behavior ?string      @[json: 'unhandledPromptBehavior']
-	timeouts                  ?Timeouts    @[json: 'timeouts']
-	proxy                     ?Proxy       @[json: 'proxy']
-	edge_options              ?EdgeOptions @[json: 'ms:edgeOptions']
+	browser_name              ?string         @[json: 'browserName']
+	browser_version           ?string         @[json: 'browserVersion']
+	platform_name             ?string         @[json: 'platformName']
+	accept_insecure_certs     ?bool           @[json: 'acceptInsecureCerts']
+	page_load_strategy        ?string         @[json: 'pageLoadStrategy']
+	unhandled_prompt_behavior ?string         @[json: 'unhandledPromptBehavior']
+	timeouts                  ?Timeouts       @[json: 'timeouts']
+	proxy                     ?Proxy          @[json: 'proxy']
+	edge_options              ?EdgeOptions    @[json: 'ms:edgeOptions']
+	chrome_options            ?ChromeOptions  @[json: 'goog:chromeOptions']
+	firefox_options           ?FirefoxOptions @[json: 'moz:firefoxOptions']
+	safari_options            ?SafariOptions  @[json: 'safari:automaticInspection']
 }
 
 pub struct NewSessionCaps {
@@ -110,6 +135,63 @@ pub fn (caps Capabilities) to_session_params() NewSessionParams {
 			edge_map['binary'] = json.Any(bin)
 		}
 		m['ms:edgeOptions'] = json.Any(edge_map)
+	}
+
+	if co := caps.chrome_options {
+		mut chrome_map := map[string]json.Any{}
+		if args := co.args {
+			mut arg_vals := []json.Any{}
+			for arg in args {
+				arg_vals << json.Any(arg)
+			}
+			chrome_map['args'] = json.Any(arg_vals)
+		}
+		if exts := co.extensions {
+			mut ext_vals := []json.Any{}
+			for ext in exts {
+				ext_vals << json.Any(ext)
+			}
+			chrome_map['extensions'] = json.Any(ext_vals)
+		}
+		if bin := co.binary {
+			chrome_map['binary'] = json.Any(bin)
+		}
+		if prefs := co.prefs {
+			chrome_map['prefs'] = json.Any(prefs)
+		}
+		m['goog:chromeOptions'] = json.Any(chrome_map)
+	}
+
+	if fo := caps.firefox_options {
+		mut firefox_map := map[string]json.Any{}
+		if args := fo.args {
+			mut arg_vals := []json.Any{}
+			for arg in args {
+				arg_vals << json.Any(arg)
+			}
+			firefox_map['args'] = json.Any(arg_vals)
+		}
+		if bin := fo.binary {
+			firefox_map['binary'] = json.Any(bin)
+		}
+		if prefs := fo.prefs {
+			firefox_map['prefs'] = json.Any(prefs)
+		}
+		if profile := fo.profile {
+			firefox_map['profile'] = json.Any(profile)
+		}
+		m['moz:firefoxOptions'] = json.Any(firefox_map)
+	}
+
+	if so := caps.safari_options {
+		mut safari_map := map[string]json.Any{}
+		if ai := so.automatic_inspection {
+			safari_map['automaticInspection'] = json.Any(ai)
+		}
+		if ap := so.automatic_profiling {
+			safari_map['automaticProfiling'] = json.Any(ap)
+		}
+		m['safari:automaticInspection'] = json.Any(safari_map)
 	}
 
 	return NewSessionParams{

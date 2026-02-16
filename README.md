@@ -71,8 +71,12 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 
 ### Prerequisites
 1. [V compiler](https://vlang.io/) installed
-2. Microsoft Edge browser
-3. [EdgeDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) matching your Edge version
+2. A supported browser (Edge, Chrome, Firefox, or Safari)
+3. Matching WebDriver:
+   - **Edge**: [EdgeDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) (port 9515)
+   - **Chrome**: [ChromeDriver](https://chromedriver.chromium.org/) (port 9515)
+   - **Firefox**: [GeckoDriver](https://github.com/mozilla/geckodriver/releases) (port 4444)
+   - **Safari**: Built-in SafariDriver on macOS (port 4445)
 
 ### Quick Setup
 
@@ -81,56 +85,104 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 git clone https://github.com/quaesitor-scientiam/v-webdriver.git
 cd v-webdriver
 
-# Start EdgeDriver (automated)
-v run start_edgedriver.v
-```
+# Start your browser's WebDriver
+# Edge/Chrome:
+.\msedgedriver.exe --port=9515  # or chromedriver.exe
 
-Or manually:
-```bash
-# Download EdgeDriver, then start it
-.\msedgedriver.exe --port=9515
+# Firefox:
+.\geckodriver.exe --port=4444
+
+# Safari (macOS):
+safaridriver --enable
+safaridriver -p 4445
 ```
 
 **Need help?** See [TEST_ENVIRONMENT_SETUP.md](TEST_ENVIRONMENT_SETUP.md) for detailed setup instructions.
 
 ## 🎯 Quick Start
 
+### Microsoft Edge
 ```v
 import webdriver
 
 fn main() {
-    // Configure capabilities
     caps := webdriver.Capabilities{
         browser_name: 'msedge'
-        accept_insecure_certs: true
         edge_options: webdriver.EdgeOptions{
             args: ['--headless=new']
             binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
         }
     }
 
-    // Create WebDriver session
-    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps) or {
-        eprintln('Failed to create driver: ${err}')
-        return
-    }
-    defer {
-        wd.quit() or { eprintln('Failed to quit: ${err}') }
-    }
+    wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
 
-    // Navigate to a page
     wd.get('https://example.com')!
-
-    // Find an element
-    heading := wd.find_element('css selector', 'h1')!
-
-    // Execute JavaScript
-    title := wd.execute_script('return document.title', [])!
+    title := wd.get_title()!
     println('Page title: ${title}')
+}
+```
 
-    // Take a screenshot
-    screenshot := wd.screenshot()!
-    println('Screenshot captured (base64): ${screenshot[..50]}...')
+### Google Chrome
+```v
+import webdriver
+
+fn main() {
+    caps := webdriver.Capabilities{
+        browser_name: 'chrome'
+        chrome_options: webdriver.ChromeOptions{
+            args: ['--headless=new', '--disable-gpu']
+            binary: r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+        }
+    }
+
+    wd := webdriver.new_chrome_driver('http://127.0.0.1:9515', caps)!
+    defer { wd.quit() or {} }
+
+    wd.get('https://example.com')!
+    println('Chrome automation working!')
+}
+```
+
+### Mozilla Firefox
+```v
+import webdriver
+
+fn main() {
+    caps := webdriver.Capabilities{
+        browser_name: 'firefox'
+        firefox_options: webdriver.FirefoxOptions{
+            args: ['-headless']
+            binary: r'C:\Program Files\Mozilla Firefox\firefox.exe'
+        }
+    }
+
+    wd := webdriver.new_firefox_driver('http://127.0.0.1:4444', caps)!
+    defer { wd.quit() or {} }
+
+    wd.get('https://example.com')!
+    println('Firefox automation working!')
+}
+```
+
+### Safari (macOS)
+```v
+import webdriver
+
+fn main() {
+    caps := webdriver.Capabilities{
+        browser_name: 'safari'
+        safari_options: webdriver.SafariOptions{
+            automatic_inspection: false
+            automatic_profiling: false
+        }
+    }
+
+    wd := webdriver.new_safari_driver('http://127.0.0.1:4445', caps)!
+    defer { wd.quit() or {} }
+
+    wd.get('https://example.com')!
+    println('Safari automation working!')
 }
 ```
 
@@ -499,11 +551,56 @@ v-webdriver/
 └── README.md                 # This file
 ```
 
+## 🌐 Multi-Browser Support
+
+V WebDriver now supports **4 major browsers**:
+
+| Browser | Driver | Default Port | Function |
+|---------|--------|--------------|----------|
+| **Edge** | EdgeDriver | 9515 | `new_edge_driver()` |
+| **Chrome** | ChromeDriver | 9515 | `new_chrome_driver()` |
+| **Firefox** | GeckoDriver | 4444 | `new_firefox_driver()` |
+| **Safari** | SafariDriver | 4445 | `new_safari_driver()` |
+
+### Browser-Specific Options
+
+**EdgeOptions / ChromeOptions**:
+```v
+edge_options: webdriver.EdgeOptions{
+    args: ['--headless=new', '--disable-gpu', '--no-sandbox']
+    binary: r'C:\Program Files\...\browser.exe'
+    extensions: ['extension1.crx', 'extension2.crx']
+}
+```
+
+**FirefoxOptions**:
+```v
+firefox_options: webdriver.FirefoxOptions{
+    args: ['-headless', '-private']
+    binary: r'C:\Program Files\Mozilla Firefox\firefox.exe'
+    prefs: {
+        'browser.download.folderList': json.Any(2)
+        'browser.download.dir': json.Any('/tmp/downloads')
+    }
+    profile: '/path/to/firefox/profile'
+}
+```
+
+**SafariOptions**:
+```v
+safari_options: webdriver.SafariOptions{
+    automatic_inspection: false  // Disable Web Inspector auto-open
+    automatic_profiling: false   // Disable profiling auto-start
+}
+```
+
+All browsers support standard W3C capabilities like `accept_insecure_certs`, `page_load_strategy`, `timeouts`, and `proxy` settings.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Now that 100% feature parity is achieved, focus areas include:
 
-1. **Additional Browser Support** - Chrome, Firefox, Safari drivers
+1. **Browser Testing** - Help test Chrome, Firefox, Safari drivers on different platforms
 2. **Performance Optimizations** - Connection pooling, parallel execution
 3. **Advanced Features** - BiDi protocol support, enhanced logging
 4. **Platform Support** - macOS, Linux testing and optimization

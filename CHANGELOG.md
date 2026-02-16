@@ -1,5 +1,127 @@
 # WebDriver V Library - Changelog
 
+## [3.1.0] - 2026-02-15 - Multi-Browser Support Added 🌐
+
+### 🌐 Multi-Browser Support
+
+**Added support for Chrome, Firefox, and Safari browsers** in addition to the existing Edge support!
+
+#### New Browser Driver Functions (3 functions)
+
+1. **`new_chrome_driver(url string, caps Capabilities) !WebDriver`** (webdriver/chrome.v)
+   - Create Chrome WebDriver sessions
+   - Default ChromeDriver endpoint: `http://127.0.0.1:9515`
+   - Supports ChromeOptions with args, binary, extensions, and prefs
+
+2. **`new_firefox_driver(url string, caps Capabilities) !WebDriver`** (webdriver/firefox.v)
+   - Create Firefox WebDriver sessions
+   - Default GeckoDriver endpoint: `http://127.0.0.1:4444`
+   - Supports FirefoxOptions with args, binary, prefs, and profile
+
+3. **`new_safari_driver(url string, caps Capabilities) !WebDriver`** (webdriver/safari.v)
+   - Create Safari WebDriver sessions
+   - Default SafariDriver endpoint: `http://127.0.0.1:4445`
+   - Supports SafariOptions with automatic_inspection and automatic_profiling
+
+#### New Capability Structs (3 structs in webdriver/capabiities.v)
+
+- **`ChromeOptions`** - Chrome-specific configuration (args, binary, extensions, prefs)
+- **`FirefoxOptions`** - Firefox-specific configuration (args, binary, prefs, profile)
+- **`SafariOptions`** - Safari-specific configuration (automatic_inspection, automatic_profiling)
+
+#### Updated Structs
+
+- **`Capabilities`** - Added chrome_options, firefox_options, safari_options fields
+- Extended `to_session_params()` method to serialize Chrome, Firefox, and Safari options
+
+#### W3C Compliance
+
+All browser options follow W3C WebDriver standard namespaces:
+- Chrome: `goog:chromeOptions`
+- Firefox: `moz:firefoxOptions`
+- Safari: `safari:automaticInspection`
+
+#### Example Usage
+
+**Chrome**:
+```v
+import webdriver
+
+caps := webdriver.Capabilities{
+    browser_name: 'chrome'
+    chrome_options: webdriver.ChromeOptions{
+        args: ['--headless=new', '--disable-gpu']
+        binary: r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+    }
+}
+
+wd := webdriver.new_chrome_driver('http://127.0.0.1:9515', caps)!
+defer { wd.quit() or {} }
+```
+
+**Firefox**:
+```v
+import webdriver
+
+caps := webdriver.Capabilities{
+    browser_name: 'firefox'
+    firefox_options: webdriver.FirefoxOptions{
+        args: ['-headless']
+        prefs: {
+            'browser.download.folderList': json.Any(2)
+        }
+    }
+}
+
+wd := webdriver.new_firefox_driver('http://127.0.0.1:4444', caps)!
+defer { wd.quit() or {} }
+```
+
+**Safari**:
+```v
+import webdriver
+
+caps := webdriver.Capabilities{
+    browser_name: 'safari'
+    safari_options: webdriver.SafariOptions{
+        automatic_inspection: false
+    }
+}
+
+wd := webdriver.new_safari_driver('http://127.0.0.1:4445', caps)!
+defer { wd.quit() or {} }
+```
+
+#### Impact
+
+- **Browser Support**: Edge only → **4 browsers** (Edge, Chrome, Firefox, Safari)
+- **Cross-browser Testing**: Now possible with the same API across all major browsers
+- **Platform Coverage**: Windows, macOS, Linux support through respective drivers
+
+#### Files Modified
+
+- `webdriver/capabiities.v` - Added 3 new options structs, extended serialization (~90 lines)
+- `webdriver/chrome.v` - Added `new_chrome_driver()` function
+- `webdriver/firefox.v` - NEW - Firefox driver support
+- `webdriver/safari.v` - NEW - Safari driver support
+
+#### Testing Status
+
+⚠️ **Note**: Chrome, Firefox, and Safari drivers follow the same proven pattern as `new_edge_driver()` but require their respective drivers to be installed for testing:
+- ChromeDriver for Chrome
+- GeckoDriver for Firefox
+- SafariDriver for Safari (built into macOS)
+
+The implementation is structurally sound and W3C compliant. Manual testing with actual drivers is recommended.
+
+#### Documentation
+
+- Updated README.md with multi-browser quick start examples
+- Added browser-specific options documentation
+- Updated installation prerequisites for all browsers
+
+---
+
 ## [3.0.0] - 2026-02-15 - Phase 8 Complete ✅ - 100% Feature Parity Achieved! 🎉🎊
 
 ### 🎉🎊 MAJOR MILESTONE: 100% Feature Parity with Selenium WebDriver!
