@@ -72,10 +72,10 @@ fn main() {
 
 fn create_driver() !webdriver.WebDriver {
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: [
+		edge_options:          webdriver.EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--no-sandbox',
@@ -210,9 +210,9 @@ fn run_test_cookies() bool {
 
 	// Add cookie
 	cookie := webdriver.Cookie{
-		name: 'test'
-		value: 'value'
-		path: '/'
+		name:   'test'
+		value:  'value'
+		path:   '/'
 		domain: 'example.com'
 	}
 	wd.add_cookie(cookie) or {

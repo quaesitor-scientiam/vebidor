@@ -4,10 +4,10 @@ import net.http
 import x.json2 as json
 
 pub struct WebDriver {
-	pub:
-		base_url   string
-		session_id string
-		logger     ?Logger
+pub:
+	base_url   string
+	session_id string
+	logger     ?Logger
 }
 
 fn (wd WebDriver) log(msg string) {
@@ -23,11 +23,8 @@ pub fn new_edge_driver(base_url string, caps Capabilities) !WebDriver {
 
 	resp := http.post('${base_url}/session', body) or {
 		return error('Failed to connect to EdgeDriver at ${base_url}\n' +
-			'Make sure EdgeDriver is running:\n' +
-			'  .\\msedgedriver.exe --port=9515\n' +
-			'Or use the helper script:\n' +
-			'  v run start_edgedriver.v\n' +
-			'Error: ${err}')
+			'Make sure EdgeDriver is running:\n' + '  .\\msedgedriver.exe --port=9515\n' +
+			'Or use the helper script:\n' + '  v run start_edgedriver.v\n' + 'Error: ${err}')
 	}
 
 	if resp.status_code >= 400 {
@@ -41,12 +38,10 @@ pub fn new_edge_driver(base_url string, caps Capabilities) !WebDriver {
 		return error('Invalid session response: ${err}')
 	}
 
-	sid := parsed.value['sessionId'] or {
-		return error('Missing sessionId in response')
-	}
+	sid := parsed.value['sessionId'] or { return error('Missing sessionId in response') }
 
 	return WebDriver{
-		base_url: base_url
+		base_url:   base_url
 		session_id: sid.str()
 	}
 }
@@ -101,14 +96,12 @@ fn (wd WebDriver) post[T](path string, payload json.Any) !WebDriverResponse[T] {
 
 	mut req := http.Request{
 		method: .post
-		url: '${wd.base_url}${path}'
-		data: body
+		url:    '${wd.base_url}${path}'
+		data:   body
 	}
 	req.add_header(.content_type, 'application/json')
 
-	resp := req.do() or {
-		return error('POST ${path} failed: ${err}')
-	}
+	resp := req.do() or { return error('POST ${path} failed: ${err}') }
 
 	if resp.status_code >= 400 {
 		err := parse_error(resp.body) or {
@@ -123,9 +116,7 @@ fn (wd WebDriver) post[T](path string, payload json.Any) !WebDriverResponse[T] {
 }
 
 fn (wd WebDriver) get_request[T](path string) !WebDriverResponse[T] {
-	resp := http.get('${wd.base_url}${path}') or {
-		return error('GET ${path} failed: ${err}')
-	}
+	resp := http.get('${wd.base_url}${path}') or { return error('GET ${path} failed: ${err}') }
 
 	if resp.status_code >= 400 {
 		err := parse_error(resp.body) or {
@@ -144,14 +135,12 @@ fn (wd WebDriver) post_void(path string, payload json.Any) ! {
 
 	mut req := http.Request{
 		method: .post
-		url: '${wd.base_url}${path}'
-		data: body
+		url:    '${wd.base_url}${path}'
+		data:   body
 	}
 	req.add_header(.content_type, 'application/json')
 
-	resp := req.do() or {
-		return error('POST ${path} failed: ${err}')
-	}
+	resp := req.do() or { return error('POST ${path} failed: ${err}') }
 
 	if resp.status_code >= 400 {
 		err := parse_error(resp.body) or {
@@ -164,10 +153,8 @@ fn (wd WebDriver) post_void(path string, payload json.Any) ! {
 fn (wd WebDriver) delete_void(path string) ! {
 	_ := http.Request{
 		method: .delete
-		url: '${wd.base_url}${path}'
-	}.do() or {
-		return error('DELETE ${path} failed: $err')
-	}
+		url:    '${wd.base_url}${path}'
+	}.do() or { return error('DELETE ${path} failed: ${err}') }
 }
 
 pub fn (wd WebDriver) click_at(x int, y int) ! {
@@ -204,7 +191,7 @@ pub fn (wd WebDriver) drag_and_drop(from ElementRef, to ElementRef) ! {
 
 pub fn (wd WebDriver) scroll_by(dx int, dy int) ! {
 	src := wheel('wheel', [
-		wheel_scroll(0, 0, dx, dy)
+		wheel_scroll(0, 0, dx, dy),
 	])
 	wd.perform_actions([src])!
 }
@@ -215,7 +202,7 @@ pub fn (wd WebDriver) edge_browser_version() !string {
 	return resp.value['version'] or { 'unknown' }.str()
 }
 
-//Network conditions (throttling)
+// Network conditions (throttling)
 pub fn (wd WebDriver) set_network_conditions(c EdgeNetworkConditions) ! {
 	encoded := json.encode(c)
 	decoded := json.decode[json.Any](encoded) or {

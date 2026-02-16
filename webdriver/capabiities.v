@@ -3,22 +3,22 @@ module webdriver
 import x.json2 as json
 
 pub struct Timeouts {
-	pub mut:
-	implicit   ?int
-	page_load  ?int @[json: 'pageLoad']
-	script     ?int
+pub mut:
+	implicit  ?int
+	page_load ?int @[json: 'pageLoad']
+	script    ?int
 }
 
 pub struct Proxy {
-	pub mut:
-	proxy_type string   @[json: 'proxyType']
-	http_proxy ?string  @[json: 'httpProxy']
-	ssl_proxy  ?string  @[json: 'sslProxy']
+pub mut:
+	proxy_type string    @[json: 'proxyType']
+	http_proxy ?string   @[json: 'httpProxy']
+	ssl_proxy  ?string   @[json: 'sslProxy']
 	no_proxy   ?[]string @[json: 'noProxy']
 }
 
 pub struct EdgeOptions {
-	pub mut:
+pub mut:
 	args       ?[]string
 	extensions ?[]string
 	binary     ?string
@@ -26,20 +26,20 @@ pub struct EdgeOptions {
 
 pub struct Capabilities {
 pub mut:
-	browser_name              ?string     @[json: 'browserName']
-	browser_version           ?string     @[json: 'browserVersion']
-	platform_name             ?string     @[json: 'platformName']
-	accept_insecure_certs     ?bool       @[json: 'acceptInsecureCerts']
-	page_load_strategy        ?string     @[json: 'pageLoadStrategy']
-	unhandled_prompt_behavior ?string     @[json: 'unhandledPromptBehavior']
-	timeouts                  ?Timeouts   @[json: 'timeouts']
-	proxy                     ?Proxy      @[json: 'proxy']
+	browser_name              ?string      @[json: 'browserName']
+	browser_version           ?string      @[json: 'browserVersion']
+	platform_name             ?string      @[json: 'platformName']
+	accept_insecure_certs     ?bool        @[json: 'acceptInsecureCerts']
+	page_load_strategy        ?string      @[json: 'pageLoadStrategy']
+	unhandled_prompt_behavior ?string      @[json: 'unhandledPromptBehavior']
+	timeouts                  ?Timeouts    @[json: 'timeouts']
+	proxy                     ?Proxy       @[json: 'proxy']
 	edge_options              ?EdgeOptions @[json: 'ms:edgeOptions']
 }
 
 pub struct NewSessionCaps {
 pub:
-	always_match map[string]json.Any   @[json: 'alwaysMatch']
+	always_match map[string]json.Any    @[json: 'alwaysMatch']
 	first_match  ?[]map[string]json.Any @[json: 'firstMatch']
 }
 
@@ -115,7 +115,7 @@ pub fn (caps Capabilities) to_session_params() NewSessionParams {
 	return NewSessionParams{
 		capabilities: NewSessionCaps{
 			always_match: m
-			first_match: none
+			first_match:  none
 		}
 	}
 }

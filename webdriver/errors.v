@@ -27,7 +27,7 @@ pub fn (err WebDriverError) str() string {
 pub fn parse_error(body string) !WebDriverError {
 	// Try to decode the WebDriver error structure
 	decoded := json.decode[map[string]json.Any](body) or {
-		return error('Invalid WebDriver error response: $err')
+		return error('Invalid WebDriver error response: ${err}')
 	}
 
 	if 'value' !in decoded {
@@ -52,7 +52,7 @@ pub fn parse_error(body string) !WebDriverError {
 	}
 
 	return WebDriverError{
-		kind: kind
+		kind:    kind
 		message: msg
 	}
 }

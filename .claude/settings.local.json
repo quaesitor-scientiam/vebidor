@@ -15,7 +15,10 @@
       "Bash(git rm:*)",
       "Bash(v:*)",
       "Bash(.main.exe)",
-      "Bash(./main.exe:*)"
+      "Bash(./main.exe:*)",
+      "Bash(./start_edgedriver_test2.exe)",
+      "Bash(powershell:*)",
+      "Bash(ls:*)"
     ]
   }
 }

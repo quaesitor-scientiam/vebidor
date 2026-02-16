@@ -16,10 +16,10 @@ fn run() ! {
 	println('========================================\n')
 
 	mut caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: [
+		edge_options:          webdriver.EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',

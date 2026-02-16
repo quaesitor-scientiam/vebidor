@@ -16,10 +16,10 @@ fn run() ! {
 	println('========================================\n')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: [
+		edge_options:          webdriver.EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',
@@ -108,7 +108,9 @@ fn run() ! {
 		println('  Error message: ${err.msg()[..err_len]}...')
 		println('✅ Scenario 6 complete\n')
 		// Return empty ElementRef to continue
-		webdriver.ElementRef{ element_id: '' }
+		webdriver.ElementRef{
+			element_id: ''
+		}
 	}
 
 	// If we got an element with ID, something went wrong

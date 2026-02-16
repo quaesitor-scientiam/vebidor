@@ -5,10 +5,10 @@ import x.json2 as json
 // Test helper to create a test driver instance
 fn setup_test_driver() !WebDriver {
 	caps := Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: EdgeOptions{
-			args: [
+		edge_options:          EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',
@@ -126,9 +126,9 @@ fn test_window_and_cookies() {
 
 	// Cookie operations
 	cookie := Cookie{
-		name: 'test_cookie'
-		value: 'test_value'
-		path: '/'
+		name:   'test_cookie'
+		value:  'test_value'
+		path:   '/'
 		domain: 'example.com'
 	}
 	wd.add_cookie(cookie) or {
@@ -192,19 +192,19 @@ fn test_capabilities_conversion() {
 	println('Testing: Capabilities conversion')
 
 	caps := Capabilities{
-		browser_name: 'msedge'
-		browser_version: '120.0'
-		platform_name: 'windows'
+		browser_name:          'msedge'
+		browser_version:       '120.0'
+		platform_name:         'windows'
 		accept_insecure_certs: true
-		page_load_strategy: 'normal'
-		edge_options: EdgeOptions{
-			args: ['--headless=new', '--disable-gpu']
+		page_load_strategy:    'normal'
+		edge_options:          EdgeOptions{
+			args:   ['--headless=new', '--disable-gpu']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
-		timeouts: Timeouts{
-			implicit: 5000
+		timeouts:              Timeouts{
+			implicit:  5000
 			page_load: 30000
-			script: 10000
+			script:    10000
 		}
 	}
 

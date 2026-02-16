@@ -13,7 +13,7 @@ fn main() {
 	caps := webdriver.Capabilities{
 		browser_name: 'msedge'
 		edge_options: webdriver.EdgeOptions{
-			args: ['--headless', '--disable-gpu', '--no-sandbox']
+			args:   ['--headless', '--disable-gpu', '--no-sandbox']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -47,7 +47,7 @@ fn main() {
 	println('  Element: <h1>')
 	println('  Position: (${rect.x}, ${rect.y})')
 	println('  Size: ${rect.width} x ${rect.height} pixels')
-	println('  Center: (${rect.x + rect.width/2}, ${rect.y + rect.height/2})')
+	println('  Center: (${rect.x + rect.width / 2}, ${rect.y + rect.height / 2})')
 	println('  ✓ Element dimensions retrieved\n')
 
 	// Scenario 2: Form Submit
@@ -106,14 +106,16 @@ fn main() {
 	println('  Created interactive box (green)')
 
 	box := wd.find_element('css selector', '#contextBox')!
-	initial_color := wd.execute_script('return document.getElementById("contextBox").style.background', [])!.str()
+	initial_color := wd.execute_script('return document.getElementById("contextBox").style.background',
+		[])!.str()
 	println('  Initial color: ${initial_color}')
 
 	wd.context_click(box)!
 	println('  Performed right-click')
 	time.sleep(500 * time.millisecond)
 
-	new_color := wd.execute_script('return document.getElementById("contextBox").style.background', [])!.str()
+	new_color := wd.execute_script('return document.getElementById("contextBox").style.background',
+		[])!.str()
 	new_text := wd.get_text(box)!
 	println('  New color: ${new_color}')
 	println('  New text: ${new_text}')
@@ -222,9 +224,7 @@ fn main() {
 	println('  Initial position: (${initial_rect.x}, ${initial_rect.y})')
 	println('  Dragging by offset: (+150px right, +100px down)')
 
-	wd.drag_and_drop_by_offset(offset_box, 150, 100) or {
-		println('  Method executed: ${err}')
-	}
+	wd.drag_and_drop_by_offset(offset_box, 150, 100) or { println('  Method executed: ${err}') }
 	time.sleep(500 * time.millisecond)
 
 	println('  ✓ Drag by offset action performed\n')

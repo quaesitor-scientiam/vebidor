@@ -10,9 +10,9 @@ fn test_capabilities_and_actions() {
 
 	// Test capabilities conversion
 	caps := Capabilities{
-		browser_name: 'msedge'
-		browser_version: '120.0'
-		platform_name: 'windows'
+		browser_name:          'msedge'
+		browser_version:       '120.0'
+		platform_name:         'windows'
 		accept_insecure_certs: true
 	}
 
@@ -41,10 +41,10 @@ fn test_webdriver_integration() {
 	println('Testing: WebDriver integration (one browser session)')
 
 	caps := Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: EdgeOptions{
-			args: [
+		edge_options:          EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',

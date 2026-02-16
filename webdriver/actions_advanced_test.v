@@ -6,7 +6,7 @@ fn setup_test_driver() !WebDriver {
 	caps := Capabilities{
 		browser_name: 'msedge'
 		edge_options: EdgeOptions{
-			args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
+			args:   ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -150,7 +150,8 @@ fn test_click_and_hold_release() {
 	time.sleep(500 * time.millisecond)
 
 	// Verify mouse is held down
-	text_after_hold := wd.execute_script('return document.getElementById("target").innerText', [])!.str()
+	text_after_hold := wd.execute_script('return document.getElementById("target").innerText',
+		[])!.str()
 	assert text_after_hold.contains('Mouse down'), 'Mouse should be held down'
 
 	// Release the button
@@ -158,7 +159,8 @@ fn test_click_and_hold_release() {
 	time.sleep(500 * time.millisecond)
 
 	// Verify mouse was released
-	text_after_release := wd.execute_script('return document.getElementById("target").innerText', [])!.str()
+	text_after_release := wd.execute_script('return document.getElementById("target").innerText',
+		[])!.str()
 	assert text_after_release.contains('Mouse up'), 'Mouse should be released'
 
 	println('✓ click_and_hold and release test passed')
@@ -232,9 +234,7 @@ fn test_drag_and_drop_by_offset() {
 
 	// Drag by offset (this may not move the element, but should execute)
 	// Note: Most web elements can't be dragged by default
-	wd.drag_and_drop_by_offset(heading, 100, 50) or {
-		eprintln('Drag by offset executed: ${err}')
-	}
+	wd.drag_and_drop_by_offset(heading, 100, 50) or { eprintln('Drag by offset executed: ${err}') }
 	time.sleep(500 * time.millisecond)
 
 	// Method should have executed without crash
@@ -283,7 +283,8 @@ fn test_advanced_actions_workflow() {
 	time.sleep(300 * time.millisecond)
 
 	// Verify color changed to purple
-	bg_color := wd.execute_script('return document.getElementById("box").style.background', [])!.str()
+	bg_color := wd.execute_script('return document.getElementById("box").style.background',
+		[])!.str()
 	assert bg_color == 'purple', 'Box color should change to purple after context click'
 
 	// Test 3: Submit form
@@ -291,7 +292,8 @@ fn test_advanced_actions_workflow() {
 	wd.submit(form)!
 	time.sleep(300 * time.millisecond)
 
-	result_text := wd.execute_script('return document.getElementById("result").innerText', [])!.str()
+	result_text := wd.execute_script('return document.getElementById("result").innerText',
+		[])!.str()
 	assert result_text == 'Submitted', 'Form should be submitted'
 
 	println('✓ Advanced actions workflow test passed')

@@ -5,10 +5,10 @@ import x.json2 as json
 
 fn setup_test_driver() !WebDriver {
 	caps := Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: EdgeOptions{
-			args: [
+		edge_options:          EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',

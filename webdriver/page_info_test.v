@@ -2,10 +2,10 @@ module webdriver
 
 fn setup_test_driver() !WebDriver {
 	caps := Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: EdgeOptions{
-			args: [
+		edge_options:          EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',
@@ -141,7 +141,8 @@ fn test_page_source_structure() ! {
 
 	// Check HTML document structure
 	assert source.starts_with('<html'), 'Should start with <html tag'
-	assert source.contains('<!DOCTYPE html>') || source.contains('<!doctype html>') || source.starts_with('<html'), 'Should have valid HTML structure'
+	assert source.contains('<!DOCTYPE html>') || source.contains('<!doctype html>')
+		|| source.starts_with('<html'), 'Should have valid HTML structure'
 	assert source.contains('<title>'), 'Should have title tag'
 	assert source.contains('<meta'), 'Should have meta tags'
 

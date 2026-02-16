@@ -8,10 +8,10 @@ fn test_search_flow() ! {
 	println('Running integration test: Search flow')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: ['--headless=new']
+		edge_options:          webdriver.EdgeOptions{
+			args:   ['--headless=new']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -35,7 +35,8 @@ fn test_search_flow() ! {
 	println('✓ Found h1 element: ${heading.element_id}')
 
 	// Get heading text using JavaScript
-	heading_text := wd.execute_script('return document.querySelector("h1").textContent', [])!
+	heading_text := wd.execute_script('return document.querySelector("h1").textContent',
+		[])!
 	println('✓ Heading text: ${heading_text}')
 
 	println('✅ Search flow test passed!')
@@ -46,10 +47,10 @@ fn test_cookie_management() ! {
 	println('\nRunning integration test: Cookie management')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: ['--headless=new']
+		edge_options:          webdriver.EdgeOptions{
+			args:   ['--headless=new']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -65,18 +66,18 @@ fn test_cookie_management() ! {
 
 	// Add cookies
 	cookie1 := webdriver.Cookie{
-		name: 'session_id'
-		value: 'abc123'
-		path: '/'
+		name:   'session_id'
+		value:  'abc123'
+		path:   '/'
 		domain: 'example.com'
 	}
 	wd.add_cookie(cookie1)!
 	println('✓ Added session_id cookie')
 
 	cookie2 := webdriver.Cookie{
-		name: 'user_pref'
-		value: 'dark_mode'
-		path: '/'
+		name:   'user_pref'
+		value:  'dark_mode'
+		path:   '/'
 		domain: 'example.com'
 	}
 	wd.add_cookie(cookie2)!
@@ -110,10 +111,10 @@ fn test_window_management() ! {
 	println('\nRunning integration test: Window management')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: ['--headless=new']
+		edge_options:          webdriver.EdgeOptions{
+			args:   ['--headless=new']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -141,9 +142,9 @@ fn test_window_management() ! {
 
 	// Resize window
 	new_rect := webdriver.WindowRect{
-		x: 0
-		y: 0
-		width: 1280
+		x:      0
+		y:      0
+		width:  1280
 		height: 720
 	}
 	wd.set_window_rect(new_rect)!
@@ -161,10 +162,10 @@ fn test_javascript_execution() ! {
 	println('\nRunning integration test: JavaScript execution')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: ['--headless=new']
+		edge_options:          webdriver.EdgeOptions{
+			args:   ['--headless=new']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -211,10 +212,10 @@ fn test_navigation_flow() ! {
 	println('\nRunning integration test: Navigation flow')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: ['--headless=new']
+		edge_options:          webdriver.EdgeOptions{
+			args:   ['--headless=new']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -256,10 +257,10 @@ fn test_multiple_elements() ! {
 	println('\nRunning integration test: Multiple elements')
 
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: ['--headless=new']
+		edge_options:          webdriver.EdgeOptions{
+			args:   ['--headless=new']
 			binary: r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 		}
 	}
@@ -293,29 +294,17 @@ fn main() {
 	println('Running WebDriver Integration Tests')
 	println('========================================')
 
-	test_search_flow() or {
-		eprintln('❌ Search flow test failed: ${err}')
-	}
+	test_search_flow() or { eprintln('❌ Search flow test failed: ${err}') }
 
-	test_cookie_management() or {
-		eprintln('❌ Cookie management test failed: ${err}')
-	}
+	test_cookie_management() or { eprintln('❌ Cookie management test failed: ${err}') }
 
-	test_window_management() or {
-		eprintln('❌ Window management test failed: ${err}')
-	}
+	test_window_management() or { eprintln('❌ Window management test failed: ${err}') }
 
-	test_javascript_execution() or {
-		eprintln('❌ JavaScript execution test failed: ${err}')
-	}
+	test_javascript_execution() or { eprintln('❌ JavaScript execution test failed: ${err}') }
 
-	test_navigation_flow() or {
-		eprintln('❌ Navigation flow test failed: ${err}')
-	}
+	test_navigation_flow() or { eprintln('❌ Navigation flow test failed: ${err}') }
 
-	test_multiple_elements() or {
-		eprintln('❌ Multiple elements test failed: ${err}')
-	}
+	test_multiple_elements() or { eprintln('❌ Multiple elements test failed: ${err}') }
 
 	println('\n========================================')
 	println('All integration tests completed!')

@@ -15,10 +15,10 @@ fn main() {
 
 fn run_demo() ! {
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: [
+		edge_options:          webdriver.EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--no-sandbox',
@@ -81,7 +81,8 @@ fn run_demo() ! {
 		input.value = "Initial value";
 		input.placeholder = "Enter text here";
 		document.body.appendChild(input);
-	', [])!
+	',
+		[])!
 
 	input := wd.find_element('css selector', '#demo-input')!
 
@@ -112,7 +113,8 @@ fn run_demo() ! {
 		label.textContent = "Accept terms";
 		document.body.appendChild(checkbox);
 		document.body.appendChild(label);
-	', [])!
+	',
+		[])!
 
 	checkbox := wd.find_element('css selector', '#demo-checkbox')!
 

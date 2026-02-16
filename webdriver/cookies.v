@@ -3,7 +3,7 @@ module webdriver
 import x.json2 as json
 
 pub struct Cookie {
-	pub mut:
+pub mut:
 	name      string
 	value     string
 	path      ?string

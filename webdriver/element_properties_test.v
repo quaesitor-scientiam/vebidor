@@ -3,10 +3,10 @@ module webdriver
 // Test helper to create a test driver instance
 fn setup_test_driver() !WebDriver {
 	caps := Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: EdgeOptions{
-			args: [
+		edge_options:          EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--disable-dev-shm-usage',
@@ -247,7 +247,8 @@ fn test_clear_and_input() {
 		input.type = "text";
 		input.value = "initial value";
 		document.body.appendChild(input);
-	', []) or {
+	',
+		[]) or {
 		eprintln('Failed to create input: ${err}')
 		assert false
 		return
@@ -324,7 +325,8 @@ fn test_is_selected() {
 		checkbox.id = "test-checkbox";
 		checkbox.type = "checkbox";
 		document.body.appendChild(checkbox);
-	', []) or {
+	',
+		[]) or {
 		eprintln('Failed to create checkbox: ${err}')
 		assert false
 		return

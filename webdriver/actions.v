@@ -3,8 +3,8 @@ module webdriver
 import x.json2 as json
 
 pub struct ActionItem {
-	pub:
-	kind     string  @[json: 'type'] // keyDown, keyUp, pointerMove, pause, etc.
+pub:
+	kind     string @[json: 'type'] // keyDown, keyUp, pointerMove, pause, etc.
 	value    ?string
 	duration ?int
 	x        ?int
@@ -16,14 +16,14 @@ pub struct ActionItem {
 }
 
 pub struct ActionSource {
-	pub:
-	kind    string        @[json: 'type'] // key, pointer, wheel
+pub:
+	kind    string @[json: 'type'] // key, pointer, wheel
 	id      string
 	actions []ActionItem
 }
 
 pub struct ActionsPayload {
-	pub:
+pub:
 	actions []ActionSource
 }
 
@@ -31,77 +31,77 @@ pub struct ActionsPayload {
 
 pub fn key_down(key string) ActionItem {
 	return ActionItem{
-		kind: 'keyDown'
+		kind:  'keyDown'
 		value: key
 	}
 }
 
 pub fn key_up(key string) ActionItem {
 	return ActionItem{
-		kind: 'keyUp'
+		kind:  'keyUp'
 		value: key
 	}
 }
 
 pub fn pause(ms int) ActionItem {
 	return ActionItem{
-		kind: 'pause'
+		kind:     'pause'
 		duration: ms
 	}
 }
 
 pub fn pointer_move(x int, y int, duration int) ActionItem {
 	return ActionItem{
-		kind: 'pointerMove'
-		x: x
-		y: y
+		kind:     'pointerMove'
+		x:        x
+		y:        y
 		duration: duration
 	}
 }
 
 pub fn pointer_down(button int) ActionItem {
 	return ActionItem{
-		kind: 'pointerDown'
+		kind:   'pointerDown'
 		button: button
 	}
 }
 
 pub fn pointer_up(button int) ActionItem {
 	return ActionItem{
-		kind: 'pointerUp'
+		kind:   'pointerUp'
 		button: button
 	}
 }
 
 pub fn keyboard(id string, actions []ActionItem) ActionSource {
 	return ActionSource{
-		kind: 'key'
-		id: id
+		kind:    'key'
+		id:      id
 		actions: actions
 	}
 }
 
 pub fn mouse(id string, actions []ActionItem) ActionSource {
 	return ActionSource{
-		kind: 'pointer'
-		id: id
+		kind:    'pointer'
+		id:      id
 		actions: actions
 	}
 }
 
 pub fn wheel(id string, actions []ActionItem) ActionSource {
 	return ActionSource{
-		kind: 'wheel'
-		id: id
+		kind:    'wheel'
+		id:      id
 		actions: actions
 	}
 }
 
 pub fn wheel_scroll(x int, y int, delta_x int, delta_y int) ActionItem {
 	return ActionItem{
-		kind: 'scroll'
-		x: x
-		y: y
+		kind:    'scroll'
+		x:       x
+		y:       y
 		delta_x: delta_x
 		delta_y: delta_y
 	}
@@ -153,7 +153,7 @@ pub fn (wd WebDriver) context_click(el ElementRef) ! {
 	// Build action sequence: move to element, right-click (button 2)
 	actions := [
 		pointer_move(x, y, 0),
-		pointer_down(2),  // Right button = 2
+		pointer_down(2), // Right button = 2
 		pointer_up(2),
 	]
 	src := mouse('mouse', actions)
@@ -172,7 +172,7 @@ pub fn (wd WebDriver) click_and_hold(el ElementRef) ! {
 	// Move to element and press down (but don't release)
 	actions := [
 		pointer_move(x, y, 0),
-		pointer_down(0),  // Left button = 0, keep pressed
+		pointer_down(0), // Left button = 0, keep pressed
 	]
 	src := mouse('mouse', actions)
 	wd.perform_actions([src])!
@@ -182,7 +182,7 @@ pub fn (wd WebDriver) click_and_hold(el ElementRef) ! {
 // This should be called after click_and_hold() to release the button
 pub fn (wd WebDriver) release_held_button() ! {
 	actions := [
-		pointer_up(0),  // Release left button
+		pointer_up(0), // Release left button
 	]
 	src := mouse('mouse', actions)
 	wd.perform_actions([src])!
@@ -205,7 +205,7 @@ pub fn (wd WebDriver) drag_and_drop_to_element(source ElementRef, target Element
 	actions := [
 		pointer_move(source_x, source_y, 0),
 		pointer_down(0),
-		pointer_move(target_x, target_y, 500),  // 500ms smooth drag
+		pointer_move(target_x, target_y, 500), // 500ms smooth drag
 		pointer_up(0),
 	]
 	src := mouse('mouse', actions)
@@ -229,7 +229,7 @@ pub fn (wd WebDriver) drag_and_drop_by_offset(el ElementRef, x_offset int, y_off
 	actions := [
 		pointer_move(start_x, start_y, 0),
 		pointer_down(0),
-		pointer_move(end_x, end_y, 500),  // 500ms smooth drag
+		pointer_move(end_x, end_y, 500), // 500ms smooth drag
 		pointer_up(0),
 	]
 	src := mouse('mouse', actions)

@@ -16,10 +16,10 @@ fn main() {
 
 fn run_demo() ! {
 	caps := webdriver.Capabilities{
-		browser_name: 'msedge'
+		browser_name:          'msedge'
 		accept_insecure_certs: true
-		edge_options: webdriver.EdgeOptions{
-			args: [
+		edge_options:          webdriver.EdgeOptions{
+			args:   [
 				'--headless=new',
 				'--disable-gpu',
 				'--no-sandbox',
