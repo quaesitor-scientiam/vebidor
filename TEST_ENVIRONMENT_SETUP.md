@@ -30,12 +30,14 @@ v run start_edgedriver.v
 
 This script will:
 - ✅ Check if EdgeDriver is already running
-- ✅ Find msedgedriver.exe automatically
+- ✅ Find msedgedriver.exe automatically (from PATH or project directory)
 - ✅ **Check version compatibility** between Edge and EdgeDriver
 - ✅ **Warn if versions don't match**
 - ✅ Start EdgeDriver on port 9515
 - ✅ Verify it's running correctly
 - ✅ Keep it running until you press Ctrl+C
+
+**Prerequisites:** EdgeDriver must be in your system PATH or in the project directory.
 
 **Example output:**
 ```
@@ -99,9 +101,13 @@ Download the EdgeDriver version that matches your Edge browser version.
 - Choose the version matching your Edge browser
 - Download and extract `msedgedriver.exe`
 
-**Place EdgeDriver in one of these locations:**
-- Project directory: `S:\vProjects\v-webdriver\msedgedriver.exe`
-- Or add to your PATH
+**Installation:**
+EdgeDriver just needs to be available in your system PATH. You can:
+- Add it to an existing PATH directory (e.g., `C:\Windows\System32`)
+- Place it in the project directory and run from there
+- Add its location to your system PATH environment variable
+
+**Note:** EdgeDriver does NOT need to be in the Edge installation directory (`C:\Program Files (x86)\Microsoft\Edge\Application`). Any location in your PATH works.
 
 ### Step 3: Start EdgeDriver
 
@@ -165,8 +171,11 @@ google-chrome --version
 - Choose the version matching your Chrome browser
 - Download and extract `chromedriver.exe` (Windows) or `chromedriver` (macOS/Linux)
 
-**Place ChromeDriver in one of these locations:**
-- Project directory or add to your PATH
+**Installation:**
+ChromeDriver just needs to be available in your system PATH. You can:
+- Add it to an existing PATH directory
+- Place it in the project directory and run from there
+- Add its location to your system PATH environment variable
 
 ### Step 3: Start ChromeDriver
 
@@ -230,8 +239,11 @@ which firefox
 - Download the latest release for your platform
 - Extract `geckodriver.exe` (Windows) or `geckodriver` (macOS/Linux)
 
-**Place GeckoDriver in one of these locations:**
-- Project directory or add to your PATH
+**Installation:**
+GeckoDriver just needs to be available in your system PATH. You can:
+- Add it to an existing PATH directory
+- Place it in the project directory and run from there
+- Add its location to your system PATH environment variable
 
 ### Step 3: Start GeckoDriver
 
@@ -387,8 +399,12 @@ v run example_phase8.v
 
 **Solution:**
 1. Download the correct WebDriver for your browser
-2. Place in project directory or add to PATH
-3. Verify with:
+2. **Important:** WebDriver executables just need to be in your system PATH - they do NOT need to be in the browser's installation directory
+3. Add to PATH by:
+   - Placing in an existing PATH directory
+   - Adding the executable's directory to your PATH environment variable
+   - Or run from the project directory using `.\msedgedriver.exe` / `./chromedriver`, etc.
+4. Verify with:
    - Windows: `where msedgedriver` / `where chromedriver` / `where geckodriver`
    - macOS/Linux: `which chromedriver` / `which geckodriver`
 
