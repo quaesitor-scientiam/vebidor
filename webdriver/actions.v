@@ -139,3 +139,99 @@ pub fn (wd WebDriver) type_text(text string) ! {
 	src := keyboard('keyboard', items)
 	wd.perform_actions([src])!
 }
+
+// Advanced Actions - Phase 7
+
+// Perform a context click (right-click) on an element
+// This moves to the element's center and clicks the right mouse button (button 2)
+pub fn (wd WebDriver) context_click(el ElementRef) ! {
+	// Get element center position
+	rect := wd.get_element_rect(el)!
+	x := int(rect.x + rect.width / 2)
+	y := int(rect.y + rect.height / 2)
+
+	// Build action sequence: move to element, right-click (button 2)
+	actions := [
+		pointer_move(x, y, 0),
+		pointer_down(2),  // Right button = 2
+		pointer_up(2),
+	]
+	src := mouse('mouse', actions)
+	wd.perform_actions([src])!
+}
+
+// Click and hold the left mouse button on an element
+// The button remains pressed until release_held_button() is called
+// This is useful for drag operations or interactive UI elements
+pub fn (wd WebDriver) click_and_hold(el ElementRef) ! {
+	// Get element center position
+	rect := wd.get_element_rect(el)!
+	x := int(rect.x + rect.width / 2)
+	y := int(rect.y + rect.height / 2)
+
+	// Move to element and press down (but don't release)
+	actions := [
+		pointer_move(x, y, 0),
+		pointer_down(0),  // Left button = 0, keep pressed
+	]
+	src := mouse('mouse', actions)
+	wd.perform_actions([src])!
+}
+
+// Release the held mouse button
+// This should be called after click_and_hold() to release the button
+pub fn (wd WebDriver) release_held_button() ! {
+	actions := [
+		pointer_up(0),  // Release left button
+	]
+	src := mouse('mouse', actions)
+	wd.perform_actions([src])!
+}
+
+// Drag an element and drop it onto another element
+// This performs a drag-and-drop operation from source to target
+// Duration of 500ms is used for the drag motion (smooth movement)
+pub fn (wd WebDriver) drag_and_drop_to_element(source ElementRef, target ElementRef) ! {
+	// Get source and target center positions
+	source_rect := wd.get_element_rect(source)!
+	target_rect := wd.get_element_rect(target)!
+
+	source_x := int(source_rect.x + source_rect.width / 2)
+	source_y := int(source_rect.y + source_rect.height / 2)
+	target_x := int(target_rect.x + target_rect.width / 2)
+	target_y := int(target_rect.y + target_rect.height / 2)
+
+	// Drag and drop: move to source, press, move to target, release
+	actions := [
+		pointer_move(source_x, source_y, 0),
+		pointer_down(0),
+		pointer_move(target_x, target_y, 500),  // 500ms smooth drag
+		pointer_up(0),
+	]
+	src := mouse('mouse', actions)
+	wd.perform_actions([src])!
+}
+
+// Drag an element by a specific pixel offset
+// x_offset: horizontal pixels to drag (positive = right, negative = left)
+// y_offset: vertical pixels to drag (positive = down, negative = up)
+// Duration of 500ms is used for the drag motion
+pub fn (wd WebDriver) drag_and_drop_by_offset(el ElementRef, x_offset int, y_offset int) ! {
+	// Get element center position
+	rect := wd.get_element_rect(el)!
+
+	start_x := int(rect.x + rect.width / 2)
+	start_y := int(rect.y + rect.height / 2)
+	end_x := start_x + x_offset
+	end_y := start_y + y_offset
+
+	// Drag by offset: move to element, press, move by offset, release
+	actions := [
+		pointer_move(start_x, start_y, 0),
+		pointer_down(0),
+		pointer_move(end_x, end_y, 500),  // 500ms smooth drag
+		pointer_up(0),
+	]
+	src := mouse('mouse', actions)
+	wd.perform_actions([src])!
+}

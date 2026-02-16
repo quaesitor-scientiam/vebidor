@@ -2,6 +2,15 @@ module webdriver
 
 import x.json2 as json
 
+// ElementRect represents the position and size of an element
+pub struct ElementRect {
+pub:
+	x      f64
+	y      f64
+	width  f64
+	height f64
+}
+
 pub fn (wd WebDriver) find_element(using string, value string) !ElementRef {
 	mut params := map[string]json.Any{}
 	params['using'] = json.Any(using)
@@ -78,4 +87,22 @@ pub fn (wd WebDriver) get_tag_name(el ElementRef) !string {
 // Clear the text of an input or textarea element
 pub fn (wd WebDriver) clear(el ElementRef) ! {
 	wd.post_void('/session/${wd.session_id}/element/${el.element_id}/clear', map[string]json.Any{})!
+}
+
+// Submit a form element
+// This method submits the form containing the given element
+// If the element is not a form or inside a form, this will throw an error
+// W3C Note: This is a convenience method that uses JavaScript
+pub fn (wd WebDriver) submit(el ElementRef) ! {
+	// Find the form element - if el is a form, use it, otherwise find the parent form
+	script := 'var form = arguments[0].form || arguments[0]; if (form.tagName === "FORM") { form.submit(); } else { throw new Error("Element is not a form or inside a form"); }'
+	wd.execute_script(script, [json.Any(json.encode(el))])!
+}
+
+// Get the bounding rectangle of an element
+// Returns the element's position (x, y) and size (width, height) in pixels
+// W3C Endpoint: GET /session/{session id}/element/{element id}/rect
+pub fn (wd WebDriver) get_element_rect(el ElementRef) !ElementRect {
+	resp := wd.get_request[ElementRect]('/session/${wd.session_id}/element/${el.element_id}/rect')!
+	return resp.value
 }
