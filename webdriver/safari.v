@@ -1,6 +1,6 @@
 module webdriver
 
-// Create a new Safari WebDriver session
+// new_safari_driver - Create a new Safari WebDriver session
 // base_url: SafariDriver endpoint (e.g., 'http://127.0.0.1:4445')
 // caps: Browser capabilities including SafariOptions
 pub fn new_safari_driver(base_url string, caps Capabilities) !WebDriver {

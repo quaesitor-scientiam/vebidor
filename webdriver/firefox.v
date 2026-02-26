@@ -1,6 +1,6 @@
 module webdriver
 
-// Create a new Firefox WebDriver session
+// new_firefox_driver - Create a new Firefox WebDriver session
 // base_url: GeckoDriver endpoint (e.g., 'http://127.0.0.1:4444')
 // caps: Browser capabilities including FirefoxOptions
 pub fn new_firefox_driver(base_url string, caps Capabilities) !WebDriver {

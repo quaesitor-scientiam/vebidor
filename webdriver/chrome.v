@@ -1,6 +1,6 @@
 module webdriver
 
-// Create a new Chrome WebDriver session
+// new_chrome_driver - Create a new Chrome WebDriver session
 // base_url: ChromeDriver endpoint (e.g., 'http://127.0.0.1:9515')
 // caps: Browser capabilities including ChromeOptions
 pub fn new_chrome_driver(base_url string, caps Capabilities) !WebDriver {

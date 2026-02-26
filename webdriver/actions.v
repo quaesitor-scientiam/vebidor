@@ -142,7 +142,7 @@ pub fn (wd WebDriver) type_text(text string) ! {
 
 // Advanced Actions - Phase 7
 
-// Perform a context click (right-click) on an element
+// context_click -Perform a context click (right-click) on an element
 // This moves to the element's center and clicks the right mouse button (button 2)
 pub fn (wd WebDriver) context_click(el ElementRef) ! {
 	// Get element center position
@@ -160,7 +160,7 @@ pub fn (wd WebDriver) context_click(el ElementRef) ! {
 	wd.perform_actions([src])!
 }
 
-// Click and hold the left mouse button on an element
+// click_and_hold - Click and hold the left mouse button on an element
 // The button remains pressed until release_held_button() is called
 // This is useful for drag operations or interactive UI elements
 pub fn (wd WebDriver) click_and_hold(el ElementRef) ! {
@@ -178,7 +178,7 @@ pub fn (wd WebDriver) click_and_hold(el ElementRef) ! {
 	wd.perform_actions([src])!
 }
 
-// Release the held mouse button
+// release_held_button - Release the held mouse button
 // This should be called after click_and_hold() to release the button
 pub fn (wd WebDriver) release_held_button() ! {
 	actions := [
@@ -188,7 +188,7 @@ pub fn (wd WebDriver) release_held_button() ! {
 	wd.perform_actions([src])!
 }
 
-// Drag an element and drop it onto another element
+// drag_and_drop_to_element - Drag an element and drop it onto another element
 // This performs a drag-and-drop operation from source to target
 // Duration of 500ms is used for the drag motion (smooth movement)
 pub fn (wd WebDriver) drag_and_drop_to_element(source ElementRef, target ElementRef) ! {
@@ -212,7 +212,7 @@ pub fn (wd WebDriver) drag_and_drop_to_element(source ElementRef, target Element
 	wd.perform_actions([src])!
 }
 
-// Drag an element by a specific pixel offset
+// drag_and_drop_by_offset - Drag an element by a specific pixel offset
 // x_offset: horizontal pixels to drag (positive = right, negative = left)
 // y_offset: vertical pixels to drag (positive = down, negative = up)
 // Duration of 500ms is used for the drag motion

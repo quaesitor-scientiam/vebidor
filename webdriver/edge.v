@@ -15,7 +15,7 @@ pub:
 	scale  f32
 }
 
-// Create a new Edge WebDriver session
+// new_edge_driver - Create a new Edge WebDriver session
 // base_url: EdgeDriver endpoint (e.g., 'http://127.0.0.1:9515')
 // caps: Browser capabilities including EdgeOptions
 pub fn new_edge_driver(base_url string, caps Capabilities) !WebDriver {

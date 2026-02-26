@@ -10,7 +10,7 @@ pub fn (wd WebDriver) execute_script(script string, args []json.Any) !json.Any {
 	return resp.value
 }
 
-// Execute asynchronous JavaScript in the current browsing context
+// execute_async_script - Execute asynchronous JavaScript in the current browsing context
 // The script should call the callback (last argument) when complete
 // W3C Endpoint: POST /session/{session id}/execute/async
 // Example: execute_async_script('setTimeout(arguments[arguments.length - 1], 1000)', [])
