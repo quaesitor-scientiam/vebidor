@@ -22,6 +22,7 @@ pub mut:
 	args       ?[]string
 	extensions ?[]string
 	binary     ?string
+	prefs      ?map[string]json.Any
 }
 
 pub struct ChromeOptions {
@@ -133,6 +134,9 @@ pub fn (caps Capabilities) to_session_params() NewSessionParams {
 		}
 		if bin := eo.binary {
 			edge_map['binary'] = json.Any(bin)
+		}
+		if prefs := eo.prefs {
+			edge_map['prefs'] = json.Any(prefs)
 		}
 		m['ms:edgeOptions'] = json.Any(edge_map)
 	}
