@@ -462,6 +462,37 @@ v simple_test.v
 .\simple_test.exe
 ```
 
+## 📊 Latency Benchmark
+
+`examples/webdriver_latency_bench.v` measures round-trip latency for common WebDriver commands (`get_title`, `get_current_url`, `execute_script`) and reports min/avg/p50/p95/p99/max in milliseconds.
+
+**Prerequisites:** a WebDriver must already be running before launching the benchmark.
+
+```bash
+# Default (stdlib net.http)
+v run examples/webdriver_latency_bench.v
+
+# Raw TCP transport (opt-in, avoids keep-alive stall)
+v -d wd_use_raw_tcp run examples/webdriver_latency_bench.v
+```
+
+**Options:**
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--browser=edge\|chrome\|firefox\|safari` | `edge` | Browser to use |
+| `--driver=URL` | `http://127.0.0.1:9515` | WebDriver URL |
+| `--iters=N` | `200` | Number of timed iterations |
+| `--warmup=N` | `20` | Warmup iterations (not measured) |
+| `--binary=PATH` | *(env var)* | Path to browser executable |
+| `--headless` / `--headed` | headless | Run browser headlessly or not |
+
+**Example output:**
+```
+Command: get_title
+  count: 200  min: 2.007 ms  avg: 2.460 ms  p50: 2.344 ms  p95: 3.045 ms  p99: 4.023 ms  max: 4.545 ms
+```
+
 ## 📚 Documentation
 
 - **[PHASE1_COMPLETE.md](PHASE1_COMPLETE.md)** - Phase 1: Element Properties (8 methods)
@@ -545,6 +576,8 @@ v-webdriver/
 │   ├── errors.v              # Error handling
 │   ├── webdriver_test.v      # Unit tests
 │   └── quick_test.v          # Quick smoke tests
+├── examples/
+│   └── webdriver_latency_bench.v  # Latency benchmark tool
 ├── main.v                    # Example usage
 ├── simple_test.v             # Standalone test suite
 ├── integration_test.v        # Integration tests
