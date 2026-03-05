@@ -19,12 +19,25 @@ fn (wd WebDriver) log(msg string) {
 	}
 }
 
-// wd_do performs an HTTP request to an EdgeDriver endpoint over raw TCP.
-// Unlike http.Request.do(), it stops reading as soon as Content-Length bytes
-// of body have been received, avoiding the 30-second read-timeout stall that
-// occurs in V's stdlib HTTP client when the server uses HTTP keep-alive and
-// never closes the connection.
+// wd_do performs an HTTP request to an EdgeDriver endpoint.
+// By default it uses V's stdlib net.http. Compile with -d wd_use_raw_tcp to
+// switch to a raw TCP path that stops reading as soon as Content-Length bytes
+// have been received, avoiding the 30-second keep-alive stall in the stdlib
+// HTTP client.
 fn wd_do(method string, url_str string, content_type string, body string) !http.Response {
+	$if !wd_use_raw_tcp ? {
+		mut header := http.new_header()
+		if content_type.len > 0 {
+			header.add(.content_type, content_type)
+		}
+		return http.fetch(
+			method: http.method_from_str(method.to_upper())
+			url:    url_str
+			data:   body
+			header: header
+		)
+	}
+
 	u := urllib.parse(url_str)!
 	host := u.hostname()
 	port := u.port().int()
@@ -54,7 +67,7 @@ fn wd_do(method string, url_str string, content_type string, body string) !http.
 	cp := unsafe { &chunk[0] }
 	mut resp_bytes := []u8{cap: 4096}
 	mut hdr_end := -1 // byte offset where the body begins (after \r\n\r\n)
-	mut clen := -1    // value of Content-Length header
+	mut clen := -1 // value of Content-Length header
 
 	for {
 		n := conn.read_ptr(cp, 4096) or { break }
