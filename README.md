@@ -2,7 +2,7 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 3.0.0** | **🎉 100% Feature Parity with Selenium 🎉** | **Production Ready**
+**Version 3.0.1** | **🎉 100% Feature Parity with Selenium 🎉** | **Production Ready**
 
 ## 🚀 Features
 
