@@ -2,7 +2,7 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 3.0.1** | **🎉 100% Feature Parity with Selenium 🎉** | **Production Ready**
+**Version 3.1.1** | **🎉 100% Feature Parity with Selenium 🎉** | **Production Ready**
 
 ## 🚀 Features
 
@@ -536,20 +536,14 @@ Command: get_title
 
 See [ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md) for complete roadmap.
 
-## ✨ What's New in v3.0.0
+## ✨ What's New in v3.1.1
 
-**🎉🎊 Phase 8 Complete: 100% Feature Parity Achieved! 🎊🎉**
+**🐛 Multi-Browser Bug Fixes - All 4 browsers now fully functional!**
 
-- ✅ **Phase 1**: Element Properties (8 methods) - `get_text()`, `get_attribute()`, `is_displayed()`, etc.
-- ✅ **Phase 2**: Alert Handling (4 methods) - `accept_alert()`, `dismiss_alert()`, `get_alert_text()`, etc.
-- ✅ **Phase 3**: Page Information (3 methods) - `get_title()`, `get_current_url()`, `get_page_source()`
-- ✅ **Phase 4**: Window & Waits (8 methods) - Multi-window support, timeouts, window state management
-- ✅ **Phase 5**: CSS Properties (1 method) - `get_css_value()` for computed CSS inspection
-- ✅ **Phase 6**: Expected Conditions (5 methods) - `wait_until_clickable()`, `wait_until_visible()`, etc.
-- ✅ **Phase 7**: Advanced Actions (7 methods) - `context_click()`, `drag_and_drop()`, `get_element_rect()`, `submit()`
-- ✅ **Phase 8**: Async JS & Shadow DOM (4 methods) - `execute_async_script()`, `get_shadow_root()`, shadow element finding ← NEW!
-
-**Latest**: Phase 8 added async JavaScript execution and complete Shadow DOM support!
+- ✅ **v3.1.1**: Fixed compile error (`new_session()` helper), Safari W3C JSON tags, moved `new_edge_driver()` to `edge.v`, standardized parameter names
+- ✅ **v3.1.0**: Added Chrome, Firefox, and Safari browser support alongside Edge
+- ✅ **v3.0.1**: Added `find_edge_binary` helper for automatic Edge binary detection
+- ✅ **v3.0.0**: Phase 8 Complete - 100% Feature Parity with Selenium achieved!
 
 **Total**: **40 methods** added across all phases, raising feature parity from 55% to **100%**! 🎉
 
@@ -659,13 +653,13 @@ For issues, questions, or contributions:
 
 ---
 
-**Status**: Production-ready for web automation. 97% feature parity achieved! 🎉
+**Status**: Production-ready for web automation. 100% feature parity achieved! 🎉
 
-**Version**: 2.2.0 (97% Selenium feature parity)
+**Version**: 3.1.1 (100% Selenium feature parity, 4-browser support)
 
-**Completed Phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 6 | ✅ Phase 7
+**Completed Phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 5 | ✅ Phase 6 | ✅ Phase 7 | ✅ Phase 8
 
-**Latest Update**: 2026-02-15 - Completed Phase 7 (Advanced Actions) - 35 methods added total across all phases
+**Latest Update**: 2026-02-15 - v3.1.1 multi-browser bug fixes (Chrome, Firefox, Safari, Edge all functional)
 
-**Next Milestone**: v3.0.0 - 100% Feature Parity (only 3% remaining!)
+**Current Release**: v3.1.1 - All browser drivers stable
 

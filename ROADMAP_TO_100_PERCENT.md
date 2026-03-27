@@ -1,6 +1,6 @@
 # 🏆 100% Feature Parity with Selenium Achieved! 🏆
 
-**Current Status**: v3.0.0 - **100% feature parity** 🎉🎊
+**Current Status**: v3.1.1 - **100% feature parity** 🎉🎊
 **Target**: v3.0.0 - 100% feature parity ✅ **ACHIEVED!**
 **Remaining**: **0%** - Complete!
 

@@ -798,5 +798,5 @@ Ctrl+C
 ---
 
 **Status**: Complete multi-browser test environment setup guide
-**Version**: v3.1.0 compatible (4-browser support)
+**Version**: v3.1.1 compatible (4-browser support)
 **Last Updated**: 2026-02-15
