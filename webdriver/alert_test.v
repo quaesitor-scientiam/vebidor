@@ -21,7 +21,7 @@ fn setup_test_driver() !WebDriver {
 	return new_edge_driver('http://127.0.0.1:9515', caps)!
 }
 
-// Test accept_alert() - Accept a simple alert dialog
+// test_accept_alert - Accept a simple alert dialog
 fn test_accept_alert() ! {
 	mut wd := setup_test_driver()!
 	defer {
@@ -47,7 +47,7 @@ fn test_accept_alert() ! {
 	println('✓ accept_alert() test passed')
 }
 
-// Test dismiss_alert() - Dismiss a confirm dialog
+// test_dismiss_alert - Dismiss a confirm dialog
 fn test_dismiss_alert() ! {
 	mut wd := setup_test_driver()!
 	defer {
@@ -71,7 +71,7 @@ fn test_dismiss_alert() ! {
 	println('✓ dismiss_alert() test passed')
 }
 
-// Test get_alert_text() - Get text from various dialog types
+// test_get_alert_text - Get text from various dialog types
 fn test_get_alert_text() ! {
 	mut wd := setup_test_driver()!
 	defer {
@@ -101,7 +101,7 @@ fn test_get_alert_text() ! {
 	println('✓ get_alert_text() test passed')
 }
 
-// Test send_alert_text() - Send text to a prompt dialog
+// test_send_alert_text - Send text to a prompt dialog
 fn test_send_alert_text() ! {
 	mut wd := setup_test_driver()!
 	defer {
@@ -133,7 +133,7 @@ fn test_send_alert_text() ! {
 	println('✓ send_alert_text() test passed')
 }
 
-// Test alert workflow - Complete alert handling scenario
+// test_alert_workflow - Complete alert handling scenario
 fn test_alert_workflow() ! {
 	mut wd := setup_test_driver()!
 	defer {
@@ -179,7 +179,7 @@ fn test_alert_workflow() ! {
 	println('✓ alert_workflow() test passed')
 }
 
-// Test empty prompt - Accept without sending text
+// test_empty_prompt - Accept without sending text
 fn test_empty_prompt() ! {
 	mut wd := setup_test_driver()!
 	defer {
@@ -202,7 +202,7 @@ fn test_empty_prompt() ! {
 	println('✓ empty_prompt() test passed')
 }
 
-// Test dismissed prompt - Should return null
+// test_dismissed_prompt - Should return null
 fn test_dismissed_prompt() ! {
 	mut wd := setup_test_driver()!
 	defer {

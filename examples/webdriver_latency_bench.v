@@ -2,7 +2,7 @@ module main
 
 import os
 import time
-import webdriver
+import vebidor {webdriver}
 import x.json2 as json
 
 struct BenchConfig {

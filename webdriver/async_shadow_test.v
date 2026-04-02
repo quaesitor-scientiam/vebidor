@@ -3,7 +3,7 @@ module webdriver
 import x.json2 as json
 import time
 
-// Helper function to set up a test driver
+// setup_test_driver - Helper function to set up a test driver
 fn setup_test_driver() !WebDriver {
 	caps := Capabilities{
 		browser_name: 'msedge'

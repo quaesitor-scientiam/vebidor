@@ -1,6 +1,6 @@
 module main
 
-import webdriver
+import vebidor {webdriver}
 import x.json2 as json
 import time
 

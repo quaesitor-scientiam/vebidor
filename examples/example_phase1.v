@@ -1,6 +1,7 @@
 module main
 
-import webdriver
+import vebidor {webdriver}
+
 
 fn main() {
 	println('========================================')

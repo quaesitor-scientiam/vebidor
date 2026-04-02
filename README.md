@@ -1,4 +1,4 @@
-# V WebDriver - W3C WebDriver Protocol Implementation
+# Vebidor - W3C WebDriver Protocol Implementation
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
@@ -265,6 +265,7 @@ fn login_example() ! {
 import webdriver
 
 fn cookie_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -293,6 +294,7 @@ fn cookie_example() ! {
 import webdriver
 
 fn actions_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -314,6 +316,7 @@ fn actions_example() ! {
 import webdriver
 
 fn element_properties_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -340,6 +343,7 @@ fn element_properties_example() ! {
 import webdriver
 
 fn alert_handling_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -363,6 +367,7 @@ fn alert_handling_example() ! {
 import webdriver
 
 fn page_info_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -388,6 +393,7 @@ fn page_info_example() ! {
 import webdriver
 
 fn multi_window_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -418,6 +424,7 @@ fn multi_window_example() ! {
 import webdriver
 
 fn timeouts_example() ! {
+    caps := webdriver.Capabilities{ browser_name: 'msedge' }
     wd := webdriver.new_edge_driver('http://127.0.0.1:9515', caps)!
     defer { wd.quit() or {} }
 
@@ -580,7 +587,7 @@ v-webdriver/
 
 ## 🌐 Multi-Browser Support
 
-V WebDriver now supports **4 major browsers**:
+Vebidor now supports **4 major browsers**:
 
 | Browser | Driver | Default Port | Function |
 |---------|--------|--------------|----------|
@@ -632,7 +639,7 @@ Contributions are welcome! Now that 100% feature parity is achieved, focus areas
 3. **Advanced Features** - BiDi protocol support, enhanced logging
 4. **Platform Support** - macOS, Linux testing and optimization
 
-V WebDriver has achieved 100% feature parity with Selenium's core functionality!
+Vebidor has achieved 100% feature parity with Selenium's core functionality!
 
 ## 📄 License
 
