@@ -1,6 +1,6 @@
 module webdriver
 
-import x.json2 as json
+import encoding.base64
 
 // Helper function to set up a test driver with test HTML
 fn setup_test_driver_with_html() !WebDriver {
@@ -50,7 +50,8 @@ fn setup_test_driver_with_html() !WebDriver {
 </body>
 </html>'
 
-	wd.get('data:text/html;charset=utf-8,${test_html}')!
+	// base64-encode to avoid URL-fragment truncation at '#' (CSS id selectors in <style>)
+	wd.get('data:text/html;charset=utf-8;base64,${base64.encode_str(test_html)}')!
 	return wd
 }
 

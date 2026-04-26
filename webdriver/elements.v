@@ -56,13 +56,15 @@ pub fn (wd WebDriver) get_text(el ElementRef) !string {
 
 // get_attribute - Get the value of an element's attribute
 pub fn (wd WebDriver) get_attribute(el ElementRef, name string) !string {
-	resp := wd.get_request[string]('/session/${wd.session_id}/element/${el.element_id}/attribute/${name}')!
+	resp :=
+		wd.get_request[string]('/session/${wd.session_id}/element/${el.element_id}/attribute/${name}')!
 	return resp.value
 }
 
 // get_property - Get the value of an element's property
 pub fn (wd WebDriver) get_property(el ElementRef, name string) !json.Any {
-	resp := wd.get_request[json.Any]('/session/${wd.session_id}/element/${el.element_id}/property/${name}')!
+	resp :=
+		wd.get_request[json.Any]('/session/${wd.session_id}/element/${el.element_id}/property/${name}')!
 	return resp.value
 }
 
@@ -100,8 +102,13 @@ pub fn (wd WebDriver) clear(el ElementRef) ! {
 // W3C Note: This is a convenience method that uses JavaScript
 pub fn (wd WebDriver) submit(el ElementRef) ! {
 	// Find the form element - if el is a form, use it, otherwise find the parent form
-	script := 'var form = arguments[0].form || arguments[0]; if (form.tagName === "FORM") { form.submit(); } else { throw new Error("Element is not a form or inside a form"); }'
-	wd.execute_script(script, [json.Any(json.encode(el))])!
+	// Prefer requestSubmit() so onsubmit handlers / submit listeners fire and form validation runs.
+	// Fall back to submit() on browsers that lack it.
+	script := 'var form = arguments[0].form || arguments[0]; if (form.tagName !== "FORM") { throw new Error("Element is not a form or inside a form"); } if (typeof form.requestSubmit === "function") { form.requestSubmit(); } else { form.submit(); }'
+	el_arg := {
+		'element-6066-11e4-a52e-4f735466cecf': json.Any(el.element_id)
+	}
+	wd.execute_script(script, [json.Any(el_arg)])!
 }
 
 // get_element_rect - Get the bounding rectangle of an element
@@ -117,7 +124,8 @@ pub fn (wd WebDriver) get_element_rect(el ElementRef) !ElementRect {
 // W3C Endpoint: GET /session/{session id}/element/{element id}/css/{property name}
 // Example: get_css_value(element, 'color') returns 'rgba(0, 0, 0, 1)'
 pub fn (wd WebDriver) get_css_value(el ElementRef, property_name string) !string {
-	resp := wd.get_request[string]('/session/${wd.session_id}/element/${el.element_id}/css/${property_name}')!
+	resp :=
+		wd.get_request[string]('/session/${wd.session_id}/element/${el.element_id}/css/${property_name}')!
 	return resp.value
 }
 

@@ -4,5 +4,5 @@ Module {
 	version: '3.1.1'
 	license: 'MIT'
 	dependencies: []
-	repo_url: 'https://github.com/quaesitor-scientiam/v-webdriver'
+	repo_url: 'https://github.com/quaesitor-scientiam/vebidor'
 }

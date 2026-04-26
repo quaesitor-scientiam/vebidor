@@ -1,7 +1,7 @@
 module main
 
-import webdriver
 import x.json2 as json
+import webdriver
 
 // Integration test: Search on a website
 fn test_search_flow() ! {
@@ -35,8 +35,7 @@ fn test_search_flow() ! {
 	println('✓ Found h1 element: ${heading.element_id}')
 
 	// Get heading text using JavaScript
-	heading_text := wd.execute_script('return document.querySelector("h1").textContent',
-		[])!
+	heading_text := wd.execute_script('return document.querySelector("h1").textContent', [])!
 	println('✓ Heading text: ${heading_text}')
 
 	println('✅ Search flow test passed!')

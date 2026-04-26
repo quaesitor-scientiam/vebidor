@@ -18,7 +18,9 @@
       "Bash(./main.exe:*)",
       "Bash(./start_edgedriver_test2.exe)",
       "Bash(powershell:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(gh pr:*)",
+      "Bash(git -C S:/vProjects/vebidor mv quick_test.vsh run_quick_tests.vsh)"
     ]
   }
 }

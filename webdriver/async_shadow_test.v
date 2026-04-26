@@ -345,28 +345,29 @@ fn test_shadow_root_interaction() {
 		wd.quit() or {}
 	}
 
-	// Create a page with interactive Shadow DOM
+	// Create a page with interactive Shadow DOM.
+	// The handler is attached from the outer script *after* setting innerHTML — a <script>
+	// inside an innerHTML template doesn't execute, and the inner </script> would also
+	// prematurely close the outer <script> during HTML parsing.
 	test_html :=
 		'<!DOCTYPE html>
 <html>
 <head><title>Shadow DOM Test</title></head>
 <body>
 	<div id="host"></div>
-	<script>
+	<scr' +
+		'ipt>
 		var host = document.getElementById("host");
 		var shadowRoot = host.attachShadow({mode: "open"});
 		shadowRoot.innerHTML = `
 			<button id="shadow-btn">Click Me</button>
 			<div id="result">Not clicked</div>
-			<scr' +
-		'ipt>
-				shadowRoot.getElementById("shadow-btn").addEventListener("click", function() {
-					shadowRoot.getElementById("result").textContent = "Clicked!";
-				});
-			</scr' +
-		'ipt>
 		`;
-	</script>
+		shadowRoot.getElementById("shadow-btn").addEventListener("click", function() {
+			shadowRoot.getElementById("result").textContent = "Clicked!";
+		});
+	</scr' +
+		'ipt>
 </body>
 </html>'
 
