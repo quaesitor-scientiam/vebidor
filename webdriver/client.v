@@ -4,6 +4,7 @@ import net
 import net.http
 import net.urllib
 import strings
+import time
 import x.json2 as json
 
 pub struct WebDriver {
@@ -31,10 +32,12 @@ fn wd_do(method string, url_str string, content_type string, body string) !http.
 			header.add(.content_type, content_type)
 		}
 		return http.fetch(
-			method: http.method_from_str(method.to_upper())
-			url:    url_str
-			data:   body
-			header: header
+			method:        http.method_from_str(method.to_upper())
+			url:           url_str
+			data:          body
+			header:        header
+			read_timeout:  120 * time.second
+			write_timeout: 30 * time.second
 		)
 	}
 
@@ -133,6 +136,13 @@ pub fn new_session(base_url string, caps Capabilities) !WebDriver {
 // quit - Close the session and quit the browser
 pub fn (wd WebDriver) quit() ! {
 	wd.delete_void('/session/${wd.session_id}')!
+}
+
+// sid - return the current WebDriver session ID. Useful for external
+// monitoring or watchdog logic that needs to terminate a specific
+// session via the underlying WebDriver REST API.
+pub fn (wd WebDriver) sid() string {
+	return wd.session_id
 }
 
 // get - Navigate to a URL
