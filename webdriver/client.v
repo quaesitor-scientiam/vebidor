@@ -35,6 +35,7 @@ fn (t HttpTransport) execute(method string, url string, content_type string, bod
 	}
 }
 
+@[heap]
 pub struct WebDriver {
 pub:
 	base_url   string
