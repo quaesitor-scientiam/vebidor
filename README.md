@@ -4,11 +4,52 @@ A V language implementation of the W3C WebDriver protocol for browser automation
 
 **Version 3.1.1** | **🎉 100% Feature Parity with Selenium 🎉** | **Production Ready**
 
+## ⚡ Modern API (Playwright-style)
+
+Beyond the raw W3C WebDriver methods, Vebidor ships a higher-level ergonomic
+layer: one-call browser **launch**, lazy auto-waiting **Locators**, semantic
+**selector engines**, and retrying **web-first assertions**.
+
+```v
+import vebidor { webdriver }
+
+fn main() {
+	// Auto-detects the driver + browser, picks a free port, and tears
+	// everything down on close(). No manual "start chromedriver" step.
+	mut b := webdriver.launch_edge(webdriver.LaunchOptions{ headless: true })!
+	defer { b.close() }
+
+	b.goto('https://example.com')!
+
+	// Locators are lazy and auto-wait for the element to be actionable.
+	b.wd.get_by_role('link', 'More information...').click()!
+
+	// Web-first assertions poll until the condition holds (or time out).
+	webdriver.expect(b.wd.get_by_role('heading', '')).to_be_visible()!
+}
+```
+
+**Selector engines:** `get_by_role`, `get_by_text`, `get_by_label`,
+`get_by_placeholder`, `get_by_test_id`, plus `wd.locator('css=...' | 'xpath=...')`
+with chaining (`row.locator('td')`) and `nth(i)` / `first()`.
+
+**Auto-waiting actions:** `click`, `fill`, `type_text`, `clear` wait for the
+element to be attached, visible, enabled, and scrolled into view.
+
+**Assertions:** `to_be_visible` / `to_be_hidden` / `to_be_enabled` /
+`to_be_disabled`, `to_have_text` / `to_contain_text` / `to_have_value` /
+`to_have_attribute` / `to_have_count`, each invertible via `.not()` and tunable
+via `.with_timeout(ms)`.
+
+See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for how this
+maps onto Playwright and the roadmap for what's next.
+
 ## 🚀 Features
 
 ### ✅ Fully Implemented (100% Coverage) 🎉
 
 **Core Features:**
+- **Modern API** - One-call `launch()`, lazy auto-waiting Locators, selector engines, and web-first assertions (see [⚡ Modern API](#-modern-api-playwright-style))
 - **Session Management** - Create, manage, and quit browser sessions
 - **Navigation** - Navigate, back, forward, refresh
 - **Element Location** - Find elements by CSS selector, XPath, ID, class name, tag name, link text
@@ -79,6 +120,12 @@ A V language implementation of the W3C WebDriver protocol for browser automation
    - **Safari**: Built-in SafariDriver on macOS (port 4445)
 
 ### Quick Setup
+
+> **Tip:** With the [Modern API](#-modern-api-playwright-style) `launch()`, you
+> can skip the manual driver-start step below — Vebidor finds the driver on
+> `PATH` (or via `EDGEDRIVER`/`CHROMEDRIVER`/`GECKODRIVER`), starts it on a free
+> port, and stops it for you. The steps below are for the classic
+> `new_*_driver(url, caps)` flow that connects to a driver you started yourself.
 
 ```bash
 # Clone the repository
