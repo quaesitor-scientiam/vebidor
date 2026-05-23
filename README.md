@@ -502,18 +502,10 @@ Command: get_title
 
 ## 📚 Documentation
 
-- **[PHASE1_COMPLETE.md](PHASE1_COMPLETE.md)** - Phase 1: Element Properties (8 methods)
-- **[PHASE2_COMPLETE.md](PHASE2_COMPLETE.md)** - Phase 2: Alert Handling (4 methods)
-- **[PHASE3_COMPLETE.md](PHASE3_COMPLETE.md)** - Phase 3: Page Information (3 methods)
-- **[PHASE4_SUMMARY.md](PHASE4_SUMMARY.md)** - Phase 4: Window & Waits (8 methods)
-- **[PHASE5_COMPLETE.md](PHASE5_COMPLETE.md)** - Phase 5: CSS Properties (1 method)
-- **[PHASE6_COMPLETE.md](PHASE6_COMPLETE.md)** - Phase 6: Expected Conditions (5 methods)
-- **[PHASE7_COMPLETE.md](PHASE7_COMPLETE.md)** - Phase 7: Advanced Actions (7 methods)
-- **[PHASE8_COMPLETE.md](PHASE8_COMPLETE.md)** - Phase 8: Async JS & Shadow DOM (4 methods) ← NEW
 - **[COMPARISON_WITH_SELENIUM.md](COMPARISON_WITH_SELENIUM.md)** - Feature comparison with Selenium
-- **[ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md)** - Roadmap to 100% feature parity
-- **[MISSING_FEATURES_GUIDE.md](MISSING_FEATURES_GUIDE.md)** - Workarounds for remaining features
+- **[COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md)** - Comparison with Playwright & roadmap
 - **[TESTING.md](TESTING.md)** - Testing guide
+- **[TEST_ENVIRONMENT_SETUP.md](TEST_ENVIRONMENT_SETUP.md)** - Test environment setup
 - **[CHANGELOG.md](CHANGELOG.md)** - Change history
 
 ## 🎯 Feature Coverage
@@ -541,7 +533,7 @@ Command: get_title
 
 **🏆 100% FEATURE PARITY ACHIEVED! 🏆**
 
-See [ROADMAP_TO_100_PERCENT.md](ROADMAP_TO_100_PERCENT.md) for complete roadmap.
+See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the roadmap beyond Selenium parity.
 
 ## ✨ What's New in v3.1.1
 
