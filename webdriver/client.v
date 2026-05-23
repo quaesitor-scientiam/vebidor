@@ -7,11 +7,40 @@ import strings
 import time
 import x.json2 as json
 
+// Response is a transport-agnostic command result. Both the HTTP (WebDriver
+// Classic) transport and a future BiDi (WebSocket) transport return this shape
+// so the generic decode helpers on WebDriver don't care how the bytes arrived.
+pub struct Response {
+pub:
+	status_code int
+	body        string
+}
+
+// Transport abstracts the mechanism used to talk to the browser/driver.
+// HttpTransport (below) implements WebDriver Classic over HTTP today; a future
+// WebDriver-BiDi transport over a WebSocket can satisfy the same interface,
+// letting both coexist behind a single WebDriver type.
+pub interface Transport {
+	execute(method string, url string, content_type string, body string) !Response
+}
+
+// HttpTransport speaks WebDriver Classic: one HTTP round-trip per command.
+pub struct HttpTransport {}
+
+fn (t HttpTransport) execute(method string, url string, content_type string, body string) !Response {
+	resp := wd_do(method, url, content_type, body)!
+	return Response{
+		status_code: resp.status_code
+		body:        resp.body
+	}
+}
+
 pub struct WebDriver {
 pub:
 	base_url   string
 	session_id string
 	logger     ?Logger
+	transport  Transport = HttpTransport{}
 }
 
 fn (wd WebDriver) log(msg string) {
@@ -104,12 +133,20 @@ fn wd_do(method string, url_str string, content_type string, body string) !http.
 	return http.parse_response(resp_bytes.bytestr())!
 }
 
-// new_session - Create a new WebDriver session (shared helper for all browsers)
+// new_session - Create a new WebDriver session (shared helper for all browsers).
+// Uses the default WebDriver Classic HTTP transport.
 pub fn new_session(base_url string, caps Capabilities) !WebDriver {
+	return new_session_with_transport(base_url, caps, HttpTransport{})
+}
+
+// new_session_with_transport - Create a session over an explicit transport.
+// This is the seam that lets a future BiDi (WebSocket) transport reuse the
+// same session-bootstrap and command-dispatch logic.
+pub fn new_session_with_transport(base_url string, caps Capabilities, transport Transport) !WebDriver {
 	params := caps.to_session_params()
 	body := json.encode(params)
 
-	resp := wd_do('POST', '${base_url}/session', 'application/json', body) or {
+	resp := transport.execute('POST', '${base_url}/session', 'application/json', body) or {
 		return error('Failed to connect to WebDriver at ${base_url}\n' +
 			'Make sure the WebDriver is running.\n' + 'Error: ${err}')
 	}
@@ -130,6 +167,7 @@ pub fn new_session(base_url string, caps Capabilities) !WebDriver {
 	return WebDriver{
 		base_url:   base_url
 		session_id: sid.str()
+		transport:  transport
 	}
 }
 
@@ -188,7 +226,7 @@ pub fn (wd WebDriver) get_page_source() !string {
 fn (wd WebDriver) post[T](path string, payload json.Any) !WebDriverResponse[T] {
 	body := json.encode(payload)
 
-	resp := wd_do('POST', '${wd.base_url}${path}', 'application/json', body) or {
+	resp := wd.transport.execute('POST', '${wd.base_url}${path}', 'application/json', body) or {
 		return error('POST ${path} failed: ${err}')
 	}
 
@@ -205,7 +243,7 @@ fn (wd WebDriver) post[T](path string, payload json.Any) !WebDriverResponse[T] {
 }
 
 fn (wd WebDriver) get_request[T](path string) !WebDriverResponse[T] {
-	resp := wd_do('GET', '${wd.base_url}${path}', '', '') or {
+	resp := wd.transport.execute('GET', '${wd.base_url}${path}', '', '') or {
 		return error('GET ${path} failed: ${err}')
 	}
 
@@ -224,7 +262,7 @@ fn (wd WebDriver) get_request[T](path string) !WebDriverResponse[T] {
 fn (wd WebDriver) post_void(path string, payload json.Any) ! {
 	body := json.encode(payload)
 
-	resp := wd_do('POST', '${wd.base_url}${path}', 'application/json', body) or {
+	resp := wd.transport.execute('POST', '${wd.base_url}${path}', 'application/json', body) or {
 		return error('POST ${path} failed: ${err}')
 	}
 
@@ -237,7 +275,7 @@ fn (wd WebDriver) post_void(path string, payload json.Any) ! {
 }
 
 fn (wd WebDriver) delete_void(path string) ! {
-	wd_do('DELETE', '${wd.base_url}${path}', '', '') or {
+	wd.transport.execute('DELETE', '${wd.base_url}${path}', '', '') or {
 		return error('DELETE ${path} failed: ${err}')
 	}
 }
