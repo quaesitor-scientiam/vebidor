@@ -1,7 +1,7 @@
 Module {
 	name: 'vebidor'
-	description: 'A V language implementation of W3C WebDriver - 100% Selenium feature parity with async JS & Shadow DOM support'
-	version: '3.1.1'
+	description: 'A V implementation of W3C WebDriver + WebDriver-BiDi with a Playwright-style API: auto-waiting Locators, selector engines, web-first assertions, one-call launch(), and network interception/mocking. 100% Selenium feature parity.'
+	version: '4.0.0'
 	license: 'MIT'
 	dependencies: []
 	repo_url: 'https://github.com/quaesitor-scientiam/vebidor'
