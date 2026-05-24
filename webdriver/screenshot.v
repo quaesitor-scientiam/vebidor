@@ -19,11 +19,11 @@ pub fn (wd WebDriver) element_screenshot(el ElementRef) !string {
 
 // save_screenshot captures the viewport and writes it to a PNG file.
 pub fn (wd WebDriver) save_screenshot(path string) ! {
-	save_png_base64(path, wd.screenshot()!)!
+	write_base64_file(path, wd.screenshot()!)!
 }
 
-// save_png_base64 decodes a base64 PNG payload and writes it to disk.
-fn save_png_base64(path string, b64 string) ! {
+// write_base64_file decodes a base64 payload and writes the bytes to disk.
+fn write_base64_file(path string, b64 string) ! {
 	bytes := base64.decode(b64)
 	os.write_file(path, bytes.bytestr())!
 }

@@ -16,5 +16,5 @@ pub fn (mut b BiDi) capture_screenshot(context string) !string {
 
 // save_screenshot captures the context and writes it to a PNG file.
 pub fn (mut b BiDi) save_screenshot(context string, path string) ! {
-	save_png_base64(path, b.capture_screenshot(context)!)!
+	write_base64_file(path, b.capture_screenshot(context)!)!
 }
