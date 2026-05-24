@@ -50,6 +50,7 @@ pub mut:
 pub struct Capabilities {
 pub mut:
 	browser_name              ?string         @[json: 'browserName']
+	web_socket_url            ?bool           @[json: 'webSocketUrl']
 	browser_version           ?string         @[json: 'browserVersion']
 	platform_name             ?string         @[json: 'platformName']
 	accept_insecure_certs     ?bool           @[json: 'acceptInsecureCerts']
@@ -79,6 +80,9 @@ pub fn (caps Capabilities) to_session_params() NewSessionParams {
 
 	if name := caps.browser_name {
 		m['browserName'] = json.Any(name)
+	}
+	if wsu := caps.web_socket_url {
+		m['webSocketUrl'] = json.Any(wsu)
 	}
 	if ver := caps.browser_version {
 		m['browserVersion'] = json.Any(ver)

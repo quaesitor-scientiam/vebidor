@@ -38,10 +38,11 @@ fn (t HttpTransport) execute(method string, url string, content_type string, bod
 @[heap]
 pub struct WebDriver {
 pub:
-	base_url   string
-	session_id string
-	logger     ?Logger
-	transport  Transport = HttpTransport{}
+	base_url       string
+	session_id     string
+	web_socket_url string // BiDi WebSocket URL, if the session was created with webSocketUrl:true
+	logger         ?Logger
+	transport      Transport = HttpTransport{}
 }
 
 fn (wd WebDriver) log(msg string) {
@@ -165,10 +166,20 @@ pub fn new_session_with_transport(base_url string, caps Capabilities, transport 
 
 	sid := parsed.value['sessionId'] or { return error('Missing sessionId in response') }
 
+	// Capture the BiDi WebSocket URL if the driver returned one (webSocketUrl:true).
+	mut ws_url := ''
+	if caps_any := parsed.value['capabilities'] {
+		cmap := caps_any.as_map()
+		if wsu := cmap['webSocketUrl'] {
+			ws_url = wsu.str()
+		}
+	}
+
 	return WebDriver{
-		base_url:   base_url
-		session_id: sid.str()
-		transport:  transport
+		base_url:       base_url
+		session_id:     sid.str()
+		web_socket_url: ws_url
+		transport:      transport
 	}
 }
 

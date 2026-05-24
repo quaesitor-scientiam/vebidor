@@ -32,6 +32,7 @@ pub:
 	args             []string // extra browser args
 	driver_url       string   // connect to an already-running driver; skips spawning
 	start_timeout_ms int = 10000 // how long to wait for the driver to become ready
+	bidi             bool // request a WebDriver-BiDi socket (webSocketUrl:true)
 }
 
 // Browser bundles a WebDriver session with the driver process that backs it,
@@ -75,12 +76,15 @@ pub fn launch(kind BrowserKind, opts LaunchOptions) !Browser {
 		url
 	}
 
-	caps := build_launch_caps(kind, opts) or {
+	mut caps := build_launch_caps(kind, opts) or {
 		if owns {
 			proc.signal_kill()
 			proc.close()
 		}
 		return err
+	}
+	if opts.bidi {
+		caps.web_socket_url = true
 	}
 
 	wd := new_session(base_url, caps) or {
@@ -123,6 +127,12 @@ pub fn launch_safari(opts LaunchOptions) !Browser {
 // goto navigates the browser's session to a URL (convenience pass-through).
 pub fn (b Browser) goto(url string) ! {
 	b.wd.get(url)!
+}
+
+// bidi opens a WebDriver-BiDi connection for this browser. Requires launching
+// with LaunchOptions{ bidi: true }.
+pub fn (b Browser) bidi() !&BiDi {
+	return b.wd.bidi()
 }
 
 // close quits the session and, if launch() spawned the driver, kills it.
