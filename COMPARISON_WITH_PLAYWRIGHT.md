@@ -1,145 +1,126 @@
-# Vebidor vs Playwright - Comparison & Roadmap
+# Vebidor vs Playwright - Comparison & Status
 
 ## Overview
 
-This document compares Vebidor with [Playwright](https://playwright.dev/) and lays out a
-staged roadmap for closing the gap. Where the Selenium comparison
-([COMPARISON_WITH_SELENIUM.md](COMPARISON_WITH_SELENIUM.md)) measures vebidor against a
-*peer* (another WebDriver-Classic client), this document measures it against a
-*newer generation* of automation tooling.
+This document compares Vebidor with [Playwright](https://playwright.dev/). Where the
+Selenium comparison ([COMPARISON_WITH_SELENIUM.md](COMPARISON_WITH_SELENIUM.md)) measures
+vebidor against a *peer* (another WebDriver-Classic client), this document measures it
+against a *newer generation* of automation tooling.
 
-Vebidor and Playwright sit in different categories:
+**Status: the Playwright-parity roadmap (Phases 0–5) is implemented**, plus a follow-up
+pass that brings the WebDriver-BiDi coverage ahead of Selenium's. Every feature below was
+verified live against headless Edge.
 
-- **Vebidor** is a **WebDriver-Classic** client. Every command is a single HTTP
-  round-trip to an external driver process (msedgedriver, chromedriver, geckodriver),
-  which forwards to the browser. See [`webdriver/client.v`](webdriver/client.v).
-- **Playwright** is a **protocol-native** framework. It speaks the browser's own
-  bidirectional protocol (CDP for Chromium, patched protocols for Firefox/WebKit) over a
-  persistent WebSocket, and ships its own browser builds.
+Vebidor now runs on **two coexisting transports**:
 
-Almost every difference below traces back to that one architectural split.
+- **WebDriver Classic** — one HTTP round-trip per command to an external driver
+  (msedgedriver, chromedriver, geckodriver). See [`webdriver/client.v`](webdriver/client.v).
+- **WebDriver-BiDi** — the W3C bidirectional protocol over a persistent WebSocket,
+  unlocking events, network interception, and isolated contexts. See
+  [`webdriver/bidi.v`](webdriver/bidi.v).
 
----
-
-## The core architectural fork
-
-Playwright's headline capabilities — network interception, reliable auto-waiting,
-isolated contexts, tracing — all depend on a **persistent, bidirectional connection** to
-the browser. WebDriver Classic is request/response only: the client cannot subscribe to
-events, intercept network traffic, or stream logs.
-
-This divides the gaps into two buckets:
-
-1. **Ergonomics gaps** — solvable on WebDriver Classic *today*, with no protocol change.
-   Auto-waiting, rich selectors, retrying assertions, browser lifecycle management.
-2. **Capability gaps** — genuinely require a bidirectional protocol. The
-   standards-aligned answer (and the one consistent with vebidor's "W3C-conformant"
-   identity) is **WebDriver-BiDi** — the WebSocket-based W3C specification now shipping in
-   Chrome, Edge, and Firefox. (Raw CDP would also work but is Chromium-only and would
-   abandon cross-browser support.)
-
-The roadmap harvests the ergonomic wins on Classic first, then adds a BiDi transport for
-the features that are otherwise impossible.
+Both share one session (created with `webSocketUrl: true`): use Classic for the command
+surface and BiDi for the event-driven features. Playwright achieves the same via CDP
+(Chromium-only); vebidor stays on a cross-browser **W3C standard**.
 
 ---
 
 ## Feature comparison
 
-### Solvable on WebDriver Classic (ergonomics)
+### Ergonomics (WebDriver Classic layer) — implemented
 
-| Feature | Vebidor today | Playwright | Path |
-|---------|---------------|------------|------|
-| Auto-waiting / actionability | ⚠️ Manual `wait_*` helpers ([`expected_conditions.v`](webdriver/expected_conditions.v)) | ✅ Built into every action | Classic |
-| Web-first retrying assertions | ❌ None | ✅ `expect(locator).toBeVisible()` | Classic |
-| Rich selectors (role/text/test-id) | ⚠️ `find_element(using, value)` only | ✅ `getByRole`, `getByText`, `getByTestId`, … | Classic |
-| Locator abstraction (lazy, chainable) | ❌ Eager `ElementRef` | ✅ Lazy `Locator` | Classic |
-| Frame-piercing locators | ⚠️ Manual `switch_to_frame` | ✅ `frameLocator` | Classic |
-| Auto-managed browsers / drivers | ❌ Manual "start chromedriver on 9515" | ✅ `browserType.launch()` | Classic |
-| Screenshot-on-failure | ⚠️ Manual screenshots ([`screenshot.v`](webdriver/screenshot.v)) | ✅ Automatic | Classic |
+| Feature | Vebidor | Playwright | Notes |
+|---------|---------|------------|-------|
+| Auto-waiting / actionability | ✅ Built into Locator actions | ✅ | [`locator.v`](webdriver/locator.v) — visible + enabled + scrolled-into-view |
+| Web-first retrying assertions | ✅ `expect(loc).to_be_visible()` | ✅ | [`assertions.v`](webdriver/assertions.v), with `.not()` / `.with_timeout()` |
+| Rich selectors (role/text/test-id) | ✅ `get_by_role/text/label/placeholder/test_id` | ✅ | [`selectors.v`](webdriver/selectors.v) |
+| Locator abstraction (lazy, chainable) | ✅ `Locator` + `nth`/`first` | ✅ | [`locator.v`](webdriver/locator.v) — re-resolves, staleness-immune |
+| Auto-managed browsers / drivers | ✅ `launch()` / `launch_edge()` | ✅ `browserType.launch()` | [`launcher.v`](webdriver/launcher.v) — detect driver+browser, free port, teardown |
+| Screenshot-on-failure | ✅ `Browser.run_or_screenshot` | ✅ | [`fixtures.v`](webdriver/fixtures.v) |
 
-### Require a bidirectional protocol (WebDriver-BiDi)
+### Bidirectional capabilities (WebDriver-BiDi layer) — implemented
 
-| Feature | Vebidor today | Playwright | Path |
-|---------|---------------|------------|------|
-| Network interception / mocking | ❌ (Edge throttling only) | ✅ `route` / `fulfill` / `abort` | **BiDi** |
-| Console / page event listeners | ❌ None | ✅ `page.on('console')` etc. | **BiDi** |
-| Request / response inspection | ❌ None | ✅ Full request/response objects | **BiDi** |
-| Isolated browser contexts | ❌ One session = one context | ✅ Cheap `browser.newContext()` | **BiDi** |
-| Event-driven waits (no polling) | ❌ Polling only | ✅ Event-driven | **BiDi** |
-| Tracing / video | ⚠️ Screenshots only | ✅ Trace viewer + video | **BiDi** |
-| Codegen recorder | ❌ None | ✅ `playwright codegen` | Tooling |
+| Feature | Vebidor | Playwright | Notes |
+|---------|---------|------------|-------|
+| Network interception / mocking | ✅ `route` + `continue_request`/`abort`/`fulfill` | ✅ | [`bidi_network.v`](webdriver/bidi_network.v) |
+| Response-phase interception | ✅ `route_response` + `InterceptedResponse` | ✅ | request- and response-phase |
+| HTTP auth handling | ✅ `on_auth(user, pass)` | ✅ | `continueWithAuth` |
+| Console / network event listeners | ✅ `on_log` / `on_request` / `on_response` | ✅ | [`bidi_modules.v`](webdriver/bidi_modules.v), [`bidi_network.v`](webdriver/bidi_network.v) |
+| Event-driven waits (no polling) | ✅ `wait_for_event` | ✅ | [`bidi.v`](webdriver/bidi.v) |
+| Isolated browser contexts | ✅ `create_user_context` / `create_context` | ✅ `browser.newContext()` | [`bidi_context.v`](webdriver/bidi_context.v) |
+| Preload / init scripts | ✅ `add_preload_script` | ✅ `addInitScript` | [`bidi_script.v`](webdriver/bidi_script.v) |
+| Viewport / DPR emulation | ✅ `set_viewport` / `set_device_pixel_ratio` | ✅ | [`bidi_context.v`](webdriver/bidi_context.v) |
+| File upload | ✅ `locate_node` + `set_files` | ✅ `setInputFiles` | [`bidi_dom.v`](webdriver/bidi_dom.v) |
+| Cookies + change events | ✅ `get/set/delete_cookies` + `on_cookie_changed` | ✅ | [`bidi_storage.v`](webdriver/bidi_storage.v) |
+| Screenshots / PDF | ✅ `capture_screenshot` / `save_pdf` | ✅ | [`bidi_screenshot.v`](webdriver/bidi_screenshot.v), [`bidi_context.v`](webdriver/bidi_context.v) |
+| Tracing | ✅ `Tracer` (console+network → JSON) | ✅ Trace viewer | [`bidi_trace.v`](webdriver/bidi_trace.v) — log, not binary trace format |
 
 ### Where vebidor stays ahead
 
 | Strength | Notes |
 |----------|-------|
 | Native V API | Playwright has no V binding; vebidor is the only real option in V. |
-| Standards-based | Speaks W3C WebDriver, so it talks to any conformant driver — including Safari's built-in `safaridriver`. |
+| Standards-based | W3C WebDriver + WebDriver-BiDi, so it talks to any conformant driver — including Safari's `safaridriver` — not a Chromium-only protocol. |
 | Dependency-light | No bundled Chromium download, no Node runtime. Compiles to a native V binary. |
+| Generic BiDi escape hatch | `send(method, params)` / `on(event)` reach *any* BiDi command/event, even unwrapped. |
+
+### Genuinely not implemented (deferred)
+
+| Feature | Why deferred |
+|---------|--------------|
+| Real video capture | No standardized BiDi screencast yet; would need periodic screenshots + ffmpeg. The screenshot/PDF primitives are the building blocks. |
+| Codegen recorder | High effort, low automation value. |
 
 ---
 
-## Roadmap
+## Quick API map (Playwright → vebidor)
 
-### Phase 0 — Transport seam (refactor)
+| Playwright | Vebidor |
+|------------|---------|
+| `chromium.launch()` | `webdriver.launch_edge(LaunchOptions{ headless: true })` |
+| `page.goto(url)` | `b.goto(url)` |
+| `page.getByRole('button', { name })` | `b.wd.get_by_role('button', name)` |
+| `locator.click()` / `.fill()` | `loc.click()` / `loc.fill()` (auto-waiting) |
+| `expect(locator).toBeVisible()` | `webdriver.expect(loc).to_be_visible()` |
+| `page.route(url, fulfill)` | `bidi.route(fn (req) { req.fulfill(...) })` |
+| `page.addInitScript(js)` | `bidi.add_preload_script(js)` |
+| `browser.newContext()` | `bidi.create_user_context()` + `bidi.create_context(uc)` |
+| `locator.setInputFiles(path)` | `bidi.set_files(ctx, bidi.locate_node(...), [path])` |
+| `page.on('console')` | `bidi.on_log(fn (e) { ... })` |
 
-`wd_do` is a free function and all commands hang off the `WebDriver` struct
-([`client.v:28`](webdriver/client.v)). Extract a transport abstraction so
-Classic-HTTP and BiDi-WebSocket transports can coexist behind one driver type.
+---
 
-- Define a transport interface (send command / await response).
-- Move HTTP logic behind it; keep current behavior identical.
-- Low risk; unblocks every later phase.
+## Implementation log (Phases 0–5, all shipped)
 
-### Phase 1 — Classic ergonomics layer (highest ROI, ship first)
-
-Makes vebidor *feel* like Playwright for the majority of scripting, with no protocol
-change.
-
-- **`Locator` type** — lazy selector with chaining; re-resolves on each use rather than
-  capturing a stale `ElementRef`.
-- **Auto-waiting actions** — `click` / `fill` / etc. inject an actionability check
-  (visible, stable, enabled, hit-testable) and retry until the configured timeout,
-  superseding the manual `wait_until_clickable` pattern.
-- **Selector engines** — `get_by_role`, `get_by_text`, `get_by_test_id`,
-  `get_by_label`, `get_by_placeholder`, implemented as injected JS / XPath translation.
-- **Web-first assertions** — `expect(locator).to_be_visible()` style, with built-in retry.
-
-### Phase 2 — Browser / driver lifecycle
-
-A `launch()` that auto-detects (or downloads) the matching driver + browser, starts it on
-a free port, and tears it down — eliminating the manual setup documented in the README.
-Cross-platform (Windows / macOS / Linux).
-
-### Phase 3 — WebDriver-BiDi transport
-
-V provides `net.websocket` in vlib.
-
-- Request `webSocketUrl: true` in capabilities ([`capabiities.v`](webdriver/capabiities.v)).
-- Build the JSON command/response correlator plus an event-dispatch loop.
-- Implement core modules: `session`, `browsingContext`, `script`, `log`.
-
-### Phase 4 — BiDi-powered features
-
-- Network interception / mocking (`network` module).
-- Console & request/response event listeners.
-- Isolated user contexts (independent cookies/storage in one browser).
-- Event-driven waits replacing Phase 1's polling.
-
-### Phase 5 — Tooling
-
-- Screencast video + tracing via BiDi events.
-- Optional codegen recorder.
-- V test-runner (`v test`) fixtures and helpers.
+- **Phase 0 — Transport seam.** `Transport` interface + `Response`; `HttpTransport`
+  wraps Classic. Lets Classic and BiDi coexist behind one `WebDriver`.
+  ([`client.v`](webdriver/client.v))
+- **Phase 1 — Classic ergonomics.** Lazy auto-waiting `Locator`, `get_by_*` selector
+  engines, web-first `expect` assertions.
+  ([`locator.v`](webdriver/locator.v), [`selectors.v`](webdriver/selectors.v), [`assertions.v`](webdriver/assertions.v))
+- **Phase 2 — Lifecycle.** `launch()` detects driver+browser, picks a free port,
+  health-checks `/status`, and tears down. ([`launcher.v`](webdriver/launcher.v))
+- **Phase 3 — BiDi transport.** WebSocket client with id-correlated commands and a
+  threaded event loop; `browsingContext`/`script`/`log` modules.
+  ([`bidi.v`](webdriver/bidi.v), [`bidi_modules.v`](webdriver/bidi_modules.v))
+- **Phase 4 — BiDi features.** Network interception/mocking, observation, isolated
+  contexts, event-driven waits. ([`bidi_network.v`](webdriver/bidi_network.v), [`bidi_context.v`](webdriver/bidi_context.v))
+- **Phase 5 — Tooling.** Tracer, BiDi screenshots, `v test` fixtures (and a fix making
+  the W3C screenshot endpoints use GET).
+  ([`bidi_trace.v`](webdriver/bidi_trace.v), [`bidi_screenshot.v`](webdriver/bidi_screenshot.v), [`fixtures.v`](webdriver/fixtures.v))
+- **BiDi gap closure (vs Selenium).** Preload scripts + `call_function`, network auth,
+  response-phase interception, viewport emulation, BiDi cookies + `cookieChanged`,
+  node handles + `set_files`, and `browsingContext` extras
+  (print/traverse/activate/handleUserPrompt).
+  ([`bidi_script.v`](webdriver/bidi_script.v), [`bidi_storage.v`](webdriver/bidi_storage.v), [`bidi_dom.v`](webdriver/bidi_dom.v))
 
 ---
 
 ## Summary
 
-Phases 1–2 close the **ergonomics** gap on the existing WebDriver-Classic foundation and
-deliver the largest felt improvement fastest. Phases 3–4 close the **capability** gap
-(network control, events, isolated contexts) while keeping vebidor on a W3C standard
-rather than a Chromium-only protocol. Phase 5 adds the surrounding tooling.
-
-This sequencing front-loads value: vebidor scripts start looking and behaving like
-Playwright after Phase 1, long before the heavier BiDi work lands.
+Vebidor now offers Playwright-style ergonomics (one-call launch, lazy auto-waiting
+locators, semantic selectors, web-first assertions, route/fulfill mocking) **and**
+standards-based WebDriver-BiDi coverage that meets or exceeds Selenium's — on a native V
+API, with no Node runtime or bundled browser download. The remaining Playwright-only items
+(binary trace viewer, video, codegen) are non-standard conveniences rather than capability
+gaps.

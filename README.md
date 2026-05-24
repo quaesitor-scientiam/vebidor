@@ -2,7 +2,7 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 3.1.1** | **🎉 100% Feature Parity with Selenium 🎉** | **Production Ready**
+**Version 4.0.0** | **Playwright-style API + WebDriver-BiDi** | **100% Selenium parity** | **Production Ready**
 
 ## ⚡ Modern API (Playwright-style)
 
@@ -41,8 +41,42 @@ element to be attached, visible, enabled, and scrolled into view.
 `to_have_attribute` / `to_have_count`, each invertible via `.not()` and tunable
 via `.with_timeout(ms)`.
 
-See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for how this
-maps onto Playwright and the roadmap for what's next.
+### WebDriver-BiDi (bidirectional)
+
+Launch with `bidi: true` to get a persistent WebSocket alongside the Classic
+session, unlocking event-driven features Classic cannot offer — network
+interception/mocking, console/network listeners, isolated contexts, and more.
+
+```v
+mut b := webdriver.launch_edge(webdriver.LaunchOptions{ headless: true, bidi: true })!
+defer { b.close() }
+mut bidi := b.bidi()!
+defer { bidi.close() }
+ctx := bidi.first_context()!
+
+// Mock a response (Playwright route.fulfill style).
+bidi.route(fn (req webdriver.InterceptedRequest) {
+	if req.url.contains('/api') {
+		req.fulfill(200, 'application/json', '{"mocked":true}') or {}
+	} else {
+		req.continue_request() or {}
+	}
+})!
+
+bidi.add_preload_script('() => { window.__patched = true }')!   // runs before page scripts
+bidi.navigate(ctx, 'https://example.com')!
+bidi.on_log(fn (e webdriver.LogEntry) { println('${e.level}: ${e.text}') })!
+```
+
+**BiDi capabilities:** request/response interception + mocking (`route`,
+`route_response`, `fulfill`/`abort`/`continue`), HTTP auth (`on_auth`),
+console/network events (`on_log`/`on_request`/`on_response`), `wait_for_event`,
+isolated user contexts, preload scripts + `call_function`, viewport emulation,
+BiDi cookies + `on_cookie_changed`, screenshots/PDF, file upload (`set_files`),
+and a `Tracer`. Any unwrapped command/event is reachable via `send`/`on`.
+
+See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the full
+Playwright/Selenium feature mapping.
 
 ## 🚀 Features
 
@@ -50,6 +84,7 @@ maps onto Playwright and the roadmap for what's next.
 
 **Core Features:**
 - **Modern API** - One-call `launch()`, lazy auto-waiting Locators, selector engines, and web-first assertions (see [⚡ Modern API](#-modern-api-playwright-style))
+- **WebDriver-BiDi** - Bidirectional WebSocket transport: network interception/mocking, console/network events, isolated contexts, preload scripts, file upload, tracing
 - **Session Management** - Create, manage, and quit browser sessions
 - **Navigation** - Navigate, back, forward, refresh
 - **Element Location** - Find elements by CSS selector, XPath, ID, class name, tag name, link text
@@ -580,7 +615,23 @@ Command: get_title
 
 **🏆 100% FEATURE PARITY ACHIEVED! 🏆**
 
-See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the roadmap beyond Selenium parity.
+See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the full Playwright/Selenium feature mapping.
+
+## ✨ What's New in v4.0.0
+
+**🎭 Playwright-style API + WebDriver-BiDi — verified live against headless Edge**
+
+- ✅ **Locators**: lazy, auto-waiting, chainable, staleness-immune (`get_by_role/text/label/placeholder/test_id`, `nth`/`first`)
+- ✅ **Web-first assertions**: `expect(loc).to_be_visible()` etc., polling, `.not()` / `.with_timeout()`
+- ✅ **`launch()`**: auto-detect driver+browser, free port, teardown — no manual driver start
+- ✅ **WebDriver-BiDi transport**: persistent WebSocket coexisting with the Classic session
+- ✅ **Network interception/mocking**: `route`/`route_response`, `fulfill`/`abort`/`continue`, `on_auth`
+- ✅ **Events**: console/network listeners, `wait_for_event`, `on_cookie_changed`
+- ✅ **Isolated user contexts**, **preload scripts**, **`call_function`**, **viewport emulation**
+- ✅ **File upload** (`set_files`), **BiDi cookies**, **screenshots/PDF**, **`Tracer`**
+- 🐛 Fixed: W3C screenshot endpoints now use GET (were POST)
+
+vebidor now offers Playwright-style ergonomics **and** WebDriver-BiDi coverage that meets or exceeds Selenium's, on a native V API. See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md).
 
 ## ✨ What's New in v3.1.1
 
@@ -602,11 +653,16 @@ See individual phase documentation for detailed examples and usage.
 ```
 v-webdriver/
 ├── webdriver/
-│   ├── client.v              # Core WebDriver client
+│   ├── client.v              # Core WebDriver client + Transport seam
 │   ├── elements.v            # Element finding and interaction
+│   ├── locator.v             # Lazy auto-waiting Locator
+│   ├── selectors.v           # get_by_* selector engines
+│   ├── assertions.v          # Web-first expect() assertions
+│   ├── launcher.v            # launch(): driver/browser lifecycle
+│   ├── fixtures.v            # v test fixtures (with_browser, etc.)
 │   ├── script.v              # JavaScript execution
 │   ├── window.v              # Window management
-│   ├── cookies.v             # Cookie operations
+│   ├── cookies.v             # Cookie operations (Classic)
 │   ├── screenshot.v          # Screenshot capture
 │   ├── actions.v             # Actions API
 │   ├── frame.v               # Frame switching
@@ -614,12 +670,19 @@ v-webdriver/
 │   ├── capabiities.v         # Capabilities configuration
 │   ├── types.v               # Common types
 │   ├── errors.v              # Error handling
+│   ├── bidi.v                # WebDriver-BiDi transport (WebSocket)
+│   ├── bidi_modules.v        # BiDi browsingContext/script/log helpers
+│   ├── bidi_network.v        # BiDi network interception/mocking + auth
+│   ├── bidi_context.v        # BiDi user contexts, viewport, PDF, history
+│   ├── bidi_script.v         # BiDi preload scripts + call_function
+│   ├── bidi_storage.v        # BiDi cookies + cookieChanged
+│   ├── bidi_screenshot.v     # BiDi per-context screenshots
+│   ├── bidi_dom.v            # BiDi node handles + setFiles (upload)
+│   ├── bidi_trace.v          # Lightweight Tracer
 │   ├── webdriver_test.v      # Unit tests
 │   └── quick_test.v          # Quick smoke tests
 ├── examples/
 │   └── webdriver_latency_bench.v  # Latency benchmark tool
-├── main.v                    # Example usage
-├── simple_test.v             # Standalone test suite
 ├── integration_test.v        # Integration tests
 └── README.md                 # This file
 ```
@@ -699,13 +762,13 @@ For issues, questions, or contributions:
 
 ---
 
-**Status**: Production-ready for web automation. 100% feature parity achieved! 🎉
+**Status**: Production-ready for web automation. Playwright-style API + WebDriver-BiDi on top of 100% Selenium parity. 🎉
 
-**Version**: 3.1.1 (100% Selenium feature parity, 4-browser support)
+**Version**: 4.0.0 (Playwright-style Locators/assertions, `launch()`, WebDriver-BiDi; 4-browser support)
 
-**Completed Phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 5 | ✅ Phase 6 | ✅ Phase 7 | ✅ Phase 8
+**Selenium-parity phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 5 | ✅ Phase 6 | ✅ Phase 7 | ✅ Phase 8
 
-**Latest Update**: 2026-02-15 - v3.1.1 multi-browser bug fixes (Chrome, Firefox, Safari, Edge all functional)
+**Playwright-parity roadmap**: ✅ Phase 0 (transport seam) | ✅ Phase 1 (locators/assertions) | ✅ Phase 2 (launch) | ✅ Phase 3 (BiDi transport) | ✅ Phase 4 (BiDi features) | ✅ Phase 5 (tooling) | ✅ BiDi gap closure vs Selenium
 
-**Current Release**: v3.1.1 - All browser drivers stable
+**Latest Update**: 2026-05-24 - v4.0.0 Playwright-style API + WebDriver-BiDi
 
