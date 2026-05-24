@@ -213,18 +213,31 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | Context click | ❌ | ✅ `ActionChains` | **Low** - Right-click |
 | Drag and drop | Partial | ✅ `ActionChains` | **Low** - Drag/drop UIs |
 
-### WebDriver BiDi Protocol (FUTURE - NOT YET IMPLEMENTED)
-| Feature | V WebDriver | Selenium 4.x | Impact |
-|---------|-------------|--------------|--------|
-| BiDi session management | ❌ | ✅ (Selenium 4.0+) | **High** - Modern protocol |
-| Real-time console logs | ❌ | ✅ BiDi | **High** - Live monitoring |
-| Network interception | ❌ | ✅ BiDi | **High** - Request/response control |
-| Performance monitoring | ❌ | ✅ BiDi | **Medium** - Metrics collection |
-| Script evaluation with realms | ❌ | ✅ BiDi | **Medium** - Isolated contexts |
-| Event subscription | ❌ | ✅ BiDi | **High** - Real-time events |
-| Bidirectional communication | ❌ | ✅ BiDi | **High** - WebSocket-based |
+### WebDriver BiDi Protocol (✅ IMPLEMENTED in v4.0.0)
+| Feature | V WebDriver | Selenium 4.x | Notes |
+|---------|-------------|--------------|-------|
+| Bidirectional transport | ✅ `BiDi` over WebSocket (`wd.bidi()`) | ✅ | Coexists with the Classic session (`web_socket_url: true`) |
+| BiDi session management | ✅ `subscribe()` / `unsubscribe()` | ✅ | session.* module |
+| Event subscription | ✅ `on()` / `subscribe()` / `wait_for_event()` | ✅ | id-correlated commands + threaded event loop |
+| Real-time console logs | ✅ `on_log()` (log.entryAdded) | ✅ | typed `LogEntry` |
+| Network observation | ✅ `on_request()` / `on_response()` | ✅ | typed `NetworkEvent` (incl. HTTP status) |
+| Network interception / mocking | ✅ `route()` + `fulfill`/`abort`/`continue_request` | ✅ | request phase |
+| Response-phase interception | ✅ `route_response()` + `InterceptedResponse` | ✅ | responseStarted phase |
+| HTTP auth | ✅ `on_auth()` (continueWithAuth) | ✅ | basic-auth handler |
+| Script evaluation | ✅ `evaluate()` / `call_function()` | ✅ | + preload scripts (`add_preload_script`) |
+| Isolated user contexts | ✅ `create_user_context()` / `create_context()` | ✅ | browser.* module |
+| Viewport emulation | ✅ `set_viewport()` / `set_device_pixel_ratio()` | ✅ | |
+| BiDi cookies + change events | ✅ `get/set/delete_cookies` + `on_cookie_changed` | ✅ | storage.* module |
+| File upload (node handles) | ✅ `locate_node()` + `set_files()` | ✅ | input.setFiles |
+| Screenshots / PDF | ✅ `capture_screenshot()` / `save_pdf()` | ✅ | per browsing context |
+| Tracing | ✅ `Tracer` (console+network → JSON) | ✅ (binary trace) | activity log, not binary format |
+| Any other BiDi command/event | ✅ generic `send()` / `on()` | ✅ low-level | escape hatch for unwrapped modules |
 
-**Note**: WebDriver BiDi is the next-generation protocol supported by Selenium 4.x. It provides real-time bidirectional communication between tests and browsers, enabling features like live console monitoring, network interception, and event-driven testing. Planned for v-webdriver v4.0.0.
+**Note**: WebDriver BiDi is the W3C bidirectional protocol (WebSocket-based) also
+supported by Selenium 4.x. As of v4.0.0 vebidor implements it natively, and its
+**wrapper coverage meets or exceeds Selenium's** — notably preload scripts,
+response-phase interception, auth, isolated contexts, and file upload. See
+[COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the full mapping.
 
 ---
 
@@ -248,13 +261,13 @@ This document compares the V WebDriver library with Selenium WebDriver to identi
 | **Alerts** | 4/4 | 0 | 100% ✅ |
 | **Page Info** | 3/3 | 0 | 100% ✅ |
 | **Timeouts** | 4/4 | 0 | 100% ✅ |
-| **BiDi Protocol** | 0/7 | 7 | 0% ❌ (Future) |
+| **BiDi Protocol** | ✅ Implemented (v4.0.0) | — | Meets/exceeds Selenium BiDi |
 
-**Overall Coverage: 100%** 🎉🎊 ⬆️ +45% from v0.90.0 (Phase 8 complete - FULL PARITY!)
+**Overall Coverage: 100%** of W3C WebDriver Classic 🎉 — **plus** a Playwright-style ergonomics layer and full WebDriver-BiDi support added in v4.0.0.
 
-**🏆 100% FEATURE PARITY WITH SELENIUM WEBDRIVER ACHIEVED! 🏆**
+**🏆 100% CLASSIC PARITY + BiDi THAT MEETS-OR-BEATS SELENIUM 🏆**
 
-**Note**: Coverage percentage is for W3C WebDriver Classic Protocol. BiDi Protocol support is planned for future releases and not included in the current percentage calculation.
+**Note**: The 100% figure is for the W3C WebDriver Classic protocol. BiDi (WebSocket) support is implemented as of v4.0.0 — see the BiDi table above and [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md).
 
 ---
 
