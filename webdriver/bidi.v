@@ -94,8 +94,11 @@ fn (mut b BiDi) handle_raw(raw string) {
 			b.mu.lock()
 			hs := b.handlers[method].clone()
 			b.mu.unlock()
+			// Dispatch on separate threads so a handler may itself call send()
+			// (e.g. network interception's continue/fulfill/abort) without
+			// deadlocking the listener thread that delivers send()'s reply.
 			for h in hs {
-				h(params)
+				spawn h(params)
 			}
 			return
 		}
@@ -195,4 +198,33 @@ pub fn (mut b BiDi) on(event string, handler BiDiEventHandler) {
 	b.mu.lock()
 	b.handlers[event] << handler
 	b.mu.unlock()
+}
+
+// wait_for_event subscribes to an event and blocks until the next one arrives
+// (or the timeout elapses), returning its params. Note: the temporary handler
+// stays registered after returning.
+pub fn (mut b BiDi) wait_for_event(event string, timeout_ms int) !json.Any {
+	ch := chan json.Any{cap: 1}
+	b.on(event, fn [ch] (params json.Any) {
+		select {
+			ch <- params {}
+			else {}
+		}
+	})
+	b.subscribe([event])!
+
+	mut out := json.Any('')
+	mut got := false
+	tmo := time.Duration(timeout_ms) * time.millisecond
+	select {
+		v := <-ch {
+			out = v
+			got = true
+		}
+		tmo {}
+	}
+	if !got {
+		return error('wait_for_event ${event} timed out after ${timeout_ms}ms')
+	}
+	return out
 }
