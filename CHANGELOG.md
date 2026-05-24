@@ -1,5 +1,72 @@
 # WebDriver V Library - Changelog
 
+## [4.0.0] - 2026-05-24 - Playwright-style API + WebDriver-BiDi 🎭
+
+A major release adding a Playwright-style ergonomic layer and a WebDriver-BiDi
+(WebSocket) transport on top of the existing Classic client. Every feature was
+verified live against headless Edge. No breaking changes to the existing Classic
+API — the new layers are additive.
+
+### ✨ Added — Classic ergonomics layer
+
+- **Lazy auto-waiting `Locator`** (`webdriver/locator.v`): re-resolves on each use
+  (staleness-immune), chainable, with `nth(i)`/`first()`/`with_timeout(ms)`.
+  Actions `click`/`fill`/`type_text`/`clear` wait for the element to be attached,
+  visible, enabled, and scrolled into view.
+- **Selector engines** (`webdriver/selectors.v`): `get_by_role`, `get_by_text`,
+  `get_by_label`, `get_by_placeholder`, `get_by_test_id`, plus
+  `wd.locator('css=…' | 'xpath=…')`.
+- **Web-first assertions** (`webdriver/assertions.v`): `expect(loc).to_be_visible()`
+  and friends — polling, with `.not()` and `.with_timeout(ms)`.
+- **`launch()` lifecycle** (`webdriver/launcher.v`): `launch`/`launch_edge`/
+  `launch_chrome`/`launch_firefox`/`launch_safari` auto-detect the driver and
+  browser, pick a free port, health-check `/status`, and tear down on `close()`.
+- **Test fixtures** (`webdriver/fixtures.v`): `with_browser`/`with_edge` and
+  `Browser.run_or_screenshot`.
+
+### ✨ Added — WebDriver-BiDi transport
+
+- **BiDi core** (`webdriver/bidi.v`, `bidi_modules.v`): WebSocket client with
+  id-correlated `send`, threaded event dispatch (`on`/`subscribe`/`wait_for_event`);
+  `browsingContext` (getTree/navigate/reload/create/close), `script` (evaluate),
+  `log` (`on_log`). Obtained via `LaunchOptions{ bidi: true }` + `b.bidi()`, or
+  `Capabilities{ web_socket_url: true }` + `wd.bidi()`.
+- **Network** (`webdriver/bidi_network.v`): request interception/mocking via
+  `route` + `continue_request`/`abort`/`fulfill`; response-phase interception via
+  `route_response`; HTTP auth via `on_auth`; observation via `on_request`/`on_response`.
+- **Isolated contexts** (`webdriver/bidi_context.v`): `create_user_context`/
+  `create_context`/`get_user_contexts`, plus `set_viewport`, `set_device_pixel_ratio`,
+  `print_pdf`/`save_pdf`, `traverse_history`, `activate`, `handle_user_prompt`.
+- **Script extras** (`webdriver/bidi_script.v`): `add_preload_script`/
+  `remove_preload_script`, `call_function` (+ `local_string`/`local_number`/`local_bool`).
+- **Storage** (`webdriver/bidi_storage.v`): `get_cookies`/`set_cookie`/`delete_cookies`
+  + `on_cookie_changed`.
+- **DOM/upload** (`webdriver/bidi_dom.v`): `locate_nodes`/`locate_node` (BiDi node
+  handles) + `set_files` (file upload).
+- **Screenshots** (`webdriver/bidi_screenshot.v`): `capture_screenshot`/`save_screenshot`.
+- **Tracing** (`webdriver/bidi_trace.v`): `Tracer` records console + network events
+  to a JSON activity log.
+
+### 🐛 Fixed
+
+- `screenshot()` / `element_screenshot()` now use the W3C **GET** endpoints
+  (previously POST, which EdgeDriver rejected as "unknown command").
+
+### 🔧 Changed
+
+- `WebDriver` gained a `Transport` seam (`Response`/`Transport`/`HttpTransport`) so
+  Classic-HTTP and BiDi-WebSocket coexist behind one type; `WebDriver` is `@[heap]`
+  so a `Locator` can reference it. `Capabilities` gained `web_socket_url`.
+
+### 📚 Docs
+
+- Rewrote `COMPARISON_WITH_PLAYWRIGHT.md` to the implemented state with a
+  Playwright→vebidor API map and a BiDi-coverage section.
+- README: added a WebDriver-BiDi section/example, bumped to v4.0.0, refreshed
+  project structure. `v.mod` bumped to 4.0.0.
+
+---
+
 ## [3.1.1] - 2026-02-15 - Multi-Browser Bug Fixes 🐛
 
 ### 🐛 Critical Bug Fixes
