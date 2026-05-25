@@ -2,7 +2,7 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 4.0.0** | **Playwright-style API + WebDriver-BiDi** | **100% Selenium parity** | **Production Ready**
+**Version 4.0.1** | **Playwright-style API + WebDriver-BiDi** | **100% Selenium parity** | **Production Ready**
 
 ## ⚡ Modern API (Playwright-style)
 
@@ -72,8 +72,9 @@ bidi.on_log(fn (e webdriver.LogEntry) { println('${e.level}: ${e.text}') })!
 `route_response`, `fulfill`/`abort`/`continue`), HTTP auth (`on_auth`),
 console/network events (`on_log`/`on_request`/`on_response`), `wait_for_event`,
 isolated user contexts, preload scripts + `call_function`, viewport emulation,
-BiDi cookies + `on_cookie_changed`, screenshots/PDF, file upload (`set_files`),
-and a `Tracer`. Any unwrapped command/event is reachable via `send`/`on`.
+partition-aware cookies (`get_cookies(user_context: uc)`) + `on_cookie_changed`,
+screenshots/PDF, file upload (`set_files`), and a `Tracer`. Any unwrapped
+command/event is reachable via `send`/`on` (or `on_sync` for inline observers).
 
 See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the full
 Playwright/Selenium feature mapping.
@@ -764,11 +765,11 @@ For issues, questions, or contributions:
 
 **Status**: Production-ready for web automation. Playwright-style API + WebDriver-BiDi on top of 100% Selenium parity. 🎉
 
-**Version**: 4.0.0 (Playwright-style Locators/assertions, `launch()`, WebDriver-BiDi; 4-browser support)
+**Version**: 4.0.1 (Playwright-style Locators/assertions, `launch()`, WebDriver-BiDi; 4-browser support)
 
 **Selenium-parity phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 5 | ✅ Phase 6 | ✅ Phase 7 | ✅ Phase 8
 
 **Playwright-parity roadmap**: ✅ Phase 0 (transport seam) | ✅ Phase 1 (locators/assertions) | ✅ Phase 2 (launch) | ✅ Phase 3 (BiDi transport) | ✅ Phase 4 (BiDi features) | ✅ Phase 5 (tooling) | ✅ BiDi gap closure vs Selenium
 
-**Latest Update**: 2026-05-24 - v4.0.0 Playwright-style API + WebDriver-BiDi
+**Latest Update**: 2026-05-25 - v4.0.1 partition-aware BiDi cookies + inline event dispatch
 

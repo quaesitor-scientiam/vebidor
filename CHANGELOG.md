@@ -1,5 +1,29 @@
 # WebDriver V Library - Changelog
 
+## [4.0.1] - 2026-05-25 - Partition-aware BiDi cookies + inline event dispatch
+
+### ✨ Added
+
+- **Partition-aware cookies** (`webdriver/bidi_storage.v`): `get_cookies`,
+  `set_cookie`, and `delete_cookies` now accept an optional `CookiePartition`
+  (`@[params]`) to scope the operation to a specific **user context**
+  (`user_context:`) or **browsing context** (`context:`). Maps to the BiDi
+  `storageKey` / `context` PartitionDescriptor. Omitting it keeps the previous
+  default-partition behavior, so existing calls are unchanged. Verified live:
+  cookies set in different partitions are mutually isolated and individually
+  inspectable.
+- **`on_sync(event, handler)`** (`webdriver/bidi.v`): inline event dispatch on
+  the listener thread for cheap, high-frequency observers (network status,
+  console, tracing), avoiding a per-event thread spawn. The handler must not
+  call `send()`. `on()` still spawns for handlers that issue BiDi commands.
+  `on_request`/`on_response`/`on_log`/`Tracer`/`wait_for_event` now use it.
+
+### 🐛 Fixed
+
+- Corrected the module import form in examples and README from
+  `import vebidor { webdriver }` (selective-symbol syntax that doesn't resolve)
+  to `import vebidor.webdriver`.
+
 ## [4.0.0] - 2026-05-24 - Playwright-style API + WebDriver-BiDi 🎭
 
 A major release adding a Playwright-style ergonomic layer and a WebDriver-BiDi
