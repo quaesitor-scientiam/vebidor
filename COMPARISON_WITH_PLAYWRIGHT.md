@@ -66,6 +66,7 @@ surface and BiDi for the event-driven features. Playwright achieves the same via
 | Standards-based | W3C WebDriver + WebDriver-BiDi, so it talks to any conformant driver — including Safari's `safaridriver` — not a Chromium-only protocol. |
 | Dependency-light | No bundled Chromium download, no Node runtime. Compiles to a native V binary. |
 | Generic BiDi escape hatch | `send(method, params)` / `on(event)` reach *any* BiDi command/event, even unwrapped. |
+| Capability probing | `status()` / `supports(method, params)` feature-detect optional BiDi modules, so scripts adapt to what a given browser's BiDi actually implements rather than assuming uniform conformance. |
 
 ### Genuinely not implemented (deferred)
 
