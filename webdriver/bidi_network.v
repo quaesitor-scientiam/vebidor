@@ -223,9 +223,11 @@ pub fn (r InterceptedResponse) fulfill(status int, content_type string, body str
 	provide_response(mut b, r.request_id, status, content_type, body)!
 }
 
-// on_request observes outgoing requests (no interception/blocking).
+// on_request observes outgoing requests (no interception/blocking). The handler
+// runs inline on the listener thread, so keep it cheap and don't call BiDi
+// commands from it.
 pub fn (mut b BiDi) on_request(handler fn (ev NetworkEvent)) ! {
-	b.on('network.beforeRequestSent', fn [handler] (params json.Any) {
+	b.on_sync('network.beforeRequestSent', fn [handler] (params json.Any) {
 		m := params.as_map()
 		rq := (m['request'] or { json.Any(map[string]json.Any{}) }).as_map()
 		handler(NetworkEvent{
@@ -237,9 +239,10 @@ pub fn (mut b BiDi) on_request(handler fn (ev NetworkEvent)) ! {
 	b.subscribe(['network.beforeRequestSent'])!
 }
 
-// on_response observes completed responses.
+// on_response observes completed responses. The handler runs inline on the
+// listener thread, so keep it cheap and don't call BiDi commands from it.
 pub fn (mut b BiDi) on_response(handler fn (ev NetworkEvent)) ! {
-	b.on('network.responseCompleted', fn [handler] (params json.Any) {
+	b.on_sync('network.responseCompleted', fn [handler] (params json.Any) {
 		m := params.as_map()
 		resp := (m['response'] or { json.Any(map[string]json.Any{}) }).as_map()
 		handler(NetworkEvent{

@@ -92,7 +92,7 @@ pub fn (mut b BiDi) evaluate_string(context string, expression string) !string {
 
 // on_log subscribes to `log.entryAdded` and invokes `handler` for each entry.
 pub fn (mut b BiDi) on_log(handler fn (entry LogEntry)) ! {
-	b.on('log.entryAdded', fn [handler] (params json.Any) {
+	b.on_sync('log.entryAdded', fn [handler] (params json.Any) {
 		m := params.as_map()
 		entry := LogEntry{
 			level:  (m['level'] or { json.Any('') }).str()

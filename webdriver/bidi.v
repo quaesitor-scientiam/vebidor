@@ -24,11 +24,12 @@ pub type BiDiEventHandler = fn (params json.Any)
 @[heap]
 pub struct BiDi {
 mut:
-	ws       &websocket.Client = unsafe { nil }
-	mu       &sync.Mutex       = unsafe { nil }
-	next_id  int               = 1
-	pending  map[int]chan string           // command id -> channel receiving the raw reply
-	handlers map[string][]BiDiEventHandler // event method -> subscribed handlers
+	ws            &websocket.Client = unsafe { nil }
+	mu            &sync.Mutex       = unsafe { nil }
+	next_id       int               = 1
+	pending       map[int]chan string           // command id -> channel receiving the raw reply
+	handlers      map[string][]BiDiEventHandler // spawned handlers (may call send())
+	sync_handlers map[string][]BiDiEventHandler // inline handlers (must not call send())
 pub:
 	url string
 pub mut:
@@ -92,11 +93,17 @@ fn (mut b BiDi) handle_raw(raw string) {
 			method := (m['method'] or { json.Any('') }).str()
 			params := m['params'] or { json.Any(map[string]json.Any{}) }
 			b.mu.lock()
+			sync_hs := b.sync_handlers[method].clone()
 			hs := b.handlers[method].clone()
 			b.mu.unlock()
-			// Dispatch on separate threads so a handler may itself call send()
-			// (e.g. network interception's continue/fulfill/abort) without
-			// deadlocking the listener thread that delivers send()'s reply.
+			// Sync handlers run inline on the listener thread — for cheap,
+			// high-frequency observers (e.g. network status) that must NOT call
+			// send(). Async handlers run on their own thread so they may call
+			// send() (e.g. interception continue/fulfill/abort) without
+			// deadlocking the listener that delivers send()'s reply.
+			for h in sync_hs {
+				h(params)
+			}
 			for h in hs {
 				spawn h(params)
 			}
@@ -200,12 +207,23 @@ pub fn (mut b BiDi) on(event string, handler BiDiEventHandler) {
 	b.mu.unlock()
 }
 
+// on_sync registers a handler that runs INLINE on the listener thread (no
+// per-event thread spawn). Use it for cheap, high-frequency observation such as
+// network status tracking. The handler MUST NOT call send()/route/fulfill (it
+// would deadlock the listener that delivers the reply) and must return quickly.
+// For handlers that issue BiDi commands, use on() instead.
+pub fn (mut b BiDi) on_sync(event string, handler BiDiEventHandler) {
+	b.mu.lock()
+	b.sync_handlers[event] << handler
+	b.mu.unlock()
+}
+
 // wait_for_event subscribes to an event and blocks until the next one arrives
 // (or the timeout elapses), returning its params. Note: the temporary handler
 // stays registered after returning.
 pub fn (mut b BiDi) wait_for_event(event string, timeout_ms int) !json.Any {
 	ch := chan json.Any{cap: 1}
-	b.on(event, fn [ch] (params json.Any) {
+	b.on_sync(event, fn [ch] (params json.Any) {
 		select {
 			ch <- params {}
 			else {}

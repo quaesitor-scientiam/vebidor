@@ -41,21 +41,21 @@ pub fn (mut t Tracer) start() ! {
 	tptr := voidptr(&t)
 	mut b := t.bidi
 
-	b.on('log.entryAdded', fn [tptr] (params json.Any) {
+	b.on_sync('log.entryAdded', fn [tptr] (params json.Any) {
 		mut tr := unsafe { &Tracer(tptr) }
 		m := params.as_map()
 		level := (m['level'] or { json.Any('') }).str()
 		text := (m['text'] or { json.Any('') }).str()
 		tr.record('console', '${level}: ${text}')
 	})
-	b.on('network.beforeRequestSent', fn [tptr] (params json.Any) {
+	b.on_sync('network.beforeRequestSent', fn [tptr] (params json.Any) {
 		mut tr := unsafe { &Tracer(tptr) }
 		rq := (params.as_map()['request'] or { json.Any(map[string]json.Any{}) }).as_map()
 		method := (rq['method'] or { json.Any('') }).str()
 		url := (rq['url'] or { json.Any('') }).str()
 		tr.record('request', '${method} ${url}')
 	})
-	b.on('network.responseCompleted', fn [tptr] (params json.Any) {
+	b.on_sync('network.responseCompleted', fn [tptr] (params json.Any) {
 		mut tr := unsafe { &Tracer(tptr) }
 		rp := (params.as_map()['response'] or { json.Any(map[string]json.Any{}) }).as_map()
 		status := (rp['status'] or { json.Any(0) }).int()
