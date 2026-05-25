@@ -48,6 +48,9 @@ surface and BiDi for the event-driven features. Playwright achieves the same via
 | Console / network event listeners | ✅ `on_log` / `on_request` / `on_response` | ✅ | [`bidi_modules.v`](webdriver/bidi_modules.v), [`bidi_network.v`](webdriver/bidi_network.v) |
 | Event-driven waits (no polling) | ✅ `wait_for_event` | ✅ | [`bidi.v`](webdriver/bidi.v) |
 | Isolated browser contexts | ✅ `create_user_context` / `create_context` | ✅ `browser.newContext()` | [`bidi_context.v`](webdriver/bidi_context.v) |
+| Per-context proxy / geolocation / permissions | ✅ `create_user_context(proxy_type: …)`, `set_geolocation`, `set_permission` | ✅ | driver-dependent; probe with `supports()` |
+| storageState (session reuse) | ✅ `storage_state` / `apply_storage_state` | ✅ `storageState` | cookies (localStorage via `evaluate`) |
+| Capability probing | ✅ `status()` / `supports()` | n/a (owns impl) | feature-detect optional BiDi modules |
 | Preload / init scripts | ✅ `add_preload_script` | ✅ `addInitScript` | [`bidi_script.v`](webdriver/bidi_script.v) |
 | Viewport / DPR emulation | ✅ `set_viewport` / `set_device_pixel_ratio` | ✅ | [`bidi_context.v`](webdriver/bidi_context.v) |
 | File upload | ✅ `locate_node` + `set_files` | ✅ `setInputFiles` | [`bidi_dom.v`](webdriver/bidi_dom.v) |

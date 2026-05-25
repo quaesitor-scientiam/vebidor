@@ -1,5 +1,38 @@
 # WebDriver V Library - Changelog
 
+## [4.1.0] - 2026-05-25 - Per-context conveniences + capability probing
+
+Closes the two "vs Playwright" gaps around user contexts: leanness (now has the
+common per-context conveniences) and maturity (now probeable rather than assumed).
+
+### ✨ Added — per-context conveniences (`webdriver/bidi_context.v`, `bidi_storage.v`)
+
+- **storageState** (session reuse): `storage_state(partition)` captures a
+  partition's cookies; `apply_storage_state(state, partition)` / `add_cookies`
+  restore them into a fresh user context. Cookies are rebuilt from writable
+  fields only (read-only `size`/`goog:*` metadata stripped, and the invalid
+  SameSite=None-without-Secure combo dropped) for a faithful round-trip.
+  Cookies only for now — localStorage/sessionStorage via `evaluate()`.
+- **Per-context options**: `create_user_context(...)` now takes
+  `UserContextOptions` — per-context **proxy** (`proxy_type`/`http_proxy`/
+  `ssl_proxy`) and `accept_insecure_certs`. Existing no-arg calls unchanged.
+- **Geolocation**: `set_geolocation(user_context, lat, lon, accuracy)`
+  (BiDi `emulation.setGeolocationOverride`).
+- **Permissions**: `set_permission(name, state, origin, user_context)`
+  (BiDi `permissions.setPermission`).
+
+### ✨ Added — capability probing (addresses driver-maturity variance)
+
+- `status()` → `BiDiStatus{ ready, message }` (`session.status`).
+- `supports(method, params)` — feature-detect optional modules by checking the
+  error isn't "unknown command", so callers can adapt to what a given browser's
+  BiDi actually implements instead of assuming uniform conformance.
+
+Verified live against headless Edge: storageState reuse across user contexts,
+per-context user-context creation, and `supports()` correctly reporting that
+Edge implements both `emulation.setGeolocationOverride` and
+`permissions.setPermission`.
+
 ## [4.0.1] - 2026-05-25 - Partition-aware BiDi cookies + inline event dispatch
 
 ### ✨ Added

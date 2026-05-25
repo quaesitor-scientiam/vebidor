@@ -6,10 +6,38 @@ import x.json2 as json
 // equivalent of Playwright's browser.newContext(): independent cookies and
 // storage within a single browser instance.
 
+// UserContextOptions configures a new user context (Playwright newContext-style
+// per-context settings). All fields optional; omit for a plain isolated context.
+@[params]
+pub struct UserContextOptions {
+pub:
+	accept_insecure_certs ?bool
+	proxy_type            string // 'manual' | 'system' | 'direct' | 'autodetect' | 'pac'
+	http_proxy            string // host:port, used when proxy_type == 'manual'
+	ssl_proxy             string // host:port, used when proxy_type == 'manual'
+}
+
 // create_user_context creates a new isolated user context (cookie/storage jar)
-// and returns its id.
-pub fn (mut b BiDi) create_user_context() !string {
-	res := b.send('browser.createUserContext', json.Any(map[string]json.Any{}))!
+// and returns its id. Pass UserContextOptions for a per-context proxy or
+// insecure-cert policy:
+//   bidi.create_user_context(proxy_type: 'manual', http_proxy: '127.0.0.1:8080')!
+pub fn (mut b BiDi) create_user_context(opts UserContextOptions) !string {
+	mut params := map[string]json.Any{}
+	if aic := opts.accept_insecure_certs {
+		params['acceptInsecureCerts'] = json.Any(aic)
+	}
+	if opts.proxy_type != '' {
+		mut proxy := map[string]json.Any{}
+		proxy['proxyType'] = json.Any(opts.proxy_type)
+		if opts.http_proxy != '' {
+			proxy['httpProxy'] = json.Any(opts.http_proxy)
+		}
+		if opts.ssl_proxy != '' {
+			proxy['sslProxy'] = json.Any(opts.ssl_proxy)
+		}
+		params['proxy'] = json.Any(proxy)
+	}
+	res := b.send('browser.createUserContext', json.Any(params))!
 	return (res.as_map()['userContext'] or { json.Any('') }).str()
 }
 
@@ -111,4 +139,70 @@ pub fn (mut b BiDi) handle_user_prompt(context string, accept bool, user_text st
 		p['userText'] = json.Any(user_text)
 	}
 	b.send('browsingContext.handleUserPrompt', json.Any(p))!
+}
+
+// --- per-context conveniences (emulation / permissions modules) ---
+//
+// These map to newer BiDi modules whose support varies by browser/driver. If a
+// driver hasn't implemented them, the call returns a clear "unknown command"
+// error (see status() to probe readiness) rather than failing silently.
+
+// set_geolocation overrides geolocation for a user context (Playwright
+// context.setGeolocation). Pass an empty user_context to leave it to the driver
+// default. BiDi module: emulation.setGeolocationOverride.
+pub fn (mut b BiDi) set_geolocation(user_context string, latitude f64, longitude f64, accuracy f64) ! {
+	mut coords := map[string]json.Any{}
+	coords['latitude'] = json.Any(latitude)
+	coords['longitude'] = json.Any(longitude)
+	coords['accuracy'] = json.Any(accuracy)
+	mut p := map[string]json.Any{}
+	p['coordinates'] = json.Any(coords)
+	if user_context != '' {
+		p['userContexts'] = json.Any([json.Any(user_context)])
+	}
+	b.send('emulation.setGeolocationOverride', json.Any(p))!
+}
+
+// set_permission grants/denies a permission for an origin, optionally scoped to
+// a user context (Playwright context.grantPermissions). `state` is
+// 'granted' | 'denied' | 'prompt'. BiDi module: permissions.setPermission.
+pub fn (mut b BiDi) set_permission(name string, state string, origin string, user_context string) ! {
+	mut desc := map[string]json.Any{}
+	desc['name'] = json.Any(name)
+	mut p := map[string]json.Any{}
+	p['descriptor'] = json.Any(desc)
+	p['state'] = json.Any(state)
+	p['origin'] = json.Any(origin)
+	if user_context != '' {
+		p['userContext'] = json.Any(user_context)
+	}
+	b.send('permissions.setPermission', json.Any(p))!
+}
+
+// BiDiStatus reports whether the remote end is ready for new sessions.
+pub struct BiDiStatus {
+pub:
+	ready   bool
+	message string
+}
+
+// status queries session.status — a readiness probe. Combined with the clear
+// "unknown command" errors from optional modules (geolocation/permissions),
+// this lets callers detect what the connected driver actually supports rather
+// than assuming uniform BiDi conformance across browsers.
+pub fn (mut b BiDi) status() !BiDiStatus {
+	res := b.send('session.status', json.Any(map[string]json.Any{}))!
+	m := res.as_map()
+	return BiDiStatus{
+		ready:   (m['ready'] or { json.Any(false) }).bool()
+		message: (m['message'] or { json.Any('') }).str()
+	}
+}
+
+// supports reports whether the driver implements a BiDi command, by issuing it
+// and checking the error is not "unknown command". Useful to feature-detect the
+// optional modules (emulation, permissions) before relying on them.
+pub fn (mut b BiDi) supports(method string, params json.Any) bool {
+	b.send(method, params) or { return !err.msg().contains('unknown command') }
+	return true
 }
