@@ -55,3 +55,6 @@ screenshots/
 .env
 credentials.json
 secrets/
+
+# Claude Code local (per-machine) settings
+.claude/settings.local.json
