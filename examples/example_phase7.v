@@ -1,6 +1,6 @@
 module main
 
-import vebidor {webdriver}
+import vebidor.webdriver
 import time
 
 fn main() {
@@ -106,16 +106,16 @@ fn main() {
 	println('  Created interactive box (green)')
 
 	box := wd.find_element('css selector', '#contextBox')!
-	initial_color := wd.execute_script('return document.getElementById("contextBox").style.background',
-		[])!.str()
+	initial_color :=
+		wd.execute_script('return document.getElementById("contextBox").style.background', [])!.str()
 	println('  Initial color: ${initial_color}')
 
 	wd.context_click(box)!
 	println('  Performed right-click')
 	time.sleep(500 * time.millisecond)
 
-	new_color := wd.execute_script('return document.getElementById("contextBox").style.background',
-		[])!.str()
+	new_color :=
+		wd.execute_script('return document.getElementById("contextBox").style.background', [])!.str()
 	new_text := wd.get_text(box)!
 	println('  New color: ${new_color}')
 	println('  New text: ${new_text}')

@@ -1,6 +1,6 @@
 module main
 
-import vebidor {webdriver}
+import vebidor.webdriver
 import time
 
 fn main() {

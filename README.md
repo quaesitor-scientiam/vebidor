@@ -11,7 +11,7 @@ layer: one-call browser **launch**, lazy auto-waiting **Locators**, semantic
 **selector engines**, and retrying **web-first assertions**.
 
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn main() {
 	// Auto-detects the driver + browser, picks a free port, and tears
@@ -185,7 +185,7 @@ safaridriver -p 4445
 
 ### Microsoft Edge
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn main() {
     caps := webdriver.Capabilities{
@@ -207,7 +207,7 @@ fn main() {
 
 ### Google Chrome
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn main() {
     caps := webdriver.Capabilities{
@@ -228,7 +228,7 @@ fn main() {
 
 ### Mozilla Firefox
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn main() {
     caps := webdriver.Capabilities{
@@ -249,7 +249,7 @@ fn main() {
 
 ### Safari (macOS)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn main() {
     caps := webdriver.Capabilities{
@@ -272,7 +272,7 @@ fn main() {
 
 ### Complete Automation Example (All Phases)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn main() {
     caps := webdriver.Capabilities{
@@ -318,7 +318,7 @@ fn main() {
 
 ### Form Automation
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn login_example() ! {
     caps := webdriver.Capabilities{
@@ -344,7 +344,7 @@ fn login_example() ! {
 
 ### Working with Cookies
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn cookie_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }
@@ -373,7 +373,7 @@ fn cookie_example() ! {
 
 ### Using Actions API
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn actions_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }
@@ -395,7 +395,7 @@ fn actions_example() ! {
 
 ### Element Properties (Phase 1)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn element_properties_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }
@@ -422,7 +422,7 @@ fn element_properties_example() ! {
 
 ### Alert Handling (Phase 2)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn alert_handling_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }
@@ -446,7 +446,7 @@ fn alert_handling_example() ! {
 
 ### Page Information (Phase 3)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn page_info_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }
@@ -472,7 +472,7 @@ fn page_info_example() ! {
 
 ### Multi-Window Management (Phase 4)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn multi_window_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }
@@ -503,7 +503,7 @@ fn multi_window_example() ! {
 
 ### Timeouts and Waits (Phase 4)
 ```v
-import vebidor { webdriver }
+import vebidor.webdriver
 
 fn timeouts_example() ! {
     caps := webdriver.Capabilities{ browser_name: 'msedge' }

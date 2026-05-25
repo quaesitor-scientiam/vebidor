@@ -1,7 +1,6 @@
 module main
 
-import vebidor {webdriver}
-
+import vebidor.webdriver
 
 fn main() {
 	run() or {
