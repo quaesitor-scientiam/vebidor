@@ -15,11 +15,17 @@ pub:
 	delta_z  ?int
 }
 
+pub struct PointerParameters {
+pub:
+	pointer_type string @[json: 'pointerType'] // 'mouse' | 'pen' | 'touch'
+}
+
 pub struct ActionSource {
 pub:
-	kind    string @[json: 'type'] // key, pointer, wheel
-	id      string
-	actions []ActionItem
+	kind       string @[json: 'type'] // key, pointer, wheel
+	id         string
+	parameters ?PointerParameters // pointer sources only (e.g. touch)
+	actions    []ActionItem
 }
 
 pub struct ActionsPayload {
@@ -86,6 +92,19 @@ pub fn mouse(id string, actions []ActionItem) ActionSource {
 		kind:    'pointer'
 		id:      id
 		actions: actions
+	}
+}
+
+// touch creates a touch-type pointer source (pointerType "touch"), used for
+// tap/swipe gestures in mobile emulation.
+pub fn touch(id string, actions []ActionItem) ActionSource {
+	return ActionSource{
+		kind:       'pointer'
+		id:         id
+		parameters: PointerParameters{
+			pointer_type: 'touch'
+		}
+		actions:    actions
 	}
 }
 

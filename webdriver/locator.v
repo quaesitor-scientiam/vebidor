@@ -207,6 +207,22 @@ pub fn (l Locator) click() ! {
 	}
 }
 
+// tap performs a touch tap at the element's center (mobile emulation),
+// auto-waiting for actionability. Touch events fire only on a touch-capable or
+// emulated browser (see Device emulation); on others it behaves like a click.
+pub fn (l Locator) tap() ! {
+	el := l.wait_until_actionable()!
+	rect := l.wd.get_element_rect(el)!
+	x := int(rect.x + rect.width / 2)
+	y := int(rect.y + rect.height / 2)
+	src := touch('touch', [
+		pointer_move(x, y, 0),
+		pointer_down(0),
+		pointer_up(0),
+	])
+	l.wd.perform_actions([src])!
+}
+
 // fill clears the field and types text into it, auto-waiting for actionability.
 pub fn (l Locator) fill(text string) ! {
 	el := l.wait_until_actionable()!
