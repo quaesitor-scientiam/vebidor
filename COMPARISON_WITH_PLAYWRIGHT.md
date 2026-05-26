@@ -120,6 +120,31 @@ surface and BiDi for the event-driven features. Playwright achieves the same via
 
 ---
 
+## Mobile emulation roadmap (in progress)
+
+Playwright's "mobile" is **device emulation** (device descriptors: viewport, UA,
+device-scale-factor, `isMobile`, `hasTouch`, touch input) — not real-device automation
+(that's Appium). vebidor is matching the emulation side over BiDi. Fidelity is best on
+Chromium-based drivers (Edge/Chrome); each `emulation.*` call is gated by `supports()`.
+
+| Gap | Mechanism | Status |
+|-----|-----------|--------|
+| viewport + device-scale-factor | `set_viewport` / `set_device_pixel_ratio` | ✅ done |
+| **Device descriptor + `emulate()`** | `Device{…}` + `bidi.emulate(ctx, device)` ([`emulation.v`](webdriver/emulation.v)) | ✅ **M1 done** (viewport + DPR) |
+| user-agent (real request header) | BiDi UA override if supported, else rewrite `User-Agent` via network interception; + preload script for JS-visible `navigator.userAgent` | ⏳ M2 |
+| `isMobile` / `hasTouch` JS flags | `add_preload_script` (maxTouchPoints, ontouchstart, mobile hints) | ⏳ M2 |
+| touch input / `tap()` | extend Actions with `pointerType:"touch"`; `Locator.tap()` + gestures | ⏳ M3 |
+| device presets (`iPhone`, `Pixel`, …) | curated `devices` catalog + `emulate_device(name)` | ⏳ M4 |
+| locale / timezone / orientation | `emulation.set*Override` (probe-gated) | ⏳ M5 |
+
+**Out of scope:** real native devices / Appium (UiAutomator2/XCUITest) — a different
+protocol surface, and not what Playwright does either.
+
+Sequencing: M1 → M3 → M2 → M4 → M5 (viewport + tap first for the visible mobile feel; UA
+last as it's the most driver-dependent).
+
+---
+
 ## Summary
 
 Vebidor now offers Playwright-style ergonomics (one-call launch, lazy auto-waiting
