@@ -253,3 +253,57 @@ pub fn (mut b BiDi) on_response(handler fn (ev NetworkEvent)) ! {
 	})
 	b.subscribe(['network.responseCompleted'])!
 }
+
+// bidi_header builds a BiDi network Header {name, value: BytesValue}.
+fn bidi_header(name string, value string) json.Any {
+	mut bv := map[string]json.Any{}
+	bv['type'] = json.Any('string')
+	bv['value'] = json.Any(value)
+	return json.Any({
+		'name':  json.Any(name)
+		'value': json.Any(bv)
+	})
+}
+
+// set_request_user_agent overrides the outgoing HTTP `User-Agent` *request
+// header* on every request (server-side detection), complementing the
+// JS-visible UA set by emulate()/set_user_agent. It intercepts each request and
+// continues it with User-Agent replaced, preserving all other headers.
+//
+// Note: this installs a beforeRequestSent intercept; don't combine it with a
+// separate route() that also resolves beforeRequestSent (both would try to
+// resolve the same request).
+pub fn (mut b BiDi) set_request_user_agent(user_agent string) ! {
+	b.add_intercept(['beforeRequestSent'])!
+	bptr := voidptr(&b)
+	b.on('network.beforeRequestSent', fn [bptr, user_agent] (params json.Any) {
+		mut bref := unsafe { &BiDi(bptr) }
+		m := params.as_map()
+		rq := (m['request'] or { json.Any(map[string]json.Any{}) }).as_map()
+		rid := (rq['request'] or { json.Any('') }).str()
+
+		// Rebuild the header list, replacing User-Agent (keep everything else).
+		mut headers := []json.Any{}
+		mut replaced := false
+		if hs := rq['headers'] {
+			for h in hs.as_array() {
+				name := (h.as_map()['name'] or { json.Any('') }).str()
+				if name.to_lower() == 'user-agent' {
+					headers << bidi_header('User-Agent', user_agent)
+					replaced = true
+				} else {
+					headers << h
+				}
+			}
+		}
+		if !replaced {
+			headers << bidi_header('User-Agent', user_agent)
+		}
+
+		mut p := map[string]json.Any{}
+		p['request'] = json.Any(rid)
+		p['headers'] = json.Any(headers)
+		bref.send('network.continueRequest', json.Any(p)) or {}
+	})
+	b.subscribe(['network.beforeRequestSent'])!
+}
