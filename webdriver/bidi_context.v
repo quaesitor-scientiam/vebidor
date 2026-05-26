@@ -179,6 +179,38 @@ pub fn (mut b BiDi) set_permission(name string, state string, origin string, use
 	b.send('permissions.setPermission', json.Any(p))!
 }
 
+// set_locale overrides the locale (BCP 47, e.g. 'fr-FR') for a browsing context.
+// BiDi module: emulation.setLocaleOverride (driver-dependent — probe with supports()).
+pub fn (mut b BiDi) set_locale(context string, locale string) ! {
+	mut p := map[string]json.Any{}
+	p['locale'] = json.Any(locale)
+	p['contexts'] = json.Any([json.Any(context)])
+	b.send('emulation.setLocaleOverride', json.Any(p))!
+}
+
+// set_timezone overrides the timezone (IANA, e.g. 'America/New_York') for a
+// browsing context. BiDi module: emulation.setTimezoneOverride.
+pub fn (mut b BiDi) set_timezone(context string, timezone string) ! {
+	mut p := map[string]json.Any{}
+	p['timezone'] = json.Any(timezone)
+	p['contexts'] = json.Any([json.Any(context)])
+	b.send('emulation.setTimezoneOverride', json.Any(p))!
+}
+
+// set_screen_orientation overrides the screen orientation for a browsing context.
+// natural is 'portrait' | 'landscape'; orientation_type is one of
+// 'portrait-primary' | 'portrait-secondary' | 'landscape-primary' |
+// 'landscape-secondary'. BiDi module: emulation.setScreenOrientationOverride.
+pub fn (mut b BiDi) set_screen_orientation(context string, natural string, orientation_type string) ! {
+	mut so := map[string]json.Any{}
+	so['natural'] = json.Any(natural)
+	so['type'] = json.Any(orientation_type)
+	mut p := map[string]json.Any{}
+	p['screenOrientation'] = json.Any(so)
+	p['contexts'] = json.Any([json.Any(context)])
+	b.send('emulation.setScreenOrientationOverride', json.Any(p))!
+}
+
 // BiDiStatus reports whether the remote end is ready for new sessions.
 pub struct BiDiStatus {
 pub:

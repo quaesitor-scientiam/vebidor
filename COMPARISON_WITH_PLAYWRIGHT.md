@@ -120,7 +120,7 @@ surface and BiDi for the event-driven features. Playwright achieves the same via
 
 ---
 
-## Mobile emulation roadmap (in progress)
+## Mobile emulation (M1–M5 done)
 
 Playwright's "mobile" is **device emulation** (device descriptors: viewport, UA,
 device-scale-factor, `isMobile`, `hasTouch`, touch input) — not real-device automation
@@ -137,7 +137,7 @@ Chromium-based drivers (Edge/Chrome); each `emulation.*` call is gated by `suppo
 | real touch-event dispatch | driver-level touch emulation (CDP / mobileEmulation capability) | ⏳ pending (tap currently synthesizes click) |
 | touch input / `tap()` | Actions `pointerType:"touch"` + `Locator.tap()` ([`actions.v`](webdriver/actions.v), [`locator.v`](webdriver/locator.v)) | ✅ **M3 done** (tap gesture; touch *events* need M2 hasTouch) |
 | device presets (`iPhone`, `Pixel`, …) | curated catalog + `emulate_device(name)` ([`devices.v`](webdriver/devices.v)) | ✅ **M4 done** (9 presets) |
-| locale / timezone / orientation | `emulation.set*Override` (probe-gated) | ⏳ M5 |
+| locale / timezone / orientation | `set_locale` / `set_timezone` / `set_screen_orientation` ([`bidi_context.v`](webdriver/bidi_context.v)) | ✅ **M5 done** (verified on Edge) |
 
 **Out of scope:** real native devices / Appium (UiAutomator2/XCUITest) — a different
 protocol surface, and not what Playwright does either.
