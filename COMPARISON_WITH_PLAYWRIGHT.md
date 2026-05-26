@@ -131,8 +131,10 @@ Chromium-based drivers (Edge/Chrome); each `emulation.*` call is gated by `suppo
 |-----|-----------|--------|
 | viewport + device-scale-factor | `set_viewport` / `set_device_pixel_ratio` | ✅ done |
 | **Device descriptor + `emulate()`** | `Device{…}` + `bidi.emulate(ctx, device)` ([`emulation.v`](webdriver/emulation.v)) | ✅ **M1 done** (viewport + DPR) |
-| user-agent (real request header) | BiDi UA override if supported, else rewrite `User-Agent` via network interception; + preload script for JS-visible `navigator.userAgent` | ⏳ M2 |
-| `isMobile` / `hasTouch` JS flags | `add_preload_script` (maxTouchPoints, ontouchstart, mobile hints) | ⏳ M2 |
+| user-agent (JS-visible) | preload script overriding `navigator.userAgent` ([`emulation.v`](webdriver/emulation.v)) | ✅ **M2 done** (JS side) |
+| `isMobile` / `hasTouch` JS flags | preload (`maxTouchPoints`, `ontouchstart`) | ✅ **M2 done** |
+| user-agent (HTTP request header) | rewrite `User-Agent` via network interception | ⏳ pending (server-side detection) |
+| real touch-event dispatch | driver-level touch emulation (CDP / mobileEmulation capability) | ⏳ pending (tap currently synthesizes click) |
 | touch input / `tap()` | Actions `pointerType:"touch"` + `Locator.tap()` ([`actions.v`](webdriver/actions.v), [`locator.v`](webdriver/locator.v)) | ✅ **M3 done** (tap gesture; touch *events* need M2 hasTouch) |
 | device presets (`iPhone`, `Pixel`, …) | curated `devices` catalog + `emulate_device(name)` | ⏳ M4 |
 | locale / timezone / orientation | `emulation.set*Override` (probe-gated) | ⏳ M5 |
