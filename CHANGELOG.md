@@ -1,5 +1,34 @@
 # WebDriver V Library - Changelog
 
+## [4.2.0] - 2026-05-26 - Mobile emulation
+
+Playwright-style mobile-web **emulation** over BiDi (browser emulation, not
+native/Appium). Verified live against headless Edge.
+
+### ✨ Added
+
+- **Device descriptor + `emulate(ctx, device)`** ([`emulation.v`](webdriver/emulation.v)) —
+  sets viewport + device-pixel-ratio, and installs a preload script overriding
+  JS-visible `navigator.userAgent` and touch signals (`maxTouchPoints`,
+  `ontouchstart`) from `is_mobile`/`has_touch`. Plus `set_user_agent(ua)`.
+- **Device presets** ([`devices.v`](webdriver/devices.v)) — `device(name)`,
+  `device_names()`, `emulate_device(ctx, name)`. 9 presets: iPhone SE/12/14/14
+  Pro Max, Pixel 5/7, Galaxy S21, iPad, iPad Mini.
+- **Touch input** — `touch()` pointer source (`pointerType:"touch"`) in the
+  Actions API + **`Locator.tap()`** ([`actions.v`](webdriver/actions.v), [`locator.v`](webdriver/locator.v)).
+- **Server-side UA** — `set_request_user_agent(ua)` rewrites the HTTP
+  `User-Agent` request header via interception ([`bidi_network.v`](webdriver/bidi_network.v)).
+- **Locale / timezone / orientation** — `set_locale` / `set_timezone` /
+  `set_screen_orientation` over the BiDi `emulation` module ([`bidi_context.v`](webdriver/bidi_context.v));
+  feature-detect with `supports()`.
+
+### Not implemented (protocol limit)
+
+- Real touch-**event** dispatch (`touchstart`/`touchend`) needs driver-level
+  touch emulation (CDP / `mobileEmulation` capability), which WebDriver-BiDi
+  doesn't expose — `tap()` synthesizes a click. Touch *detection* (`hasTouch`)
+  is emulated.
+
 ## [4.1.0] - 2026-05-25 - Per-context conveniences + capability probing
 
 Closes the two "vs Playwright" gaps around user contexts: leanness (now has the

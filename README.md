@@ -2,7 +2,7 @@
 
 A V language implementation of the W3C WebDriver protocol for browser automation.
 
-**Version 4.1.0** | **Playwright-style API + WebDriver-BiDi** | **100% Selenium parity** | **Production Ready**
+**Version 4.2.0** | **Playwright-style API + WebDriver-BiDi + mobile emulation** | **100% Selenium parity** | **Production Ready**
 
 ## ⚡ Modern API (Playwright-style)
 
@@ -78,6 +78,13 @@ isolated user contexts (with per-context **proxy**, **geolocation**,
 upload (`set_files`), and a `Tracer`. Capability probing via `status()` /
 `supports()`. Any unwrapped command/event is reachable via `send`/`on` (or
 `on_sync` for inline observers).
+
+**Mobile emulation** (Playwright-style): device presets
+(`emulate_device(ctx, 'iPhone 14')`, 9 built-in), `emulate()` for viewport/DPR/UA/
+touch flags, `Locator.tap()`, `set_request_user_agent` (server-side UA), and
+`set_locale`/`set_timezone`/`set_screen_orientation`. (Real touch-*event* dispatch
+needs a CDP/`mobileEmulation` capability BiDi doesn't expose; touch *detection* is
+emulated.)
 
 See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the full
 Playwright/Selenium feature mapping.
@@ -621,6 +628,18 @@ Command: get_title
 
 See [COMPARISON_WITH_PLAYWRIGHT.md](COMPARISON_WITH_PLAYWRIGHT.md) for the full Playwright/Selenium feature mapping.
 
+## ✨ What's New in v4.2.0
+
+**📱 Playwright-style mobile-web emulation** (over WebDriver-BiDi):
+- ✅ Device presets — `emulate_device(ctx, 'iPhone 14')` (9 built-in: iPhone, Pixel, Galaxy, iPad)
+- ✅ `emulate()` — viewport + DPR + JS-visible UA + `isMobile`/`hasTouch`
+- ✅ `Locator.tap()` (touch pointer)
+- ✅ `set_request_user_agent` — server-side UA (HTTP header rewrite)
+- ✅ `set_locale` / `set_timezone` / `set_screen_orientation`
+- ⚠️ Real touch-*event* dispatch needs a CDP/`mobileEmulation` capability BiDi doesn't expose (touch *detection* is emulated; `tap` synthesizes a click)
+
+(v4.1.0: per-context conveniences + capability probing; v4.0.1: partition-aware cookies + inline dispatch — see CHANGELOG.)
+
 ## ✨ What's New in v4.0.0
 
 **🎭 Playwright-style API + WebDriver-BiDi — verified live against headless Edge**
@@ -768,11 +787,11 @@ For issues, questions, or contributions:
 
 **Status**: Production-ready for web automation. Playwright-style API + WebDriver-BiDi on top of 100% Selenium parity. 🎉
 
-**Version**: 4.1.0 (Playwright-style Locators/assertions, `launch()`, WebDriver-BiDi; 4-browser support)
+**Version**: 4.2.0 (Playwright-style Locators/assertions, `launch()`, WebDriver-BiDi, mobile emulation; 4-browser support)
 
 **Selenium-parity phases**: ✅ Phase 1 | ✅ Phase 2 | ✅ Phase 3 | ✅ Phase 4 | ✅ Phase 5 | ✅ Phase 6 | ✅ Phase 7 | ✅ Phase 8
 
 **Playwright-parity roadmap**: ✅ Phase 0 (transport seam) | ✅ Phase 1 (locators/assertions) | ✅ Phase 2 (launch) | ✅ Phase 3 (BiDi transport) | ✅ Phase 4 (BiDi features) | ✅ Phase 5 (tooling) | ✅ BiDi gap closure vs Selenium
 
-**Latest Update**: 2026-05-25 - v4.1.0 per-context conveniences (proxy/geolocation/permissions/storageState) + capability probing
+**Latest Update**: 2026-05-26 - v4.2.0 Playwright-style mobile-web emulation (device presets, viewport/UA/touch, locale/timezone)
 
