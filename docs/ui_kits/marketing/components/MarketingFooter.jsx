@@ -27,7 +27,7 @@ function MarketingFooter() {
             { t: "Comparison",        h: `${DOCS_BASE}#comparison` },
           ]} />
           <FooterCol label="Reference" links={[
-            { t: "Changelog",     h: `${REPO_F}/blob/main/CHANGELOG.md` },
+            { t: "Changelog",     h: `${DOCS_BASE}#changelog` },
             { t: "vs Selenium",   h: `${REPO_F}/blob/main/COMPARISON_WITH_SELENIUM.md` },
             { t: "vs Playwright", h: `${REPO_F}/blob/main/COMPARISON_WITH_PLAYWRIGHT.md` },
             { t: "Examples",      h: `${REPO_F}/tree/main/examples` },

@@ -16,7 +16,7 @@ function TopNav({ onNavigate, activeId }) {
             <a style={tnStyles.navLink} href="#quick-start" onClick={docNav("quick-start")}>Docs</a>
             <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="#modern-api" onClick={docNav("modern-api")}>API</a>
             <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href={`${REPO}/tree/main/examples`}>Examples</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href={`${REPO}/blob/main/CHANGELOG.md`}>Changelog</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="#changelog" onClick={docNav("changelog")}>Changelog</a>
           </nav>
         </div>
         <div style={tnStyles.right}>

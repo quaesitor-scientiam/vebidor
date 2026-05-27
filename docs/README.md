@@ -1,8 +1,11 @@
 # Vebidor Design System
 
-A design system for **Vebidor** — a V-language implementation of the W3C WebDriver + WebDriver-BiDi protocols with a Playwright-style ergonomic API.
+A design system + docs/marketing site for **Vebidor** — a V-language implementation of the W3C WebDriver + WebDriver-BiDi protocols with a Playwright-style ergonomic API.
 
-> ⚠️ **Source has no existing visual brand.** Vebidor is a developer library distributed via `v.mod`/GitHub. There is no marketing site, app UI, icon set, brand colors, fonts, or logo in the source repo. **Every visual decision below is inferred** from the README's tone, CLI output, code-block density, comparison-table style, and emoji-rich changelog. Treat this as a *proposed* visual identity for "if Vebidor had a docs site and landing page" — and ask the user to validate or steer before treating any specific color/typeface/logo as canonical.
+> Live at: **https://quaesitor-scientiam.github.io/vebidor/**
+> (root redirects to `/ui_kits/marketing/index.html`)
+
+> ⚠️ **Vebidor has no source visual brand.** It is a developer library distributed via `v.mod`/GitHub — no marketing site, app UI, icon set, brand colors, fonts, or logo existed in the source repo. Every visual decision here was **inferred** from the README's tone, CLI output, code-block density, comparison-table style, and emoji-rich changelog. Treat this as a *proposed* identity; ask for validation before treating any color/typeface as canonical. The **logo** is now a real PNG mark provided by the maintainer.
 
 ---
 
@@ -13,34 +16,31 @@ A design system for **Vebidor** — a V-language implementation of the W3C WebDr
 - **Repo:** `github.com/quaesitor-scientiam/vebidor`
 - **Module:** `vebidor.webdriver`
 - **What it does:** Browser automation. Talks W3C WebDriver-Classic (HTTP) **and** W3C WebDriver-BiDi (WebSocket) to msedgedriver / chromedriver / geckodriver / safaridriver. Wraps the raw W3C protocol in a Playwright-style API: `launch()`, lazy auto-waiting `Locator`s, semantic selector engines (`get_by_role`, `get_by_text`, …), and retrying web-first assertions (`expect(loc).to_be_visible()`).
-- **Positioning:** Claims **100% Selenium feature parity** + **Playwright-style ergonomics** + WebDriver-BiDi (network interception/mocking, isolated contexts, mobile emulation) — all on a **W3C-standards** transport, not Chromium-only CDP.
+- **Positioning:** Claims **100% Selenium feature parity** (since v3.0.0) + **Playwright-style ergonomics** (since v4.0.0) + WebDriver-BiDi (network interception/mocking, isolated contexts, mobile-web emulation since v4.2.0) — all on a **W3C-standards** transport, not Chromium-only CDP.
 - **Audience:** V-language developers writing browser tests, scrapers, automation scripts. Cross-browser (Edge / Chrome / Firefox / Safari), cross-platform.
 
-### Products / surfaces represented
+### Live surfaces
 
-Vebidor has **no visual product**. It is a library. The natural design surfaces are:
-
-1. **Docs site** — API reference, getting-started, comparison pages (vs Selenium, vs Playwright). Heavy on code blocks, tables, and "phase" callouts.
-2. **Marketing / landing page** — hero ("Playwright-style API for V"), feature grid, code snippet, browser support matrix.
-3. **Terminal / CLI output** — example programs print ASCII rules (`========`), `✓` checkmarks, `✅` / `🎉` / `🐛` emoji status, phase headings.
-
-These are the three surfaces this design system targets.
+| URL | What it is |
+|---|---|
+| `/` → `/ui_kits/marketing/index.html` | Marketing landing page (hero, features, browser matrix, phases timeline, footer) |
+| `/ui_kits/docs/index.html` | Docs site with deep-link hash routing (`#quick-start`, `#modern-api`, `#bidi`, `#mobile`, `#comparison`, `#changelog`) |
 
 ---
 
 ## Sources
 
-The only material consulted was the read-only attached codebase:
+Material consulted to build this design system:
 
-- **Codebase:** `vebidor/` (mounted via File System Access API as `vebidor/...`)
-  - `README.md` — 798 lines, primary tonal source
-  - `CHANGELOG.md` — 1363 lines, voice + version-milestone framing
-  - `COMPARISON_WITH_PLAYWRIGHT.md`, `COMPARISON_WITH_SELENIUM.md` — feature-mapping table style
-  - `TESTING.md`, `TEST_ENVIRONMENT_SETUP.md` — instructional docs voice
-  - `examples/*.v`, `webdriver/*.v` — V source code style, CLI output style
+- **Codebase:** `quaesitor-scientiam/vebidor` (read directly from GitHub once connected)
+  - `README.md` — primary tonal source
+  - `CHANGELOG.md` (~50 KB, ~1300 lines) — voice + milestone framing
+  - `COMPARISON_WITH_PLAYWRIGHT.md`, `COMPARISON_WITH_SELENIUM.md` — table style
+  - `TESTING.md`, `TEST_ENVIRONMENT_SETUP.md` — instructional voice
+  - `examples/*.v`, `webdriver/*.v` — V source style, CLI output style
   - `v.mod` — package metadata
 
-No Figma file, no design system file, no logo asset, no marketing site, no app screens were provided. **If the user has any of those, ask them to attach.**
+No Figma file or pre-existing design system was provided.
 
 ---
 
@@ -57,23 +57,22 @@ Vebidor's prose is **technical, achievement-oriented, and quietly proud**. It re
 
 ### Casing & punctuation
 
-- **Sentence case** for most headings: "Quick Start", "What's New in v4.2.0".
+- **Sentence case** for most headings.
 - **lowercase product name:** the project styles itself `vebidor` in body prose (lowercase) but `Vebidor` at the start of sentences and in marketing headers. Be flexible.
-- **Backticks everywhere** for API names: `launch()`, `get_by_role`, `expect(loc).to_be_visible()`. Never italics for code.
+- **Backticks everywhere** for API names. Never italics for code.
 - **W3C / BiDi / CDP** stay all-caps. **`v` / `v.mod` / `v test`** stay lowercase.
-- Emoji headers are common (see below).
 
-### Emoji usage — yes, heavily, with a system
+### Emoji vocabulary — load-bearing, not decorative
 
-The README and changelog use emoji as **section markers and status flags**, not decoration. This is intentional and brand-consistent. The vocabulary is small and load-bearing:
+The README and changelog use emoji as **section markers and status flags**. The vocabulary is small and deliberate:
 
-| Emoji | Meaning in Vebidor docs |
+| Emoji | Meaning |
 |---|---|
 | ✅ | Feature complete / implemented / passing |
 | ⚠️ | Limitation, caveat, "not implemented because…" |
 | 🐛 | Bug fix |
 | ✨ | New feature in this release |
-| 🎉 / 🎊 | Milestone (e.g. "100% parity achieved") |
+| 🎉 / 🎊 | Milestone |
 | 🏆 | Major achievement |
 | ⚡ | Performance / speed claim |
 | 🚀 | Quick start / launch section |
@@ -81,28 +80,11 @@ The README and changelog use emoji as **section markers and status flags**, not 
 | 📖 / 📚 | Documentation |
 | 🎯 | Feature coverage / goals |
 | 🌐 | Multi-browser support |
-| 🤝 | Contributing |
-| 📄 | License |
 | 🎭 | Playwright reference (Playwright's mascot is a theater mask) |
 | 📱 | Mobile / device emulation |
-| ✓ | Inline checkmark in CLI output (plain unicode, not emoji ✅) |
+| ✓ | Inline checkmark in CLI output (plain unicode) |
 
 **Rule:** in marketing/docs designs, lean into these. They are *the* brand voice. Strip them only in production-app UI (which Vebidor doesn't have anyway).
-
-### Copy examples (lifted verbatim from source)
-
-- Tagline / one-liner: *"A V language implementation of the W3C WebDriver protocol for browser automation."*
-- Positioning line: *"Playwright-style API + WebDriver-BiDi + mobile emulation | 100% Selenium parity | Production Ready"*
-- Pride line: *"🏆 100% FEATURE PARITY ACHIEVED! 🏆"*
-- Honest-limits line: *"Real touch-*event* dispatch needs a CDP/`mobileEmulation` capability BiDi doesn't expose…"*
-- Feature-grid voice: *"Lazy auto-waiting `Locator`s, selector engines, web-first assertions, one-call `launch()`, and network interception/mocking."*
-- CLI banner style:
-  ```
-  ========================================
-  v-webdriver v2.0.0 - Feature Showcase
-  85% Selenium Feature Parity
-  ========================================
-  ```
 
 ### Vibe summary
 
@@ -112,157 +94,149 @@ If Vebidor were a person, it would be a backend engineer who built something the
 
 ## VISUAL FOUNDATIONS
 
-Because there is no existing brand to follow, this section proposes a coherent foundation that matches the **tone** above. All values are tokenized in `colors_and_type.css`.
+All values are tokenized in `colors_and_type.css`.
 
 ### Color
 
-- **Primary — Vebidor Blue.** A V-language-adjacent deep blue (`#3E63DD` core, `#1E3A8A` deep). Not the bluish-purple gradient cliché; flat, confident, used on buttons, links, code-keyword tokens, and the wordmark.
-- **Surface — Slate neutrals.** A 10-step slate scale from near-white (`#F8FAFC`) to near-black (`#0B1220`). Docs are light-mode by default; the **terminal/code surface is always dark** regardless of theme (this matches how every code example in the README is dark-themed in your mental model).
+- **Primary — Vebidor Blue.** A V-language-adjacent deep blue (`#3E63DD` core, `#1E3A8A` deep). Flat and confident, used on buttons, links, code-keyword tokens, and the wordmark. The cyan-blue in the canonical logo ties to this scale.
+- **Surface — Slate neutrals.** A 12-step slate scale from white (`#FFFFFF`) through to terminal-near-black (`#0B1220`). Docs are light-mode by default; the **terminal/code surface is always dark**.
 - **Semantic / status — mapped to emoji vocabulary.**
-  - Success / "feature complete" / ✅ → `#1E9F5E` (a confident green, not pastel)
-  - Warning / "limitation" / ⚠️ → `#D97706` (amber, not yellow)
-  - Bug-fix / "regression" / 🐛 → `#DC2626` (red)
-  - "New feature" / ✨ → primary blue (re-use)
-  - Milestone / 🎉🏆 → a warm gold `#D4A017` — used sparingly, never as a background
-- **Browser-brand accents** (functional, not decorative — used in browser-support matrices and device-emulation chips):
-  - Edge `#0F6CBD`, Chrome `#1A73E8`, Firefox `#FF7139`, Safari `#0FB5EE`
-- **Code-token palette** (for syntax highlighting on dark surface):
-  - keyword `#7AA2F7` · string `#9ECE6A` · number `#FF9E64` · function `#E0AF68` · comment `#565F89` · plain `#C0CAF5` (a Tokyo-Night-adjacent scheme — chosen because Vebidor itself shows almost no UI, but every README example is a V code block and the syntax matters more than the chrome).
+  - Success / ✅ → `#1E9F5E`
+  - Warning / ⚠️ → `#D97706`
+  - Bug-fix / 🐛 → `#DC2626`
+  - New feature / ✨ → primary blue (re-use)
+  - Milestone / 🎉🏆 → `#D4A017` warm gold — used sparingly
+- **Browser-brand accents:** Edge `#0F6CBD`, Chrome `#1A73E8`, Firefox `#FF7139`, Safari `#0FB5EE`
+- **Code-token palette** (Tokyo-Night-adjacent): keyword `#7AA2F7` · string `#9ECE6A` · number `#FF9E64` · function `#E0AF68` · type `#BB9AF7` · comment `#565F89` · plain `#C0CAF5`
 
 ### Type
 
-- **Display / headings:** **Geist Sans** (Vercel's open-source geometric humanist sans). Picked because Inter / Roboto are over-used per project guidelines, Geist has a quietly modern dev-tool register, and it's Google-Fonts-available. ⚠️ flagged: the source has no font preference — confirm with user.
-- **Body:** Geist Sans, same family, 16px base, 1.6 line-height.
-- **Mono:** **JetBrains Mono** for all code (inline and block). Ligatures **on** (Vebidor uses `!`, `!=`, `->` heavily and ligatures read well there).
-- **Scale:** 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 48 / 60 / 72px. Tight-ish letterspacing on headings (`-0.02em`), default on body.
+- **Display & body:** **Geist** (Google Fonts CDN). ⚠️ flagged substitution.
+- **Mono:** **JetBrains Mono** with ligatures. Reads well for V's `!`, `!=`, `->`.
+- **Scale:** 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 48 / 60 / 72px. `-0.02em` tracking on headings.
 
-### Spacing & layout
+### Spacing, radii, shadows
 
-- **4px base unit.** Tokens: `--space-1` (4) … `--space-16` (64). Generous vertical rhythm — Vebidor's README is a long-form doc and the design should reward scanning.
-- **Container widths:** docs body `720px`, docs-with-sidebar `1200px`, marketing hero up to `1280px`. Wide tables can go full bleed.
-- **Layout grid:** docs use a fixed left sidebar (260px) + content (~720px) + on-page TOC (200px). Marketing is a centered single column with full-bleed accent bands.
+- **4px base unit.** Tokens `--space-1` (4) through `--space-16` (64).
+- **Radii:** buttons/inputs/chips `6px`, code blocks `8px`, cards `10px`, feature cards `14px`, pills `9999px`.
+- **Shadows:** one resting state (`--shadow-card`), one elevated (`--shadow-pop`). Sparing.
 
-### Backgrounds
+### Background, motion, interaction
 
-- **No gradient backgrounds** anywhere except a single optional radial-glow behind the marketing hero (very subtle, primary-blue at ~6% opacity). The dev-tool aesthetic is **flat surfaces + meaningful borders**.
-- **No hand-drawn illustrations, no patterns, no textures, no photography.** The brand's imagery is *code blocks* and *comparison tables*.
-- **Full-bleed dark code blocks** are the most visually distinctive element. Treat them as imagery.
-
-### Animation & interaction
-
-- **Animations are minimal and functional.** Hover transitions on links/buttons at `120ms cubic-bezier(0.4, 0, 0.2, 1)`. No bounces. No spring physics. No page-load reveals.
-- **Hover state:** primary buttons darken by ~6% on the primary color; secondary/ghost buttons get a `--surface-2` background fill; links underline (or thicken if already underlined).
-- **Press state:** `scale(0.98)` + color darken by ~10%. 80ms.
-- **Focus state:** 2px outline in `--accent-focus` (a lighter primary tint) offset 2px. Always visible — this is a dev tool, keyboard users matter.
-- **Disabled state:** 0.4 opacity, `cursor: not-allowed`. No layout shift.
-
-### Borders & shadows
-
-- **Borders carry most of the visual structure.** `1px solid var(--border-1)` is the workhorse. Use color, not weight, to differentiate.
-- **Corner radii:** small UI `6px` (buttons, inputs, chips), cards `10px`, code blocks `8px`, full-bleed dark sections `0`. Pills (`9999px`) only for status chips.
-- **Shadows are sparing.** A single elevation step (`--shadow-card`: `0 1px 3px rgba(11,18,32,0.06), 0 1px 2px rgba(11,18,32,0.04)`) for floating menus and hover-on-cards. No drop-shadow stacks, no neon glows, no inner shadows.
-- **No "left-border-accent + rounded-corner-card" pattern.** That is on the avoid-list.
-
-### Transparency & blur
-
-- Used only for **overlays and the on-page TOC**: `backdrop-filter: blur(8px)` + `rgba(255,255,255,0.75)` background on sticky doc headers. Nothing decorative.
+- **No gradient backgrounds** except one optional subtle radial-glow behind the marketing hero. Flat surfaces + meaningful borders.
+- **No illustrations, no patterns, no photography.** The brand's imagery is *code blocks* and *comparison tables*.
+- **Animations are minimal** — `120ms cubic-bezier(0.4, 0, 0.2, 1)` hover transitions. No bounces, no spring physics, no page-load reveals.
+- **Hover:** ~6% darken on primary; `--surface-2` fill on secondary/ghost.
+- **Focus:** 2px outline in lighter blue, offset 2px. Always visible.
+- **Borders carry most of the visual structure.** `1px solid var(--border-1)` is the workhorse.
 
 ### Imagery vibe
 
-- **Imagery is code.** Treat dark code blocks as the brand's "photography". When the marketing site needs a hero visual, it's a code block — not an illustration.
-- For the rare case where a real image is needed (e.g. an OG image / social card), use a flat dark-blue field with the wordmark and a single line of code in JetBrains Mono. No gradients, no 3D, no shapes.
-
-### Card anatomy
-
-- White (or `--surface-1`) background
-- `1px solid var(--border-1)` border
-- `10px` radius
-- `20–24px` padding
-- Title row (icon optional, label, optional status pill)
-- Body
-- Optional code block (dark) inline
-- No drop shadow at rest; subtle shadow on hover
-
-### Fixed elements
-
-- **Docs site:** sticky top nav (56px), sticky left sidebar, sticky right on-page TOC. All have `backdrop-filter: blur(8px)` + translucent surface.
-- **Marketing:** sticky top nav only.
-
-### Use of color across the surface
-
-- Docs are predominantly **light surface, dark text, blue accents, dark code**. Color is rationed — it's mostly black-on-white with one blue link color and the semantic-status chips.
-- Marketing has slightly more color — a primary-blue hero CTA, a "100% parity" milestone badge in gold, browser-support chips in their brand colors.
+- **Imagery is code.** Dark code blocks are the brand's "photography".
 
 ---
 
 ## ICONOGRAPHY
 
-Vebidor has **no first-party icon system**. The README uses emoji (see Content Fundamentals) and CLI plain-unicode `✓`. There is no SVG icon set, no icon font, no PNG sprites in the source repo.
-
-### Decisions
-
-- **For UI chrome icons** (search, copy-to-clipboard, external link, menu, close, theme toggle, chevrons): **Lucide** via CDN. Reasoning: Lucide is the closest match in stroke weight (1.5px), corner style (rounded), and dev-tool register to what this brand wants. ⚠️ flagged: this is a substitution; no source preference exists.
-- **For browser logos** (Edge / Chrome / Firefox / Safari, used in the support matrix and device-emulation chips): linked from Simple Icons CDN as monochrome SVGs, colorized via `currentColor` to the brand-color tokens above. ⚠️ flagged: trademarked logos used for identification only.
-- **For status icons** (✅ ⚠️ 🐛 ✨ 🎉 etc.): **native emoji**. This is genuinely part of Vebidor's voice and should not be replaced with SVGs. Render with `font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji'` fallback.
-- **For the Vebidor wordmark / logo:** there is no existing logo. `assets/logo-vebidor.svg` is a **placeholder wordmark** I created — a simple `vebidor` set in Geist Sans 700 with a small "→" glyph standing in for the WebDriver "navigate" metaphor. ⚠️ flagged — please replace with the real logo or tell me to iterate.
+- **Logo / wordmark:** `assets/logo-vebidor.png` — the canonical 256×256 mark provided by the maintainer (stylized V with inset browser window + reticle/crosshair, cyan-blue on near-black). Use it as a square mark (small `border-radius` in UI chrome) or paired with the "vebidor" wordmark in Geist 800 for a horizontal lockup.
+- **UI chrome icons:** **Lucide** via CDN. ⚠️ substitution.
+- **Browser glyphs:** monochrome SVGs for Edge / Chrome / Firefox / Safari, colorized via `currentColor`. Trademarked logos used for identification only.
+- **Status icons:** native emoji rendered with the system color-emoji fallback stack.
 
 ### Files in `assets/`
 
-- `logo-vebidor.svg` — placeholder wordmark (flagged)
-- `logo-vebidor-mark.svg` — placeholder monogram "V→" (flagged)
-- `browser-edge.svg`, `browser-chrome.svg`, `browser-firefox.svg`, `browser-safari.svg` — monochrome browser glyphs (placeholder; recommend Simple Icons in production)
+- `logo-vebidor.png` — **canonical logo** (256×256 PNG)
+- `logo-vebidor.svg`, `logo-vebidor-mark.svg` — legacy placeholders, kept for reference
+- `browser-edge.svg`, `browser-chrome.svg`, `browser-firefox.svg`, `browser-safari.svg`
 
 ---
 
-## Index — what lives in this design system
+## Index — what lives in this folder
 
 ```
-/
+docs/                          ← GitHub Pages serves from here
+├── index.html                 ← redirect → ui_kits/marketing/index.html
 ├── README.md                  ← you are here
-├── SKILL.md                   ← Agent-Skills-compatible entry point
+├── SKILL.md                   ← Agent-Skills-compatible entry point for Claude
 ├── colors_and_type.css        ← all design tokens + base type styles
-├── fonts/                     ← (Geist Sans + JetBrains Mono via Google Fonts; flagged)
-│   └── README.md              ← font sourcing notes + substitution flags
-├── assets/                    ← logos + browser glyphs (placeholders, flagged)
-├── preview/                   ← design-system cards rendered into the DS tab
+├── fonts/
+│   └── README.md              ← font sourcing notes
+├── assets/                    ← canonical PNG logo + legacy SVGs + browser glyphs
+├── preview/                   ← 19 design-system specimen cards
 │   ├── colors-primary.html
 │   ├── colors-neutrals.html
 │   ├── colors-semantic.html
 │   ├── colors-browser-accents.html
 │   ├── colors-code-tokens.html
-│   ├── type-display.html
-│   ├── type-body.html
-│   ├── type-mono.html
-│   ├── spacing-scale.html
-│   ├── radii.html
-│   ├── shadows.html
-│   ├── buttons.html
-│   ├── inputs.html
-│   ├── chips-status.html
-│   ├── browser-matrix.html
-│   ├── code-block.html
-│   ├── comparison-table.html
-│   ├── emoji-vocabulary.html
+│   ├── type-display.html / type-body.html / type-mono.html
+│   ├── spacing-scale.html / radii.html / shadows.html
+│   ├── buttons.html / inputs.html / chips-status.html
+│   ├── code-block.html / comparison-table.html
+│   ├── emoji-vocabulary.html / browser-matrix.html
 │   └── logo-placeholders.html
 └── ui_kits/
-    ├── docs/                  ← Docs-site UI kit (sidebar + content + TOC + code blocks)
+    ├── docs/                  ← Docs-site UI kit (live)
     │   ├── README.md
-    │   ├── index.html         ← live demo of a docs page
-    │   └── components/*.jsx
-    └── marketing/             ← Landing-page UI kit (hero + features + matrix + CTA)
+    │   ├── index.html
+    │   ├── app.jsx            ← hash-routed page navigation
+    │   └── components/
+    │       ├── TopNav.jsx
+    │       ├── Sidebar.jsx
+    │       ├── TocPanel.jsx
+    │       ├── DocsPage.jsx   ← all 6 page components + Changelog data
+    │       ├── CodeBlock.jsx
+    │       ├── Callout.jsx
+    │       ├── ComparisonTable.jsx
+    │       └── ApiSignature.jsx
+    └── marketing/             ← Landing-page UI kit (live)
         ├── README.md
-        ├── index.html         ← live demo of the landing page
-        └── components/*.jsx
+        ├── index.html
+        ├── app.jsx
+        └── components/
+            ├── MarketingNav.jsx
+            ├── Hero.jsx
+            ├── FeatureGrid.jsx
+            ├── BrowserMatrix.jsx
+            ├── PhasesTimeline.jsx
+            └── MarketingFooter.jsx
 ```
 
-There is no `slides/` directory because no slide template was provided in the source.
+### Docs pages currently shipped
+
+| Hash | Page | Status |
+|---|---|---|
+| `#quick-start` | Quick start | live |
+| `#modern-api` | Modern API (Locators, actions, assertions) | live |
+| `#bidi` | WebDriver-BiDi (network mocking, contexts) | live |
+| `#mobile` | Mobile (preview) — design sketch for a no-Appium backend | live, ⚠️ proposal only |
+| `#comparison` | Comparison — vs Playwright + Phase history | live |
+| `#changelog` | Changelog — 15 releases on a timeline, deep-link to GitHub | live |
+
+Sidebar entries `install`, `config`, `locators`, `selectors`, `assertions` are stubs that currently fall back to Quick Start — flagged in caveats below.
 
 ---
 
 ## Caveats (read me)
 
-1. **No source brand.** Logo, colors, fonts, motion: all inferred. Push back.
-2. **Font substitution.** Geist + JetBrains Mono loaded from Google Fonts CDN. No `.ttf` files copied. If you want self-hosted fonts, point me at them.
-3. **Browser logos.** Used for identification under nominative fair-use; we don't bundle the trademark assets, we render monochrome glyphs.
-4. **No slide template** in source → no `slides/` directory was generated. Ask if you want one.
-5. **No mobile-app UI** in source — this is a CLI/library — so no iOS/Android frames are in the UI kits.
+1. **Sidebar stubs that don't exist yet.** `Installation`, `Configuration`, `Locators`, `Selector engines`, `Assertions` in the sidebar all silently fall back to Quick Start. Either build them out, point them at GitHub source files, or remove them.
+2. **Font substitution.** Geist + JetBrains Mono loaded from Google Fonts CDN. No `.ttf` files in `fonts/`. If you want self-hosted fonts, drop them in and rewrite the `@import` in `colors_and_type.css` as `@font-face`.
+3. **Browser logos.** Used for identification under nominative fair-use; bundled as monochrome glyphs, not official trademark assets.
+4. **No slide template** in source → no `slides/` directory generated.
+5. **No mobile-app UI** in source — this is a CLI/library — so no iOS/Android frames in the UI kits.
+6. **Cache:** GitHub Pages serves JSX with default cache headers. After a deploy, end-users may see stale content until they hard-refresh. Consider cache-busting JSX imports with a `?v=4.2.0` query string on each release.
+7. **JSX compiled in-browser via Babel-standalone.** Fine for a docs/marketing site, but adds ~200 KB of CDN deps and a brief first-paint delay. Switch to a build step if performance matters.
+
+## Recently shipped
+
+- **Canonical PNG logo** — replaced SVG placeholders in nav, footer, and the design-system preview card.
+- **Mobile (preview) docs page** — architecture diagram + comparison vs. Espresso / EarlGrey / Detox / Maestro / Appium, MVP plan for a no-Appium backend.
+- **Changelog docs page** — 15 releases on a timeline with sectioned ✨ / 🐛 / ⚠️ / 🏆 groups, link out to the full `CHANGELOG.md` on GitHub.
+- **Hash routing** in the docs site — pages now have shareable URLs (`#mobile`, `#changelog`, etc.).
+- **Link audit** — 22 dead `href="#"` links replaced with real targets (GitHub URLs, docs deep-links, smooth-scroll handlers).
+
+## Asks for the maintainer
+
+- Is the primary blue (`#3E63DD` core, `#1E3A8A` deep) right, or should it lean another way?
+- Are Geist + JetBrains Mono the right pairing, or do you have a brand typeface preference?
+- Should the sidebar stubs (Installation / Configuration / Locators / Selector engines / Assertions) be built out as real pages, or trimmed?
+- Want a custom domain (e.g. `vebidor.dev`)? Easy add — needs a `CNAME` file + DNS records.
