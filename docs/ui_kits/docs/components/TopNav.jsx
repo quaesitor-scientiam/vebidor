@@ -11,7 +11,7 @@ function TopNav({ onSearchFocus }) {
           </a>
           <nav style={tnStyles.nav}>
             <a style={tnStyles.navLink} href="https://github.com/quaesitor-scientiam/vebidor#readme" target="_blank" rel="noopener">Docs</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor#readme" target="_blank" rel="noopener">API</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor#-modern-api-playwright-style" target="_blank" rel="noopener">API</a>
             <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor/tree/main/examples" target="_blank" rel="noopener">Examples</a>
             <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
           </nav>
