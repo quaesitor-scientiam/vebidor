@@ -1,4 +1,7 @@
 /* global React */
+const REPO_F = "https://github.com/quaesitor-scientiam/vebidor";
+const DOCS_BASE = "../docs/index.html";
+
 function MarketingFooter() {
   return (
     <footer style={fStyles.footer}>
@@ -16,9 +19,27 @@ function MarketingFooter() {
           </div>
         </div>
         <div style={fStyles.cols}>
-          <FooterCol label="Docs" links={["Quick start", "Modern API", "Selectors", "Assertions", "WebDriver-BiDi"]} />
-          <FooterCol label="Reference" links={["Changelog", "vs Selenium", "vs Playwright", "License", "Examples"]} />
-          <FooterCol label="Project" links={["GitHub", "Issues", "v.mod", "Contributing", "Sponsors"]} />
+          <FooterCol label="Docs" links={[
+            { t: "Quick start",       h: `${DOCS_BASE}#quick-start` },
+            { t: "Modern API",        h: `${DOCS_BASE}#modern-api` },
+            { t: "WebDriver-BiDi",    h: `${DOCS_BASE}#bidi` },
+            { t: "Mobile (preview)",  h: `${DOCS_BASE}#mobile` },
+            { t: "Comparison",        h: `${DOCS_BASE}#comparison` },
+          ]} />
+          <FooterCol label="Reference" links={[
+            { t: "Changelog",     h: `${REPO_F}/blob/main/CHANGELOG.md` },
+            { t: "vs Selenium",   h: `${REPO_F}/blob/main/COMPARISON_WITH_SELENIUM.md` },
+            { t: "vs Playwright", h: `${REPO_F}/blob/main/COMPARISON_WITH_PLAYWRIGHT.md` },
+            { t: "Examples",      h: `${REPO_F}/tree/main/examples` },
+            { t: "License",       h: `${REPO_F}/blob/main/LICENSE` },
+          ]} />
+          <FooterCol label="Project" links={[
+            { t: "GitHub",       h: REPO_F },
+            { t: "Issues",       h: `${REPO_F}/issues` },
+            { t: "v.mod",        h: `${REPO_F}/blob/main/v.mod` },
+            { t: "Tests",        h: `${REPO_F}/blob/main/TESTING.md` },
+            { t: "Test setup",   h: `${REPO_F}/blob/main/TEST_ENVIRONMENT_SETUP.md` },
+          ]} />
         </div>
       </div>
       <div style={fStyles.bottom}>
@@ -39,7 +60,7 @@ function FooterCol({ label, links }) {
       <div style={fStyles.colLabel}>{label}</div>
       <ul style={fStyles.list}>
         {links.map((l, i) => (
-          <li key={i}><a href="#" style={fStyles.link}>{l}</a></li>
+          <li key={i}><a href={l.h} style={fStyles.link}>{l.t}</a></li>
         ))}
       </ul>
     </div>

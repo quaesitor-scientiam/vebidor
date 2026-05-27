@@ -22,7 +22,8 @@ const dpStyles = {
 const C = (text) => <code style={dpStyles.inlineCode}>{text}</code>;
 
 // ───────── PAGE: Quick Start ─────────
-function PageQuickStart() {
+function PageQuickStart({ onNavigate }) {
+  const nav = (id) => (e) => { e.preventDefault(); onNavigate && onNavigate(id); };
   return (
     <article style={dpStyles.page}>
       <div style={dpStyles.breadcrumb}>Getting started <span style={{ margin: "0 6px", color: "var(--fg-4)" }}>/</span> <span style={dpStyles.breadcrumb_b}>Quick start</span></div>
@@ -64,9 +65,9 @@ function PageQuickStart() {
 
       <h2 id="next" style={dpStyles.h2}>Next steps</h2>
       <ul style={dpStyles.ul}>
-        <li style={dpStyles.li}><a href="#">Modern API</a> — Locators, selectors, retrying assertions</li>
-        <li style={dpStyles.li}><a href="#">WebDriver-BiDi</a> — network interception, isolated contexts, mobile emulation</li>
-        <li style={dpStyles.li}><a href="#">Comparison with Selenium &amp; Playwright</a> — feature-by-feature</li>
+        <li style={dpStyles.li}><a href="#modern-api" onClick={nav("modern-api")}>Modern API</a> — Locators, selectors, retrying assertions</li>
+        <li style={dpStyles.li}><a href="#bidi" onClick={nav("bidi")}>WebDriver-BiDi</a> — network interception, isolated contexts, mobile emulation</li>
+        <li style={dpStyles.li}><a href="#comparison" onClick={nav("comparison")}>Comparison with Selenium &amp; Playwright</a> — feature-by-feature</li>
       </ul>
     </article>
   );
@@ -418,10 +419,10 @@ const PAGES_DATA = {
   ]},
 };
 
-function DocsPage({ pageId }) {
+function DocsPage({ pageId, onNavigate }) {
   const data = PAGES_DATA[pageId] || PAGES_DATA["quick-start"];
   const Page = data.component;
-  return <Page />;
+  return <Page onNavigate={onNavigate} />;
 }
 
 window.DocsPage = DocsPage;

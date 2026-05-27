@@ -1,23 +1,26 @@
 /* global React */
-function TopNav({ onSearchFocus }) {
+const REPO = "https://github.com/quaesitor-scientiam/vebidor";
+
+function TopNav({ onNavigate, activeId }) {
+  const docNav = (id) => (e) => { e.preventDefault(); onNavigate && onNavigate(id); };
   return (
     <div style={tnStyles.bar}>
       <div style={tnStyles.inner}>
         <div style={tnStyles.left}>
-          <a href="../marketing/index.html" style={tnStyles.brand}>
+          <a href="../../index.html" style={tnStyles.brand}>
             <img src="../../assets/logo-vebidor.png" width="24" height="24" alt="vebidor" style={{ borderRadius: 5, display: "block" }} />
             <span style={tnStyles.wordmark}>vebidor</span>
             <span style={tnStyles.version}>v4.2.0</span>
           </a>
           <nav style={tnStyles.nav}>
-            <a style={tnStyles.navLink} href="https://github.com/quaesitor-scientiam/vebidor#readme" target="_blank" rel="noopener">Docs</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor#-modern-api-playwright-style" target="_blank" rel="noopener">API</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor/tree/main/examples" target="_blank" rel="noopener">Examples</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a style={tnStyles.navLink} href="#quick-start" onClick={docNav("quick-start")}>Docs</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="#modern-api" onClick={docNav("modern-api")}>API</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href={`${REPO}/tree/main/examples`}>Examples</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href={`${REPO}/blob/main/CHANGELOG.md`}>Changelog</a>
           </nav>
         </div>
         <div style={tnStyles.right}>
-          <div style={tnStyles.search} onClick={onSearchFocus}>
+          <div style={tnStyles.search}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-4-4" />
