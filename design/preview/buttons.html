@@ -1,0 +1,49 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 16px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .group-label { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); width: 70px; flex-shrink: 0; }
+  .btn { font-family: var(--font-sans); font-weight: 500; font-size: 14px; line-height: 1; padding: 9px 14px; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 120ms cubic-bezier(.4,0,.2,1); }
+  .btn--primary { background: var(--vb-blue-500); color: #fff; }
+  .btn--primary:hover { background: var(--vb-blue-600); }
+  .btn--secondary { background: #fff; color: var(--fg-1); border-color: var(--border-2); }
+  .btn--secondary:hover { background: var(--surface-1); }
+  .btn--ghost { background: transparent; color: var(--fg-1); }
+  .btn--ghost:hover { background: var(--surface-2); }
+  .btn--danger { background: var(--danger-fg); color: #fff; }
+  .btn--sm { padding: 6px 10px; font-size: 12.5px; }
+  .btn--lg { padding: 12px 18px; font-size: 15px; }
+  .btn[disabled] { opacity: 0.4; pointer-events: none; }
+  .em { font-family: var(--font-emoji); font-size: 14px; }
+</style>
+</head>
+<body>
+  <div class="label">Buttons · primary / secondary / ghost / danger · 3 sizes</div>
+  <div class="stack">
+    <div class="row"><div class="group-label">primary</div>
+      <button class="btn btn--primary btn--sm">Run tests</button>
+      <button class="btn btn--primary">Run tests</button>
+      <button class="btn btn--primary btn--lg">Run tests <span class="em">▸</span></button>
+      <button class="btn btn--primary" disabled>Disabled</button>
+    </div>
+    <div class="row"><div class="group-label">secondary</div>
+      <button class="btn btn--secondary btn--sm">Copy code</button>
+      <button class="btn btn--secondary">Copy code</button>
+      <button class="btn btn--secondary btn--lg">Copy code</button>
+    </div>
+    <div class="row"><div class="group-label">ghost</div>
+      <button class="btn btn--ghost">Cancel</button>
+      <button class="btn btn--ghost">Learn more</button>
+      <button class="btn btn--danger btn--sm">Quit session</button>
+    </div>
+  </div>
+</body>
+</html>

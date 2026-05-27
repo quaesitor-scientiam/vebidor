@@ -1,0 +1,37 @@
+<!-- @dsCard group="Type" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mono Type</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 12px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .frame { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  pre { margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: var(--radius-md); padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; letter-spacing: -0.01em; }
+  .right { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+  .lig { display: flex; align-items: baseline; gap: 12px; font-family: var(--font-mono); color: var(--fg-1); }
+  .lig b { font-size: 22px; font-weight: 500; min-width: 80px; }
+  .lig span { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); }
+</style>
+</head>
+<body>
+  <div class="label">Mono · JetBrains Mono · ligatures on · 13/14px in code blocks</div>
+  <div class="frame">
+<pre><span class="tok-keyword">fn</span> (l <span class="tok-type">Locator</span>) <span class="tok-function">click</span>() ! {
+  el := l.<span class="tok-function">find</span>()!
+  <span class="tok-keyword">if</span> !l.wd.<span class="tok-function">is_displayed</span>(el)! {
+    <span class="tok-keyword">return</span> error(<span class="tok-string">'not visible'</span>)
+  }
+}</pre>
+    <div class="right">
+      <div class="lig"><b>!=</b><span>inequality · ligature</span></div>
+      <div class="lig"><b>-&gt;</b><span>arrow · ligature</span></div>
+      <div class="lig"><b>=&gt;</b><span>fat arrow</span></div>
+      <div class="lig"><b>!!</b><span>V double-bang</span></div>
+      <div class="lig"><b>&lt;=</b><span>comparison</span></div>
+    </div>
+  </div>
+</body>
+</html>

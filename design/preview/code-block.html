@@ -1,0 +1,41 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Code Block</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px 24px; background: var(--surface-0); }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 10px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .cb { background: var(--code-bg); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--slate-800); }
+  .cb__head { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: var(--slate-900); border-bottom: 1px solid var(--slate-800); }
+  .cb__lang { font-family: var(--font-mono); font-size: 11.5px; color: var(--slate-400); }
+  .cb__copy { font-family: var(--font-sans); font-size: 11.5px; color: var(--slate-300); background: var(--slate-800); padding: 4px 9px; border-radius: 5px; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+  .cb__copy svg { width: 12px; height: 12px; }
+  .cb__copy:hover { background: var(--slate-700); color: #fff; }
+  pre { margin: 0; padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--code-fg); letter-spacing: -0.01em; }
+  .ln { display: inline-block; width: 22px; color: var(--slate-600); user-select: none; text-align: right; padding-right: 12px; }
+</style>
+</head>
+<body>
+  <div class="label">Code block · header + copy · line numbers · V syntax</div>
+  <div class="cb">
+    <div class="cb__head">
+      <span class="cb__lang">vlang · example_modern.v</span>
+      <button class="cb__copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+<pre><span class="ln">1</span><span class="tok-keyword">import</span> vebidor.webdriver
+<span class="ln">2</span>
+<span class="ln">3</span><span class="tok-keyword">fn</span> <span class="tok-function">main</span>() {
+<span class="ln">4</span>  <span class="tok-keyword">mut</span> b := webdriver.<span class="tok-function">launch_edge</span>(webdriver.<span class="tok-type">LaunchOptions</span>{ headless: <span class="tok-keyword">true</span> })!
+<span class="ln">5</span>  <span class="tok-keyword">defer</span> { b.<span class="tok-function">close</span>() }
+<span class="ln">6</span>  b.<span class="tok-function">goto</span>(<span class="tok-string">'https://example.com'</span>)!
+<span class="ln">7</span>  webdriver.<span class="tok-function">expect</span>(b.wd.<span class="tok-function">get_by_role</span>(<span class="tok-string">'heading'</span>, <span class="tok-string">''</span>)).<span class="tok-function">to_be_visible</span>()!
+<span class="ln">8</span>}</pre>
+  </div>
+</body>
+</html>

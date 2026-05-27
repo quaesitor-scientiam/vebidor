@@ -1,0 +1,35 @@
+<!-- @dsCard group="Type" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Display Type</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-bottom: 1px dashed var(--border-1); padding-bottom: 10px; }
+  .row:last-child { border-bottom: 0; }
+  .meta { font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); white-space: nowrap; }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 12px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .sample { color: var(--fg-1); }
+</style>
+</head>
+<body>
+  <div class="label">Display · Geist · marketing headers</div>
+  <div class="stack">
+    <div class="row">
+      <span class="sample" style="font-family:var(--font-sans);font-weight:800;font-size:60px;line-height:1;letter-spacing:-0.03em">Automate the web</span>
+      <span class="meta">Display 1 · 60 / 800 / -0.03</span>
+    </div>
+    <div class="row">
+      <span class="sample" style="font-family:var(--font-sans);font-weight:800;font-size:44px;line-height:1.05;letter-spacing:-0.03em">Playwright-style</span>
+      <span class="meta">Display 2 · 44 / 800 / -0.03</span>
+    </div>
+    <div class="row">
+      <span class="sample" style="font-family:var(--font-sans);font-weight:700;font-size:30px;line-height:1.1;letter-spacing:-0.02em">100% feature parity</span>
+      <span class="meta">H1 · 30 / 700 / -0.02</span>
+    </div>
+  </div>
+</body>
+</html>

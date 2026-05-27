@@ -1,0 +1,29 @@
+<!-- @dsCard group="Spacing" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Radii</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 14px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .box { width: 70px; height: 70px; background: var(--vb-blue-100); border: 1px solid var(--vb-blue-200); }
+  .name { font-family: var(--font-mono); font-size: 11px; color: var(--fg-1); font-weight: 500; }
+  .meta { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); }
+</style>
+</head>
+<body>
+  <div class="label">Radii · borders carry structure, radii stay restrained</div>
+  <div class="grid">
+    <div class="item"><div class="box" style="border-radius:0"></div><div class="name">none</div><div class="meta">0px</div></div>
+    <div class="item"><div class="box" style="border-radius:6px"></div><div class="name">sm</div><div class="meta">6px · buttons</div></div>
+    <div class="item"><div class="box" style="border-radius:8px"></div><div class="name">md</div><div class="meta">8px · code</div></div>
+    <div class="item"><div class="box" style="border-radius:10px"></div><div class="name">lg</div><div class="meta">10px · cards</div></div>
+    <div class="item"><div class="box" style="border-radius:14px"></div><div class="name">xl</div><div class="meta">14px · feature</div></div>
+    <div class="item"><div class="box" style="border-radius:9999px"></div><div class="name">pill</div><div class="meta">∞ · chips</div></div>
+  </div>
+</body>
+</html>

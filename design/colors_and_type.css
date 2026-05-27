@@ -1,0 +1,369 @@
+/* ============================================================
+   Vebidor Design System — Tokens + Base Type
+   See README.md → VISUAL FOUNDATIONS for rationale.
+   ============================================================ */
+
+/* Fonts — sourced via Google Fonts CDN.
+   FLAGGED: Source repo has no font preference; substitution chosen
+   to match the developer-tool register. Drop in @font-face for
+   self-hosted .ttf/.woff2 if you have them. */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+:root {
+  /* ---------- COLOR: PRIMARY (Vebidor Blue) ---------- */
+  --vb-blue-50:  #EEF3FF;
+  --vb-blue-100: #DDE7FF;
+  --vb-blue-200: #B8CBFF;
+  --vb-blue-300: #8AA8FA;
+  --vb-blue-400: #5C82F0;
+  --vb-blue-500: #3E63DD;  /* CORE — buttons, links, brand */
+  --vb-blue-600: #2E4FBE;
+  --vb-blue-700: #25409B;
+  --vb-blue-800: #1E3A8A;  /* DEEP — wordmark, dense backgrounds */
+  --vb-blue-900: #15265F;
+
+  /* ---------- COLOR: SLATE NEUTRALS (10-step) ---------- */
+  --slate-0:   #FFFFFF;
+  --slate-50:  #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --slate-950: #0B1220;  /* terminal / code surface */
+
+  /* ---------- COLOR: SEMANTIC (mapped to emoji vocabulary) ---------- */
+  --success-bg:   #E6F7EE;
+  --success-fg:   #1E9F5E;   /* ✅ "feature complete" */
+  --success-line: #1E9F5E;
+
+  --warning-bg:   #FEF3E2;
+  --warning-fg:   #D97706;   /* ⚠️ "limitation / caveat" */
+  --warning-line: #D97706;
+
+  --danger-bg:    #FDECEC;
+  --danger-fg:    #DC2626;   /* 🐛 "bug / regression" */
+  --danger-line:  #DC2626;
+
+  --info-bg:      var(--vb-blue-50);
+  --info-fg:      var(--vb-blue-700);   /* ✨ "new feature" */
+  --info-line:    var(--vb-blue-500);
+
+  --milestone-bg: #FFF6DA;
+  --milestone-fg: #8B6914;   /* 🎉🏆 — used SPARINGLY */
+  --milestone-line: #D4A017;
+
+  /* ---------- COLOR: BROWSER ACCENTS (functional) ---------- */
+  --browser-edge:    #0F6CBD;
+  --browser-chrome:  #1A73E8;
+  --browser-firefox: #FF7139;
+  --browser-safari:  #0FB5EE;
+
+  /* ---------- COLOR: CODE TOKENS (dark surface) ---------- */
+  --code-bg:       var(--slate-950);
+  --code-fg:       #C0CAF5;   /* plain text */
+  --code-keyword:  #7AA2F7;   /* fn, pub, return, if */
+  --code-string:   #9ECE6A;   /* 'foo' "bar" */
+  --code-number:   #FF9E64;   /* 42, 0.5 */
+  --code-function: #E0AF68;   /* function names */
+  --code-type:     #BB9AF7;   /* WebDriver, Browser */
+  --code-comment:  #565F89;   /* // ... */
+  --code-line:     #2A3358;   /* gutter divider */
+
+  /* ---------- SEMANTIC: SURFACE / FG / BORDER ---------- */
+  --surface-0: var(--slate-0);     /* page bg */
+  --surface-1: var(--slate-50);    /* card bg / hover fill */
+  --surface-2: var(--slate-100);   /* secondary card / inputs */
+  --surface-3: var(--slate-200);
+
+  --fg-1: var(--slate-900);   /* primary text */
+  --fg-2: var(--slate-700);   /* secondary text */
+  --fg-3: var(--slate-500);   /* muted, meta, captions */
+  --fg-4: var(--slate-400);   /* placeholder, dividers in text */
+  --fg-inverse: var(--slate-50);
+
+  --border-1: var(--slate-200);   /* default card / divider */
+  --border-2: var(--slate-300);   /* stronger divider */
+  --border-strong: var(--slate-400);
+
+  --link: var(--vb-blue-500);
+  --link-hover: var(--vb-blue-700);
+
+  --focus-ring: var(--vb-blue-400);
+
+  /* ---------- TYPE: FAMILIES ---------- */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+
+  /* ---------- TYPE: SIZE SCALE ---------- */
+  --fs-12: 0.75rem;
+  --fs-14: 0.875rem;
+  --fs-16: 1rem;       /* body */
+  --fs-18: 1.125rem;
+  --fs-20: 1.25rem;
+  --fs-24: 1.5rem;
+  --fs-30: 1.875rem;
+  --fs-36: 2.25rem;
+  --fs-48: 3rem;
+  --fs-60: 3.75rem;
+  --fs-72: 4.5rem;
+
+  /* ---------- TYPE: LINE HEIGHT / TRACKING ---------- */
+  --lh-tight: 1.1;
+  --lh-snug:  1.25;
+  --lh-base:  1.6;
+  --lh-loose: 1.8;
+
+  --tracking-tight:  -0.02em;
+  --tracking-base:   0;
+  --tracking-wide:   0.04em;
+  --tracking-mono:   -0.01em;  /* JetBrains Mono reads tight */
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ---------- RADII ---------- */
+  --radius-sm:  6px;   /* buttons, inputs, chips */
+  --radius-md:  8px;   /* code blocks */
+  --radius-lg:  10px;  /* cards */
+  --radius-xl:  14px;  /* large feature cards */
+  --radius-pill: 9999px;
+  --radius-none: 0;
+
+  /* ---------- SHADOWS (sparing) ---------- */
+  --shadow-none: none;
+  --shadow-card: 0 1px 3px rgba(11,18,32,0.06), 0 1px 2px rgba(11,18,32,0.04);
+  --shadow-pop:  0 8px 24px rgba(11,18,32,0.10), 0 2px 6px rgba(11,18,32,0.06);
+
+  /* ---------- LAYOUT ---------- */
+  --container-narrow: 720px;
+  --container-docs:   1200px;
+  --container-wide:   1280px;
+  --sidebar-width:    260px;
+  --toc-width:        200px;
+  --topnav-height:    56px;
+
+  /* ---------- MOTION ---------- */
+  --motion-fast:   80ms cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-base:   120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-emph:   200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   BASE TYPE — semantic styles built on the tokens above
+   ============================================================ */
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  color: var(--fg-1);
+  background: var(--surface-0);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  line-height: var(--lh-base);
+  color: var(--fg-1);
+  margin: 0;
+}
+
+/* Display & headings — Geist Sans, tightened tracking */
+.h1, h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--fs-48);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 var(--space-6);
+}
+.h2, h2 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--fs-36);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-tight);
+  margin: var(--space-12) 0 var(--space-4);
+}
+.h3, h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-24);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--tracking-tight);
+  margin: var(--space-8) 0 var(--space-3);
+}
+.h4, h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-20);
+  line-height: var(--lh-snug);
+  margin: var(--space-6) 0 var(--space-2);
+}
+.h5, h5 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-16);
+  line-height: var(--lh-snug);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--fg-2);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+/* Display sizes (marketing) */
+.display-1 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--fs-72);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+.display-2 {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--fs-60);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* Body */
+.body, p {
+  font-family: var(--font-sans);
+  font-size: var(--fs-16);
+  line-height: var(--lh-base);
+  color: var(--fg-1);
+  margin: 0 0 var(--space-4);
+  text-wrap: pretty;
+}
+.body-sm, .small {
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+.body-lg, .lede {
+  font-size: var(--fs-20);
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+.muted { color: var(--fg-3); }
+.meta {
+  font-size: var(--fs-12);
+  color: var(--fg-3);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Links */
+a {
+  color: var(--link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--motion-base), border-color var(--motion-base);
+}
+a:hover {
+  color: var(--link-hover);
+  border-bottom-color: currentColor;
+}
+a:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Inline code */
+code, .code-inline {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--surface-2);
+  color: var(--fg-1);
+  padding: 0.12em 0.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-1);
+  letter-spacing: var(--tracking-mono);
+}
+
+/* Block code */
+pre, .code-block {
+  font-family: var(--font-mono);
+  font-size: var(--fs-14);
+  line-height: 1.55;
+  letter-spacing: var(--tracking-mono);
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  overflow-x: auto;
+  margin: var(--space-4) 0;
+}
+pre code, .code-block code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* Code-token classes for syntax-highlighted samples */
+.tok-keyword  { color: var(--code-keyword); }
+.tok-string   { color: var(--code-string); }
+.tok-number   { color: var(--code-number); }
+.tok-function { color: var(--code-function); }
+.tok-type     { color: var(--code-type); }
+.tok-comment  { color: var(--code-comment); font-style: italic; }
+
+/* Emoji — keep them on a font stack that renders the system color emoji */
+.emoji {
+  font-family: var(--font-emoji);
+  font-style: normal;
+  line-height: 1;
+}
+
+/* Status chip — small reusable surface */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-12);
+  font-weight: 500;
+  line-height: 1;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.chip--success  { background: var(--success-bg);   color: var(--success-fg);   border-color: rgba(30,159,94,0.25); }
+.chip--warning  { background: var(--warning-bg);   color: var(--warning-fg);   border-color: rgba(217,119,6,0.25); }
+.chip--danger   { background: var(--danger-bg);    color: var(--danger-fg);    border-color: rgba(220,38,38,0.25); }
+.chip--info     { background: var(--info-bg);      color: var(--info-fg);      border-color: rgba(62,99,221,0.25); }
+.chip--milestone{ background: var(--milestone-bg); color: var(--milestone-fg); border-color: rgba(212,160,23,0.30); }
+.chip--neutral  { background: var(--surface-2);    color: var(--fg-2);         border-color: var(--border-1); }
+
+/* Selection */
+::selection {
+  background: var(--vb-blue-200);
+  color: var(--vb-blue-900);
+}

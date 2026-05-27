@@ -1,0 +1,42 @@
+<!-- @dsCard group="Type" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Body Type</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
+  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-bottom: 1px dashed var(--border-1); padding-bottom: 8px; }
+  .row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .meta { font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); white-space: nowrap; }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 12px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+</style>
+</head>
+<body>
+  <div class="label">Body · Geist · docs &amp; running prose</div>
+  <div class="stack">
+    <div class="row">
+      <span style="font-size:24px;font-weight:600;letter-spacing:-0.02em">H3 — Quick start</span>
+      <span class="meta">24 / 600 / -0.02</span>
+    </div>
+    <div class="row">
+      <span style="font-size:20px;font-weight:400;line-height:1.5;color:var(--fg-2)">Lede — auto-waiting, lazy locators, BiDi.</span>
+      <span class="meta">Lede · 20 / 400 / 1.5</span>
+    </div>
+    <div class="row">
+      <span style="font-size:16px;line-height:1.6">Body — vebidor finds the driver on PATH, picks a free port, and tears it down on close().</span>
+      <span class="meta">Body · 16 / 400 / 1.6</span>
+    </div>
+    <div class="row">
+      <span style="font-size:14px;color:var(--fg-2);line-height:1.55">Small — verified live against headless Edge.</span>
+      <span class="meta">Small · 14 / 400 / 1.55</span>
+    </div>
+    <div class="row">
+      <span style="font-size:12px;text-transform:uppercase;letter-spacing:0.04em;font-weight:500;color:var(--fg-3)">Meta — PHASE 8 · COMPLETE</span>
+      <span class="meta">Meta · 12 / 500 / 0.04</span>
+    </div>
+  </div>
+</body>
+</html>

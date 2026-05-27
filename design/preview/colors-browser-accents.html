@@ -1,0 +1,44 @@
+<!-- @dsCard group="Colors" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Browser Accent Colors</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px 24px; background: var(--surface-0); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .item { border: 1px solid var(--border-1); border-radius: var(--radius-lg); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .head { display: flex; align-items: center; gap: 10px; font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--fg-1); }
+  .head svg { width: 22px; height: 22px; }
+  .swatch { height: 36px; border-radius: var(--radius-sm); }
+  .meta { font-family: var(--font-mono); font-size: 11px; color: var(--fg-2); display: flex; justify-content: space-between; }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 10px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+</style>
+</head>
+<body>
+  <div class="label">Browser accents · functional, used in support matrix &amp; device chips</div>
+  <div class="grid">
+    <div class="item">
+      <div class="head" style="color:var(--browser-edge)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.86 17.86q.14 0 .25.12.1.13.1.25 0 .24-.4.79-.4.54-1.22 1.15-.83.6-2.16 1.06-1.34.45-3.12.45-1.7 0-3.27-.6-1.55-.59-2.72-1.65-1.17-1.07-1.86-2.55-.68-1.48-.68-3.27 0-1.43.43-2.65.43-1.22 1.13-2.18.7-.96 1.61-1.66.92-.7 1.91-1.13.99-.43 2-.65 1.01-.22 1.93-.22.83 0 1.76.27.94.27 1.74.85.8.59 1.39 1.55.59.95.71 2.34l-.05.13q-.6.16-1.18.4t-1.13.62q-.55.4-1 .94l-.27.32q-.27.32-.45.65l-.46.84q-.18.4-.24 1.04l-.05 1.21q.04.61.21 1.34.18.73.62 1.4.43.66 1.19 1.12.76.47 1.95.47.51 0 1.05-.11.55-.11 1.05-.27.51-.16.92-.32t.59-.24q.08-.04.16-.04Z"/></svg>Edge</div>
+      <div class="swatch" style="background:var(--browser-edge)"></div>
+      <div class="meta"><span>#0F6CBD</span><span>port 9515</span></div>
+    </div>
+    <div class="item">
+      <div class="head" style="color:var(--browser-chrome)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 0 1 10.39 6h-9.43a6 6 0 0 0-5.46 3.56L3.65 4.36A12 12 0 0 1 12 0Zm-6.94 5.6L9.5 13.21A6 6 0 0 0 17.4 16l-3.96 6.87A12 12 0 0 1 5.06 5.6ZM23.4 7.06A12 12 0 0 1 14.95 23.9l4.59-7.95a6 6 0 0 0 .55-7.21ZM7.98 11.98A4.02 4.02 0 0 1 16.02 12 4.02 4.02 0 0 1 7.98 12Z"/></svg>Chrome</div>
+      <div class="swatch" style="background:var(--browser-chrome)"></div>
+      <div class="meta"><span>#1A73E8</span><span>port 9515</span></div>
+    </div>
+    <div class="item">
+      <div class="head" style="color:var(--browser-firefox)"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>Firefox</div>
+      <div class="swatch" style="background:var(--browser-firefox)"></div>
+      <div class="meta"><span>#FF7139</span><span>port 4444</span></div>
+    </div>
+    <div class="item">
+      <div class="head" style="color:var(--browser-safari)"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>Safari</div>
+      <div class="swatch" style="background:var(--browser-safari)"></div>
+      <div class="meta"><span>#0FB5EE</span><span>port 4445</span></div>
+    </div>
+  </div>
+</body>
+</html>

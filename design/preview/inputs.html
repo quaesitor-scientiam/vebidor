@@ -1,0 +1,55 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inputs</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 14px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .lbl { font-family: var(--font-sans); font-size: 12px; font-weight: 500; color: var(--fg-2); }
+  .ipt { font-family: var(--font-sans); font-size: 14px; padding: 8px 12px; border: 1px solid var(--border-2); border-radius: var(--radius-sm); background: #fff; color: var(--fg-1); }
+  .ipt:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 0; border-color: var(--vb-blue-400); }
+  .ipt--focus { outline: 2px solid var(--focus-ring); border-color: var(--vb-blue-400); }
+  .ipt--error { border-color: var(--danger-fg); }
+  .ipt--mono { font-family: var(--font-mono); font-size: 13px; }
+  .helper { font-family: var(--font-sans); font-size: 11.5px; color: var(--fg-3); }
+  .helper.error { color: var(--danger-fg); }
+  .search { position: relative; }
+  .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--fg-3); }
+  .search .ipt { padding-left: 32px; }
+</style>
+</head>
+<body>
+  <div class="label">Inputs · text / mono / search · default / focus / error</div>
+  <div class="grid">
+    <div class="field">
+      <div class="lbl">Driver URL</div>
+      <input class="ipt" value="http://127.0.0.1:9515">
+    </div>
+    <div class="field">
+      <div class="lbl">Driver URL <span style="color:var(--vb-blue-500);font-weight:400">· focused</span></div>
+      <input class="ipt ipt--focus" value="http://127.0.0.1:9515">
+    </div>
+    <div class="field">
+      <div class="lbl">Selector</div>
+      <input class="ipt ipt--mono" value="css=button[type='submit']">
+    </div>
+    <div class="field">
+      <div class="lbl">Port</div>
+      <input class="ipt ipt--error" value="-1">
+      <div class="helper error">Must be a positive integer.</div>
+    </div>
+    <div class="field" style="grid-column: span 2">
+      <div class="lbl">Search docs</div>
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input class="ipt" placeholder="Search the API, e.g. &quot;get_by_role&quot;">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

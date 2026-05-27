@@ -1,0 +1,39 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Comparison Table</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin: 0; padding: 20px 24px; background: var(--surface-0); }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 12px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--font-sans); font-size: 13.5px; }
+  thead th { text-align: left; padding: 10px 12px; background: var(--surface-1); color: var(--fg-2); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-2); }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border-1); color: var(--fg-1); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.feature { font-weight: 500; }
+  td.has { font-family: var(--font-mono); font-size: 12px; color: var(--success-fg); }
+  td.note { color: var(--fg-3); font-size: 12.5px; }
+  .em { font-family: var(--font-emoji); }
+  .wrap { border: 1px solid var(--border-1); border-radius: var(--radius-lg); overflow: hidden; }
+</style>
+</head>
+<body>
+  <div class="label">Comparison table · the brand's signature content unit</div>
+  <div class="wrap"><table>
+    <thead><tr>
+      <th style="width:38%">Feature</th>
+      <th style="width:14%">Vebidor</th>
+      <th style="width:14%">Playwright</th>
+      <th>Notes</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="feature">Auto-waiting actions</td><td class="has"><span class="em">✅</span> Built-in</td><td class="has"><span class="em">✅</span></td><td class="note">visible + enabled + scrolled-into-view</td></tr>
+      <tr><td class="feature">Network interception</td><td class="has"><span class="em">✅</span> via BiDi</td><td class="has"><span class="em">✅</span></td><td class="note"><code>route</code> / <code>fulfill</code> / <code>abort</code></td></tr>
+      <tr><td class="feature">Real touch-event dispatch</td><td style="color:var(--warning-fg)"><span class="em">⚠️</span> Protocol limit</td><td class="has"><span class="em">✅</span></td><td class="note">BiDi doesn't expose CDP touch</td></tr>
+      <tr><td class="feature">Codegen recorder</td><td style="color:var(--fg-3)">— Deferred</td><td class="has"><span class="em">✅</span></td><td class="note">High effort, low value</td></tr>
+    </tbody>
+  </table></div>
+</body>
+</html>
