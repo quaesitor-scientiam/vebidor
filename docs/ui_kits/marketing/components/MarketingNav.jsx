@@ -37,7 +37,7 @@ const mnStyles = {
   nav: { display: "flex", gap: 24 },
   link: { fontFamily: "var(--font-sans)", fontSize: 14, color: "var(--fg-2)", border: 0, fontWeight: 500 },
   right: { display: "flex", alignItems: "center", gap: 12 },
-  star: { display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 12px", background: "var(--surface-1)", border: "1px solid var(--border-1)", borderRadius: "var(--radius-sm)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-1)", border: 0, borderWidth: 1, borderColor: "var(--border-1)", borderStyle: "solid" },
+  star: { display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 12px", background: "var(--surface-1)", border: "1px solid var(--border-1)", borderRadius: "var(--radius-sm)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-1)" },
   starCount: { fontFamily: "var(--font-sans)", fontWeight: 600, color: "var(--milestone-fg)", marginLeft: 4 },
   cta: { background: "var(--vb-blue-500)", color: "#fff", padding: "8px 14px", borderRadius: "var(--radius-sm)", fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 13.5, border: 0 },
 };
