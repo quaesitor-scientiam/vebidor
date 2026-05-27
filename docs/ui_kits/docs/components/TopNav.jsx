@@ -4,16 +4,16 @@ function TopNav({ onSearchFocus }) {
     <div style={tnStyles.bar}>
       <div style={tnStyles.inner}>
         <div style={tnStyles.left}>
-          <a href="#" style={tnStyles.brand}>
+          <a href="../marketing/index.html" style={tnStyles.brand}>
             <img src="../../assets/logo-vebidor-mark.svg" width="22" height="22" alt="" />
             <span style={tnStyles.wordmark}>vebidor</span>
             <span style={tnStyles.version}>v4.2.0</span>
           </a>
           <nav style={tnStyles.nav}>
-            <a style={tnStyles.navLink} href="#">Docs</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="#">API</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="#">Examples</a>
-            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="#">Changelog</a>
+            <a style={tnStyles.navLink} href="https://github.com/quaesitor-scientiam/vebidor#readme" target="_blank" rel="noopener">Docs</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor#readme" target="_blank" rel="noopener">API</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor/tree/main/examples" target="_blank" rel="noopener">Examples</a>
+            <a style={{ ...tnStyles.navLink, ...tnStyles.navLinkMuted }} href="https://github.com/quaesitor-scientiam/vebidor/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
           </nav>
         </div>
         <div style={tnStyles.right}>
