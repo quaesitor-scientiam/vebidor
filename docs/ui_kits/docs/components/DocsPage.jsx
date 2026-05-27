@@ -384,6 +384,325 @@ const archStyles = {
   },
 };
 
+// ───────── PAGE: Changelog ─────────
+const RELEASES = [
+  {
+    v: "4.2.0", date: "2026-05-26", title: "Mobile emulation",
+    chip: { kind: "info", em: "✨", label: "Latest" },
+    blurb: "Playwright-style mobile-web emulation over BiDi — browser-side, not Appium. Verified live against headless Edge.",
+    sections: [
+      { kind: "added", items: [
+        "Device descriptor + emulate(ctx, device) — viewport + DPR + preload UA/touch overrides",
+        "9 device presets (iPhone SE/12/14/14 Pro Max, Pixel 5/7, Galaxy S21, iPad, iPad Mini)",
+        "Touch input via Actions API + Locator.tap()",
+        "Server-side User-Agent rewrite via interception",
+        "Locale / timezone / orientation via the BiDi emulation module",
+      ]},
+      { kind: "limit", items: [
+        "Real touch-event dispatch (touchstart/touchend) needs CDP/mobileEmulation — BiDi doesn't expose it. tap() synthesizes a click.",
+      ]},
+    ],
+  },
+  {
+    v: "4.1.0", date: "2026-05-25", title: "Per-context conveniences + capability probing",
+    chip: { kind: "info", em: "✨", label: "Feature" },
+    blurb: "Closes the two vs-Playwright gaps around user contexts — leanness (now has the conveniences) and maturity (now probeable rather than assumed).",
+    sections: [
+      { kind: "added", items: [
+        "storageState + apply_storage_state + add_cookies (session reuse across user contexts)",
+        "UserContextOptions: per-context proxy + accept_insecure_certs",
+        "set_geolocation, set_permission",
+        "status() and supports(method, params) for feature-detecting BiDi modules",
+      ]},
+    ],
+  },
+  {
+    v: "4.0.1", date: "2026-05-25", title: "Partition-aware BiDi cookies + inline event dispatch",
+    chip: { kind: "danger", em: "🐛", label: "Patch" },
+    blurb: "Partition-scoped storage operations and a lower-overhead event handler for high-frequency observers.",
+    sections: [
+      { kind: "added", items: [
+        "Optional CookiePartition on get_cookies / set_cookie / delete_cookies — scoped by user_context or context",
+        "on_sync(event, handler) — inline dispatch on the listener thread (no thread spawn)",
+      ]},
+      { kind: "fixed", items: [
+        "README + examples — corrected `import vebidor { webdriver }` (broken syntax) → `import vebidor.webdriver`",
+      ]},
+    ],
+  },
+  {
+    v: "4.0.0", date: "2026-05-24", title: "Playwright-style API + WebDriver-BiDi",
+    chip: { kind: "milestone", em: "🎭", label: "Major release" },
+    blurb: "Playwright-style ergonomic layer and a WebDriver-BiDi (WebSocket) transport on top of the existing Classic client. Additive — no breaking changes.",
+    sections: [
+      { kind: "added", items: [
+        "Lazy auto-waiting Locator (re-resolves on each use, staleness-immune)",
+        "Selector engines: get_by_role / get_by_text / get_by_label / get_by_placeholder / get_by_test_id",
+        "Web-first assertions: expect(loc).to_be_visible() with .not() and .with_timeout(ms)",
+        "launch() / launch_edge / launch_chrome / launch_firefox / launch_safari lifecycle",
+        "BiDi core: WebSocket client, browsingContext / script / log modules",
+        "BiDi network: route + fulfill / abort / continue, route_response, on_auth, on_request, on_response",
+        "BiDi contexts: create_user_context, set_viewport, print_pdf, traverse_history, activate",
+        "BiDi storage: get_cookies / set_cookie / delete_cookies + on_cookie_changed",
+        "BiDi DOM: locate_nodes + set_files (file upload)",
+        "BiDi screenshots + Tracer (JSON activity log)",
+      ]},
+      { kind: "fixed", items: [
+        "screenshot() / element_screenshot() — now use W3C GET endpoints (previously POST, which EdgeDriver rejected)",
+      ]},
+      { kind: "changed", items: [
+        "WebDriver gained a Transport seam so Classic-HTTP and BiDi-WebSocket coexist behind one type. WebDriver is now @[heap] so Locator can reference it.",
+      ]},
+    ],
+  },
+  {
+    v: "3.1.1", date: "2026-02-15", title: "Multi-Browser Bug Fixes",
+    chip: { kind: "danger", em: "🐛", label: "Patch" },
+    blurb: "Fixed compilation + runtime errors in v3.1.0 multi-browser support. Standardized parameter naming across all drivers.",
+    sections: [
+      { kind: "fixed", items: [
+        "COMPILE ERROR — created new_session() helper in client.v (chrome/firefox/safari were calling undefined function)",
+        "RUNTIME — corrected Safari W3C JSON tag from 'safari:automaticInspection' to 'safari:options'",
+        "Consistency — moved new_edge_driver() to edge.v to match the other browser drivers",
+        "Standardized parameter `url` → `base_url` across all driver constructors",
+        "Added webdriver/multi_browser_test.v with 10 compilation tests",
+      ]},
+    ],
+  },
+  {
+    v: "3.1.0", date: "2026-02-15", title: "Multi-Browser Support",
+    chip: { kind: "info", em: "🌐", label: "Feature" },
+    blurb: "Added Chrome, Firefox, and Safari support in addition to existing Edge. One API, four browsers, W3C-compliant.",
+    sections: [
+      { kind: "added", items: [
+        "new_chrome_driver — default ChromeDriver endpoint http://127.0.0.1:9515",
+        "new_firefox_driver — default GeckoDriver endpoint http://127.0.0.1:4444",
+        "new_safari_driver — default SafariDriver endpoint http://127.0.0.1:4445",
+        "ChromeOptions / FirefoxOptions / SafariOptions capability structs",
+      ]},
+    ],
+  },
+  {
+    v: "3.0.0", date: "2026-02-15", title: "Phase 8 Complete — 100% Feature Parity Achieved",
+    chip: { kind: "milestone", em: "🏆", label: "Milestone" },
+    blurb: "Phase 8: async JavaScript execution + Shadow DOM. Selenium feature coverage hits 100%. 40 methods added across all 8 phases (55% → 100%).",
+    sections: [
+      { kind: "added", items: [
+        "execute_async_script — async JS with callback / Promise / async-await support",
+        "get_shadow_root — access an element's shadow DOM",
+        "find_element_in_shadow_root + find_elements_in_shadow_root",
+        "ShadowRoot struct",
+      ]},
+      { kind: "milestone", items: [
+        "55% → 100% Selenium feature parity",
+        "Shadow DOM: 0% → 100%",
+        "JavaScript execution: 67% → 100%",
+      ]},
+    ],
+  },
+  {
+    v: "2.3.0", date: "2026-02-15", title: "Phase 5 Complete — 98% Feature Parity",
+    chip: { kind: "success", em: "✅", label: "Phase 5" },
+    blurb: "CSS property values complete the Element Properties category. All 9 Selenium element property methods now natively supported.",
+    sections: [
+      { kind: "added", items: [
+        "get_css_value(el, property_name) — returns computed values (rgba, px, etc.), not specified values",
+      ]},
+    ],
+  },
+  {
+    v: "2.2.0", date: "2026-02-15", title: "Phase 7 Complete — 97% Feature Parity",
+    chip: { kind: "success", em: "✅", label: "Phase 7" },
+    blurb: "Advanced actions: context click, drag-and-drop variants, click-and-hold/release, element rect, form submit. Actions API and Element Interaction now 100%.",
+    sections: [
+      { kind: "added", items: [
+        "context_click (right-click) + click_and_hold + release_held_button",
+        "drag_and_drop_to_element + drag_and_drop_by_offset",
+        "get_element_rect — returns x/y/width/height in pixels",
+        "submit(el) — form submission shortcut",
+        "ElementRect struct",
+      ]},
+    ],
+  },
+  {
+    v: "2.1.0", date: "2026-02-15", title: "Phase 6 Complete — 91% Feature Parity",
+    chip: { kind: "success", em: "✅", label: "Phase 6" },
+    blurb: "Expected conditions and advanced waits. Selenium's most-used wait patterns now available in V. Timeouts/Waits 14% → 100%.",
+    sections: [
+      { kind: "added", items: [
+        "wait_until_clickable + wait_until_visible + wait_until_present",
+        "wait_for_text_in_element — substring match",
+        "get_timeouts() — retrieve current implicit / page_load / script timeouts",
+        "500ms polling interval, timeout errors include selector + duration",
+      ]},
+    ],
+  },
+  {
+    v: "2.0.0", date: "2026-02-14", title: "Phase 4 Complete — 85% Feature Parity",
+    chip: { kind: "success", em: "🎉", label: "Phase 4" },
+    blurb: "All 4 originally-planned phases complete. Window management 56% → 100%. 23 methods added across phases 1-4.",
+    sections: [
+      { kind: "added", items: [
+        "switch_to_window + new_window (tab or window) + maximize / minimize / fullscreen",
+        "set_implicit_wait + set_page_load_timeout + set_script_timeout",
+      ]},
+    ],
+  },
+  {
+    v: "1.10.0", date: "2026-02-14", title: "Phase 3 Complete — Page Information",
+    chip: { kind: "success", em: "✅", label: "Phase 3" },
+    blurb: "Page information methods: title, URL, and HTML source. Page Information 0% → 100%.",
+    sections: [
+      { kind: "added", items: [
+        "get_title — current page title",
+        "get_current_url — current page URL",
+        "get_page_source — HTML source",
+      ]},
+    ],
+  },
+  {
+    v: "1.00.0", date: "2026-02-14", title: "Phase 2 Complete — Alert Handling",
+    chip: { kind: "success", em: "✅", label: "Phase 2" },
+    blurb: "Complete support for alert(), confirm(), and prompt() dialogs. Alert Handling 0% → 100%.",
+    sections: [
+      { kind: "added", items: [
+        "accept_alert — accept alert/confirm/prompt",
+        "dismiss_alert — dismiss/cancel",
+        "get_alert_text — read dialog message",
+        "send_alert_text — send input to a prompt dialog",
+      ]},
+    ],
+  },
+  {
+    v: "0.95.0", date: "2026-02-14", title: "Phase 1 Complete — Element Properties",
+    chip: { kind: "success", em: "✅", label: "Phase 1" },
+    blurb: "8 element property methods used by ~90% of automation scripts. No more JavaScript workarounds for element inspection.",
+    sections: [
+      { kind: "added", items: [
+        "get_text + get_attribute + get_property + get_tag_name",
+        "is_displayed + is_enabled + is_selected",
+        "clear — empty an input or textarea",
+      ]},
+    ],
+  },
+  {
+    v: "0.90.0", date: "2026-02-14", title: "Initial Bug Fixes",
+    chip: { kind: "danger", em: "🐛", label: "Patch" },
+    blurb: "W3C protocol compliance, JSON encoding, session lifecycle. The pre-Phase-1 foundation pass.",
+    sections: [
+      { kind: "fixed", items: [
+        "Window + cookie methods — switched POST → GET to comply with W3C",
+        "Deprecated json.raw_decode() → json.decode[json.Any]()",
+        "JSON double-encoding (struct → JSON → JSON) — now builds map[string]json.Any directly",
+        "Empty firstMatch array rejected by EdgeDriver — made optional",
+        "Browser name 'edge' → 'msedge' (W3C standard)",
+      ]},
+      { kind: "added", items: [
+        "WebDriver.quit() — proper session cleanup",
+        "Content-Type: application/json header on all POSTs",
+      ]},
+    ],
+  },
+];
+
+function PageChangelog() {
+  return (
+    <article style={dpStyles.page}>
+      <div style={dpStyles.breadcrumb}>Reference <span style={{ margin: "0 6px", color: "var(--fg-4)" }}>/</span> <span style={dpStyles.breadcrumb_b}>Changelog</span></div>
+      <h1 id="changelog" style={dpStyles.h1}>Changelog</h1>
+      <p style={dpStyles.lede}>
+        Every release closes a specific gap — usually relative to Selenium or Playwright. Versions are organized around <strong>Phases</strong>: each phase is a feature cluster that pushes Selenium parity from 55% toward 100%, then layers Playwright ergonomics on top.
+      </p>
+
+      <Callout kind="milestone" title="Where we are now">
+        <p style={{ margin: 0 }}>
+          <strong>v4.2.0</strong> · <span className="emoji">🏆</span> 100% Selenium parity since v3.0.0 · Playwright-style API + WebDriver-BiDi since v4.0.0 · mobile-web emulation since v4.2.0. Latest features verified live against headless Edge.
+        </p>
+      </Callout>
+
+      <div style={clStyles.timeline}>
+        {RELEASES.map((r, i) => (
+          <div key={i} style={clStyles.row}>
+            <div style={clStyles.rail}>
+              <div style={clStyles.tick} />
+              <div style={{ ...clStyles.dot, ...(r.chip.kind === "milestone" ? clStyles.dotMilestone : {}) }} />
+            </div>
+            <div style={clStyles.card}>
+              <div style={clStyles.head}>
+                <code style={clStyles.version}>v{r.v}</code>
+                <span className={`chip chip--${r.chip.kind}`} style={{ fontSize: 11 }}>
+                  <span className="emoji">{r.chip.em}</span> {r.chip.label}
+                </span>
+                <span style={clStyles.date}>{r.date}</span>
+              </div>
+              <h3 style={clStyles.title}>{r.title}</h3>
+              <p style={clStyles.blurb}>{r.blurb}</p>
+              {r.sections.map((s, j) => (
+                <div key={j} style={clStyles.section}>
+                  <div style={{ ...clStyles.sectionLabel, ...sectionLabelColor(s.kind) }}>
+                    <span className="emoji" style={{ fontSize: 12 }}>{sectionEm(s.kind)}</span>
+                    {sectionLabel(s.kind)}
+                  </div>
+                  <ul style={clStyles.list}>
+                    {s.items.map((it, k) => (
+                      <li key={k} style={clStyles.li}>{it}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={clStyles.footer}>
+        <p style={{ ...dpStyles.p, margin: 0 }}>
+          <strong>Looking for the raw file?</strong> The full <code style={dpStyles.inlineCode}>CHANGELOG.md</code> (50 KB, ~1300 lines with every test list and full code example) lives on GitHub:
+        </p>
+        <a href="https://github.com/quaesitor-scientiam/vebidor/blob/main/CHANGELOG.md" style={clStyles.linkBtn}>
+          <span className="emoji" style={{ fontSize: 14 }}>📖</span>
+          View CHANGELOG.md on GitHub
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 4 }}>
+            <path d="M7 17 17 7"/><path d="M7 7h10v10"/>
+          </svg>
+        </a>
+      </div>
+    </article>
+  );
+}
+
+function sectionEm(kind) {
+  return { added: "✨", fixed: "🐛", changed: "🔧", limit: "⚠️", milestone: "🏆" }[kind] || "✅";
+}
+function sectionLabel(kind) {
+  return { added: "Added", fixed: "Fixed", changed: "Changed", limit: "Not implemented", milestone: "Milestone" }[kind] || "Changes";
+}
+function sectionLabelColor(kind) {
+  const c = { added: "var(--info-fg)", fixed: "var(--danger-fg)", changed: "var(--fg-2)", limit: "var(--warning-fg)", milestone: "var(--milestone-fg)" }[kind];
+  return c ? { color: c } : {};
+}
+
+const clStyles = {
+  timeline: { display: "flex", flexDirection: "column", gap: 16, marginTop: 28 },
+  row: { display: "grid", gridTemplateColumns: "44px 1fr", gap: 16 },
+  rail: { position: "relative", display: "flex", justifyContent: "center" },
+  tick: { position: "absolute", top: 0, bottom: -16, left: "50%", transform: "translateX(-50%)", width: 2, background: "var(--border-2)" },
+  dot: { width: 12, height: 12, borderRadius: 12, background: "var(--vb-blue-500)", border: "3px solid #fff", boxShadow: "0 0 0 1px var(--vb-blue-300)", marginTop: 10, position: "relative", zIndex: 1 },
+  dotMilestone: { background: "var(--milestone-line)", boxShadow: "0 0 0 1px rgba(212,160,23,0.4)" },
+  card: { border: "1px solid var(--border-1)", borderRadius: "var(--radius-lg)", padding: 18, background: "#fff" },
+  head: { display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" },
+  version: { fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "var(--fg-1)", background: "var(--surface-2)", padding: "3px 8px", borderRadius: 5, border: "1px solid var(--border-1)", letterSpacing: "0.01em" },
+  date: { fontFamily: "var(--font-mono)", fontSize: 11.5, color: "var(--fg-3)", marginLeft: "auto" },
+  title: { fontFamily: "var(--font-sans)", fontSize: 18, fontWeight: 600, margin: "0 0 6px", color: "var(--fg-1)", letterSpacing: "-0.01em" },
+  blurb: { fontFamily: "var(--font-sans)", fontSize: 14, lineHeight: 1.55, color: "var(--fg-2)", margin: "0 0 14px" },
+  section: { marginBottom: 12 },
+  sectionLabel: { display: "flex", alignItems: "center", gap: 6, fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 },
+  list: { margin: 0, paddingLeft: 22, fontFamily: "var(--font-sans)", fontSize: 13.5, lineHeight: 1.55, color: "var(--fg-1)" },
+  li: { marginBottom: 3 },
+  footer: { marginTop: 40, paddingTop: 24, borderTop: "1px solid var(--border-1)" },
+  linkBtn: { display: "inline-flex", alignItems: "center", gap: 8, marginTop: 12, padding: "10px 16px", background: "var(--surface-1)", border: "1px solid var(--border-2)", borderRadius: "var(--radius-sm)", color: "var(--fg-1)", fontFamily: "var(--font-sans)", fontSize: 14, fontWeight: 500, textDecoration: "none" },
+};
+
 const PAGES_DATA = {
   "quick-start": { component: PageQuickStart, toc: [
     { id: "quick-start", label: "Quick start", depth: 1 },
@@ -416,6 +735,9 @@ const PAGES_DATA = {
     { id: "comparison", label: "Comparison", depth: 1 },
     { id: "vs-playwright", label: "vs Playwright", depth: 2 },
     { id: "phases", label: "Phase history", depth: 2 },
+  ]},
+  "changelog": { component: PageChangelog, toc: [
+    { id: "changelog", label: "Changelog", depth: 1 },
   ]},
 };
 
