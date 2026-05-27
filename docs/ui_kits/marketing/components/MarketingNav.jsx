@@ -4,7 +4,7 @@ function MarketingNav() {
     <div style={mnStyles.bar}>
       <div style={mnStyles.inner}>
         <div style={mnStyles.left}>
-          <a href="#" style={mnStyles.brand}>
+          <a href="index.html" style={mnStyles.brand}>
             <img src="../../assets/logo-vebidor-mark.svg" width="24" height="24" alt="" />
             <span style={mnStyles.wm}>vebidor</span>
           </a>
@@ -21,7 +21,7 @@ function MarketingNav() {
             <span>quaesitor-scientiam/vebidor</span>
             <span style={mnStyles.starCount}>★ 1.2k</span>
           </a>
-          <a href="#" style={mnStyles.cta}>Get started</a>
+          <a href="../docs/index.html" style={mnStyles.cta}>Get started</a>
         </div>
       </div>
     </div>
