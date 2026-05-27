@@ -50,6 +50,9 @@ test-results/
 screenshots/
 *.png
 *.jpg
+# ...but do track brand/logo assets committed for the docs site
+!docs/assets/*.png
+!docs/assets/*.jpg
 
 # Sensitive data
 .env

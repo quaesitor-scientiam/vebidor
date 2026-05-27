@@ -3,41 +3,43 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Logo placeholders</title>
+<title>Logo</title>
 <link rel="stylesheet" href="../colors_and_type.css">
 <style>
   body { margin: 0; padding: 22px 26px; background: var(--surface-0); }
-  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 6px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
-  .flag { font-family: var(--font-sans); font-size: 12px; color: var(--warning-fg); margin: 0 0 14px; }
-  .flag .em { font-family: var(--font-emoji); }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .item { border: 1px solid var(--border-1); border-radius: var(--radius-lg); padding: 16px; display: flex; align-items: center; gap: 16px; background: #fff; }
-  .item--dark { background: var(--vb-blue-800); border-color: var(--vb-blue-900); }
-  .item img { display: block; }
-  .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); }
-  .item--dark .lbl { color: var(--vb-blue-200); }
-  .stack { display: flex; flex-direction: column; gap: 4px; }
-  .name { font-family: var(--font-sans); font-size: 13px; font-weight: 500; color: var(--fg-1); }
-  .item--dark .name { color: #fff; }
+  .label { font-family: var(--font-sans); font-size: 12px; color: var(--fg-3); margin: 0 0 14px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .item { border: 1px solid var(--border-1); border-radius: var(--radius-lg); padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: #fff; }
+  .item--dark { background: #0B1220; border-color: #1E293B; color: #fff; }
+  .item--blue { background: var(--vb-blue-50); border-color: var(--vb-blue-200); }
+  .lbl { font-family: var(--font-mono); font-size: 10.5px; color: var(--fg-3); text-align: center; }
+  .item--dark .lbl { color: #94A3B8; }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .wm { font-family: var(--font-sans); font-weight: 800; font-size: 22px; letter-spacing: -0.03em; color: var(--vb-blue-800); }
+  .item--dark .wm { color: #5C82F0; }
+  img.app { display: block; }
 </style>
 </head>
 <body>
-  <div class="label">Logo placeholders</div>
-  <div class="flag"><span class="em">⚠️</span> No source logo exists — these are placeholders. Replace before shipping.</div>
+  <div class="label">Logo · square app-icon mark + lockup variants</div>
   <div class="grid">
     <div class="item">
-      <img src="../assets/logo-vebidor-mark.svg" width="56" height="56" alt="mark">
-      <div class="stack"><div class="name">Monogram</div><div class="lbl">logo-vebidor-mark.svg</div></div>
+      <img class="app" src="../assets/logo-vebidor.png" width="80" height="80" alt="vebidor" style="border-radius:14px">
+      <div class="lbl">app icon · 256×256</div>
     </div>
-    <div class="item">
-      <img src="../assets/logo-vebidor.svg" width="200" height="40" alt="wordmark">
+    <div class="item item--blue">
+      <div class="row">
+        <img class="app" src="../assets/logo-vebidor.png" width="36" height="36" alt="" style="border-radius:7px">
+        <span class="wm">vebidor</span>
+      </div>
+      <div class="lbl">horizontal lockup · light</div>
     </div>
     <div class="item item--dark">
-      <img src="../assets/logo-vebidor-mark.svg" width="40" height="40" alt="mark on dark" style="filter:brightness(1.2)">
-      <div class="stack"><div class="name">On dark</div><div class="lbl">vb-blue-800 background</div></div>
-    </div>
-    <div class="item">
-      <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-sans);font-weight:800;font-size:26px;letter-spacing:-0.03em;color:var(--vb-blue-800)">vebidor</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--fg-3)">v4.2.0</span></div>
+      <div class="row">
+        <img class="app" src="../assets/logo-vebidor.png" width="36" height="36" alt="" style="border-radius:7px">
+        <span class="wm">vebidor</span>
+      </div>
+      <div class="lbl">horizontal lockup · dark</div>
     </div>
   </div>
 </body>

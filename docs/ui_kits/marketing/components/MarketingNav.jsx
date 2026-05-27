@@ -5,7 +5,7 @@ function MarketingNav() {
       <div style={mnStyles.inner}>
         <div style={mnStyles.left}>
           <a href="index.html" style={mnStyles.brand}>
-            <img src="../../assets/logo-vebidor-mark.svg" width="24" height="24" alt="" />
+            <img src="../../assets/logo-vebidor.png" width="28" height="28" alt="vebidor" style={{ borderRadius: 6, display: "block" }} />
             <span style={mnStyles.wm}>vebidor</span>
           </a>
           <nav style={mnStyles.nav}>

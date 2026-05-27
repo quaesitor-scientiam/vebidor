@@ -5,7 +5,7 @@ function MarketingFooter() {
       <div className="mk-container" style={fStyles.inner}>
         <div style={fStyles.brandCol}>
           <div style={fStyles.brandRow}>
-            <img src="../../assets/logo-vebidor-mark.svg" width="28" height="28" alt="" />
+            <img src="../../assets/logo-vebidor.png" width="32" height="32" alt="vebidor" style={{ borderRadius: 7, display: "block" }} />
             <span style={fStyles.wm}>vebidor</span>
           </div>
           <p style={fStyles.tagline}>A V language implementation of the W3C WebDriver protocol for browser automation.</p>

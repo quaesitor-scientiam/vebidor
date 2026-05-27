@@ -5,7 +5,7 @@ function TopNav({ onSearchFocus }) {
       <div style={tnStyles.inner}>
         <div style={tnStyles.left}>
           <a href="../marketing/index.html" style={tnStyles.brand}>
-            <img src="../../assets/logo-vebidor-mark.svg" width="22" height="22" alt="" />
+            <img src="../../assets/logo-vebidor.png" width="24" height="24" alt="vebidor" style={{ borderRadius: 5, display: "block" }} />
             <span style={tnStyles.wordmark}>vebidor</span>
             <span style={tnStyles.version}>v4.2.0</span>
           </a>
