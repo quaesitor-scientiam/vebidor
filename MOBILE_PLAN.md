@@ -129,7 +129,7 @@ End-to-end iOS Simulator driving on macOS. The wire client (`wda.v`),
 `.attach` mode connects to an already-running WDA; auto-launch ships
 in Mob-2.1 below.
 
-### **Mob-2.1 — WDA auto-launch** ✅ shipped (pending live validation on macOS)
+### **Mob-2.1 — WDA auto-launch** ✅ shipped + verified live on iOS Simulator (`2ca4047`)
 
 `launch_ios` now spawns WebDriverAgent itself when you ask it to. The
 launch mode (`IOSLaunchMode`) selects the flow:
@@ -150,8 +150,10 @@ attempted.
 
 The example `examples/mobile/example_mob_ios_sim.v` reads `IOS_SIM_UDID`
 and `WDA_XCTESTRUN` from the env so user-specific paths stay out of
-source. Compiles + errors-cleanly verified on Windows; live validation
-(actual xcodebuild + WDA spawn) needs a macOS run.
+source. Verified end-to-end on macOS against the iOS Simulator — boots
+the Sim, spawns xcodebuild, polls until WDA answers, drives the
+Settings flow, screenshots, and cleans up the xcodebuild process on
+close().
 
 ### **Mob-3 — Android UiAutomator2 client** (~2-3 weeks)
 
