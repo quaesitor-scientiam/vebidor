@@ -178,6 +178,14 @@ Playwright/Selenium feature mapping.
 git clone https://github.com/quaesitor-scientiam/v-webdriver.git
 cd v-webdriver
 
+# Register the checkout on V's module path so `import vebidor.webdriver`
+# resolves. Without this step, `v run examples/*.v` will fail with
+# misleading "unknown type vebidor.webdriver.XYZ" errors because V can't
+# locate the module by name.
+mkdir -p ~/.vmodules
+ln -s "$(pwd)" ~/.vmodules/vebidor
+# (Alternatively: `v install` from this directory.)
+
 # Start your browser's WebDriver
 # Edge/Chrome:
 .\msedgedriver.exe --port=9515  # or chromedriver.exe

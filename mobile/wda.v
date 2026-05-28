@@ -98,7 +98,9 @@ pub fn new_ios_session(base_url string, bundle_id string) !MobileSession {
 
 // find_element performs a single W3C find against the active session.
 // `using` selects the strategy (`accessibility id`, `class chain`,
-// `-ios predicate string`, `xpath`); `value` is the strategy-specific
+// `predicate string`, `xpath`); `value` is the strategy-specific
+// expression. NOTE: raw WDA uses `predicate string` / `class chain`;
+// Appium adds the `-ios ` prefix, but we talk to WDA directly here.
 // expression.
 pub fn (s MobileSession) find_element(using string, value string) !webdriver.ElementRef {
 	mut params := map[string]json.Any{}

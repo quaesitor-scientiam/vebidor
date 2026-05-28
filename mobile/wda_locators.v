@@ -34,7 +34,7 @@ pub fn (s &MobileSession) class_chain(expr string) MobileLocator {
 pub fn (s &MobileSession) predicate(expr string) MobileLocator {
 	return MobileLocator{
 		session: s
-		using:   '-ios predicate string'
+		using:   'predicate string'
 		value:   expr
 	}
 }
