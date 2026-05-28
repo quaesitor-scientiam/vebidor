@@ -218,7 +218,7 @@ function PageMobile() {
         ]}
         rows={[
           ["Espresso (Android)",  "In-process",     "Syncs with main looper + AsyncTask — zero polling",       "Must be the app · JVM · rebuild"],
-          ["EarlGrey 2 (iOS)",    "In-process",     "XCUITest + RunLoop / dispatch_queue sync",                 "Swift/Obj-C · rebuild"],
+          ["EarlGrey 2 (iOS)",    "Out-of-process", "XCUITest + injected satellite framework syncs with AUT runloop", "Swift/Obj-C · embed sync lib"],
           ["Detox (RN only)",     "In-process",     "Hooks RN's bridge / Hermes idle signals",                  "React Native only"],
           ["Maestro",             "Out-of-process", "Direct sockets to idb_companion + UiAutomator2",           "Less granular than full WebDriver"],
           ["Appium",              "Out-of-process", { chip: "Multi-hop", kind: "warning", em: "⚠️" },           "HTTP → Node → vendor → device"],
@@ -280,7 +280,7 @@ function PageMobile() {
           {/* Android box */}
           <rect x="380" y="208" width="280" height="58" rx="10" fill="#FFFFFF" stroke="#CBD5E1"/>
           <text x="520" y="231" textAnchor="middle" fontFamily="Geist, sans-serif" fontSize="14" fontWeight="600" fill="#0F172A">Android · UiAutomator2</text>
-          <text x="520" y="250" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#64748B">TCP / proto via adb forward</text>
+          <text x="520" y="250" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="#64748B">TCP / JSON Wire via adb forward</text>
 
           {/* arrows to devices */}
           <line x1="200" y1="266" x2="200" y2="298" stroke="#475569" strokeWidth="1.5" markerEnd="url(#arr)"/>
@@ -303,6 +303,10 @@ function PageMobile() {
         </svg>
       </div>
 
+      <p style={dpStyles.p}>
+        <strong>Host requirements.</strong> Android works from any host with the Android SDK (<code style={dpStyles.inlineCode}>adb</code>). iOS — including the Simulator — requires a <strong>macOS host</strong>: WebDriverAgent must be code-signed with an Apple developer cert, and the signing toolchain is macOS-only.
+      </p>
+
       <h2 id="example" style={dpStyles.h2}>What it would look like</h2>
       <p style={dpStyles.p}>
         Same lazy auto-waiting locator pattern as the web API. <code style={dpStyles.inlineCode}>launch_ios()</code> handles WDA install + port-forward; you get a session and a familiar <code style={dpStyles.inlineCode}>Locator</code> with platform-aware selectors.
@@ -314,6 +318,7 @@ function PageMobile() {
         [{ t: "  mut", k: "keyword" }, { t: " b := mobile." }, { t: "launch_ios", k: "function" }, { t: "(mobile." }, { t: "iOSOptions", k: "type" }, { t: "{" }],
         [{ t: "    udid:        " }, { t: "'00008110-001A1D2E0E80801E'", k: "string" }],
         [{ t: "    bundle_id:   " }, { t: "'com.foo.MyApp'", k: "string" }],
+        [{ t: "    app_path:    " }, { t: "'/path/to/MyApp.ipa'", k: "string" }],
         [{ t: "    install_app: " }, { t: "true", k: "keyword" }],
         [{ t: "  })!" }],
         [{ t: "  defer", k: "keyword" }, { t: " { b." }, { t: "close", k: "function" }, { t: "() }" }],
@@ -322,7 +327,7 @@ function PageMobile() {
         [{ t: "  b." }, { t: "get_by_label", k: "function" }, { t: "(" }, { t: "'Sign in'", k: "string" }, { t: ")." }, { t: "tap", k: "function" }, { t: "()!" }],
         [{ t: "  b." }, { t: "get_by_label", k: "function" }, { t: "(" }, { t: "'Email'", k: "string" }, { t: ")." }, { t: "fill", k: "function" }, { t: "(" }, { t: "'me@example.com'", k: "string" }, { t: ")!" }],
         [{ t: "" }],
-        [{ t: "  ", k: null }, { t: "// Maestro-style batched flow → ONE round trip", k: "comment" }],
+        [{ t: "  ", k: null }, { t: "// pointer batch → one round trip; assertion is a separate read", k: "comment" }],
         [{ t: "  b." }, { t: "flow", k: "function" }, { t: "([" }],
         [{ t: "    .tap_text(" }, { t: "'Continue'", k: "string" }, { t: ")," }],
         [{ t: "    .assert_visible(" }, { t: "'Welcome back'", k: "string" }, { t: "),", k: null }],
@@ -345,7 +350,7 @@ function PageMobile() {
         rows={[
           ["Single tap command",      "100–300 ms", "30–80 ms",    { chip: "15–40 ms",   kind: "success", em: "✨" }, "1–5 ms"],
           ["Session start (real)",    "15–60 s",    "5–15 s",      { chip: "3–10 s",     kind: "success", em: "✨" }, "n/a (already in app)"],
-          ["Batched flow · 10 steps", "1–3 s",      "300–800 ms",  { chip: "100–300 ms", kind: "success", em: "✨" }, "10–30 ms"],
+          ["Batched pointer flow · 10 taps", "1–3 s",      "300–800 ms",  { chip: "100–300 ms", kind: "success", em: "✨" }, "10–30 ms"],
         ]}
       />
 
