@@ -1,31 +1,29 @@
-// Mob-1 example. Confirms the `vebidor.mobile` module compiles, the public
-// types are visible, and the launch stubs error with the expected pointer to
-// MOBILE_PLAN.md. The real iOS / Android backends land in Mob-2 / Mob-3.
+// Cheap status-check example: confirms the `vebidor.mobile` module compiles
+// and shows what each backend's launch function does in its current state.
+//
+// After Mob-2, `launch_ios` is real — it errors with WDA launch instructions
+// when WDA isn't reachable, instead of a "not yet implemented" stub.
+// `launch_android` remains a stub until Mob-3 lands.
+//
+// For an actual end-to-end iOS smoke test (Settings app on the Simulator)
+// see `example_mob_ios.v`.
 module main
 
 import vebidor.mobile
 
 fn main() {
-	println('vebidor.mobile · Mob-1 (foundations) — launch stubs return descriptive errors.')
-	println('')
+	println('vebidor.mobile · backend status check\n')
 
-	// iOS stub.
+	// Mob-2: real backend. Errors with launch instructions if WDA isn't up.
 	mobile.launch_ios(mobile.IOSOptions{
-		udid:        '00000000-0000000000000000'
-		bundle_id:   'com.example.MyApp'
-		app_path:    '/path/to/MyApp.app'
-		install_app: true
-	}) or { println('launch_ios → ${err.msg()}') }
+		bundle_id: 'com.example.MyApp'
+	}) or { println('launch_ios → ${err.msg().all_before('\n')}') }
 
-	// Android stub.
+	// Mob-3: still a stub.
 	mobile.launch_android(mobile.AndroidOptions{
-		udid:         'emulator-5554'
-		app_package:  'com.example.myapp'
-		app_activity: '.MainActivity'
-		apk_path:     '/path/to/myapp.apk'
-		install_app:  true
+		udid:        'emulator-5554'
+		app_package: 'com.example.myapp'
 	}) or { println('launch_android → ${err.msg()}') }
 
-	println('')
-	println('Both stubs reported the expected Mob-2/Mob-3 deferral. ✓')
+	println('\nBoth launches reported their current backend status. ✓')
 }

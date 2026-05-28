@@ -109,7 +109,7 @@ All non-breaking. Purely refactors that improve reuse.
 Each phase shippable and demonstrable on its own, mirroring the M1–M5
 mobile-emulation roadmap pattern.
 
-### **Mob-1 — Foundations** (~1 week)
+### **Mob-1 — Foundations** ✅ shipped (`12481c4`)
 
 - Refactors above (`transport.v`, `wait_helpers.v`).
 - `mobile/` skeleton: `MobileSession`, `iOSOptions`, `AndroidOptions`,
@@ -119,9 +119,18 @@ mobile-emulation roadmap pattern.
 - **Validation:** existing webdriver builds + the example builds and errors as
   designed.
 
-### **Mob-2 — iOS WDA client** (~2-3 weeks, the meatiest)
+### **Mob-2 — iOS WDA client** ✅ first cut shipped; auto-launch deferred to Mob-2.1
 
 End-to-end iOS Simulator driving on macOS.
+
+> **First-cut status:** the wire client (`wda.v`), `MobileLocator` with
+> auto-wait (`locator.v`), XCUITest selector factories (`wda_locators.v`),
+> action surface (`actions.v`), screenshots (`screenshot.v`), and an iOS
+> Settings smoke example (`examples/mobile/example_mob_ios.v`) are all in.
+> The launcher connects to an **already-running** WDA — see `wda_bridge.v`
+> for the launch instructions surfaced in errors. Auto-build/auto-launch
+> via `xcodebuild test-without-building` (Sim) and `go-ios` (real device)
+> lands as Mob-2.1.
 
 - `mobile/wda.v` — WDA HTTP command wrappers: `/session`, `/element`,
   `/element/{}/click|value|clear|text`, `/element/{}/displayed|enabled`,

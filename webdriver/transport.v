@@ -27,7 +27,7 @@ pub interface Transport {
 // same module so the forward reference is fine.
 pub struct HttpTransport {}
 
-fn (t HttpTransport) execute(method string, url string, content_type string, body string) !Response {
+pub fn (t HttpTransport) execute(method string, url string, content_type string, body string) !Response {
 	resp := wd_do(method, url, content_type, body)!
 	return Response{
 		status_code: resp.status_code

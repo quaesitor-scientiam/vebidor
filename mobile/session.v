@@ -2,11 +2,12 @@
 // UiAutomator2 server (Android). Same wire as Appium uses (W3C JSON over
 // HTTP), but talked to directly. Out-of-process, no Node hop.
 //
-// This is Mob-1 (foundations): module structure and the public types that
-// later phases fill in. `launch_ios()` and `launch_android()` currently
-// error with a pointer to MOBILE_PLAN.md.
+// Mob-2: iOS WDA client end-to-end (this file holds the session type; the
+// HTTP wrappers live in wda.v, locator/actions in locator.v / actions.v,
+// the simulator/real-device bridge in bridges_ios.v).
 module mobile
 
+import os
 import vebidor.webdriver
 
 // Platform tags a session with which mobile backend it is talking to. The
@@ -31,11 +32,24 @@ pub:
 	base_url   string
 	session_id string
 	transport  webdriver.Transport = webdriver.HttpTransport{}
+pub mut:
+	// Bridge process the launcher spawned (e.g. `xcodebuild test-without-
+	// building` for the iOS Simulator, `adb shell am instrument` for
+	// Android). `nil` when the session was opened against an already-running
+	// backend.
+	bridge_proc &os.Process = unsafe { nil }
+	owns_bridge bool
 }
 
-// close ends the backend session and tears down any bridge processes the
-// launcher spawned. Mob-2 / Mob-3 will populate this; for now it is a
-// no-op so callers can `defer s.close()` from Mob-1 onwards.
+// close ends the backend session (DELETE /session/{id}) and, if the launcher
+// spawned a bridge process, kills it. Idempotent — safe to defer.
 pub fn (mut s MobileSession) close() {
-	// Implementation lands with the backends (Mob-2 iOS, Mob-3 Android).
+	if s.session_id.len > 0 {
+		s.delete_void('/session/${s.session_id}') or {}
+	}
+	if s.owns_bridge && !isnil(s.bridge_proc) {
+		s.bridge_proc.signal_kill()
+		s.bridge_proc.wait()
+		s.bridge_proc.close()
+	}
 }
