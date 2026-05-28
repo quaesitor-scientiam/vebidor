@@ -1,7 +1,5 @@
 module webdriver
 
-import time
-
 // Web-first assertions (Playwright-style). Each assertion polls the locator
 // until the expected condition holds or the timeout elapses, instead of
 // checking once. This removes most flakiness from "assert right after action"
@@ -41,21 +39,19 @@ pub fn (a LocatorAssertions) with_timeout(ms int) LocatorAssertions {
 }
 
 // poll repeatedly evaluates `check` until it matches the (possibly negated)
-// expectation or the timeout elapses.
+// expectation or the timeout elapses. Delegates to the shared
+// `poll_until_true` helper so the polling loop has a single owner.
 fn (a LocatorAssertions) poll(desc string, check fn () !bool) ! {
-	start := time.now()
-	for {
+	is_not := a.is_not
+	neg := if is_not { ' not' } else { '' }
+	poll_until_true(WaitOptions{
+		timeout_ms:  a.timeout_ms
+		interval_ms: a.locator.interval_ms
+		describe:    'expect(${a.locator.describe()})${neg} ${desc}'
+	}, fn [check, is_not] () !bool {
 		ok := check() or { false }
-		matched := if a.is_not { !ok } else { ok }
-		if matched {
-			return
-		}
-		if time.now().unix_milli() - start.unix_milli() > i64(a.timeout_ms) {
-			neg := if a.is_not { ' not' } else { '' }
-			return error('expect(${a.locator.describe()})${neg} ${desc}: condition not met after ${a.timeout_ms}ms')
-		}
-		time.sleep(a.locator.interval_ms * time.millisecond)
-	}
+		return if is_not { !ok } else { ok }
+	})!
 }
 
 // to_be_visible asserts the element is present and displayed.

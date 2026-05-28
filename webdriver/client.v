@@ -7,33 +7,9 @@ import strings
 import time
 import x.json2 as json
 
-// Response is a transport-agnostic command result. Both the HTTP (WebDriver
-// Classic) transport and a future BiDi (WebSocket) transport return this shape
-// so the generic decode helpers on WebDriver don't care how the bytes arrived.
-pub struct Response {
-pub:
-	status_code int
-	body        string
-}
-
-// Transport abstracts the mechanism used to talk to the browser/driver.
-// HttpTransport (below) implements WebDriver Classic over HTTP today; a future
-// WebDriver-BiDi transport over a WebSocket can satisfy the same interface,
-// letting both coexist behind a single WebDriver type.
-pub interface Transport {
-	execute(method string, url string, content_type string, body string) !Response
-}
-
-// HttpTransport speaks WebDriver Classic: one HTTP round-trip per command.
-pub struct HttpTransport {}
-
-fn (t HttpTransport) execute(method string, url string, content_type string, body string) !Response {
-	resp := wd_do(method, url, content_type, body)!
-	return Response{
-		status_code: resp.status_code
-		body:        resp.body
-	}
-}
+// Transport, Response, and HttpTransport live in `transport.v` so the mobile
+// module (which talks to WebDriverAgent / UiAutomator2 over the same HTTP
+// transport) can import them without depending on browser-specific code.
 
 @[heap]
 pub struct WebDriver {
