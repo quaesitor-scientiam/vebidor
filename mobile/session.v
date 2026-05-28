@@ -33,23 +33,26 @@ pub:
 	session_id string
 	transport  webdriver.Transport = webdriver.HttpTransport{}
 pub mut:
-	// Bridge process the launcher spawned (e.g. `xcodebuild test-without-
-	// building` for the iOS Simulator, `adb shell am instrument` for
-	// Android). `nil` when the session was opened against an already-running
-	// backend.
-	bridge_proc &os.Process = unsafe { nil }
-	owns_bridge bool
+	// Bridge processes the launcher spawned. Simulator mode adds one
+	// (`xcodebuild test-without-building`); real-device mode adds two
+	// (`go-ios runwda` + `go-ios forward`); Android mode (Mob-3) will add
+	// `adb shell am instrument`. Empty when the session was opened against
+	// an already-running backend.
+	bridge_procs []&os.Process
+	owns_bridge  bool
 }
 
-// close ends the backend session (DELETE /session/{id}) and, if the launcher
-// spawned a bridge process, kills it. Idempotent — safe to defer.
+// close ends the backend session (DELETE /session/{id}) and kills any bridge
+// processes the launcher spawned. Idempotent — safe to defer.
 pub fn (mut s MobileSession) close() {
 	if s.session_id.len > 0 {
 		s.delete_void('/session/${s.session_id}') or {}
 	}
-	if s.owns_bridge && !isnil(s.bridge_proc) {
-		s.bridge_proc.signal_kill()
-		s.bridge_proc.wait()
-		s.bridge_proc.close()
+	if s.owns_bridge {
+		for mut p in s.bridge_procs {
+			p.signal_kill()
+			p.wait()
+			p.close()
+		}
 	}
 }

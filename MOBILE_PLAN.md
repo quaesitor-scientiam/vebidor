@@ -119,40 +119,39 @@ mobile-emulation roadmap pattern.
 - **Validation:** existing webdriver builds + the example builds and errors as
   designed.
 
-### **Mob-2 — iOS WDA client** ✅ first cut shipped; auto-launch deferred to Mob-2.1
+### **Mob-2 — iOS WDA client** ✅ first cut shipped + verified live on iOS Simulator (`87d397f`)
 
-End-to-end iOS Simulator driving on macOS.
+End-to-end iOS Simulator driving on macOS. The wire client (`wda.v`),
+`MobileLocator` with auto-wait (`locator.v`), XCUITest selector factories
+(`wda_locators.v`), action surface (`actions.v`), screenshots
+(`screenshot.v`), and the iOS Settings smoke example
+(`examples/mobile/example_mob_ios.v`) are all in. The launcher's
+`.attach` mode connects to an already-running WDA; auto-launch ships
+in Mob-2.1 below.
 
-> **First-cut status:** the wire client (`wda.v`), `MobileLocator` with
-> auto-wait (`locator.v`), XCUITest selector factories (`wda_locators.v`),
-> action surface (`actions.v`), screenshots (`screenshot.v`), and an iOS
-> Settings smoke example (`examples/mobile/example_mob_ios.v`) are all in.
-> The launcher connects to an **already-running** WDA — see `wda_bridge.v`
-> for the launch instructions surfaced in errors. Auto-build/auto-launch
-> via `xcodebuild test-without-building` (Sim) and `go-ios` (real device)
-> lands as Mob-2.1.
+### **Mob-2.1 — WDA auto-launch** ✅ shipped (pending live validation on macOS)
 
-- `mobile/wda.v` — WDA HTTP command wrappers: `/session`, `/element`,
-  `/element/{}/click|value|clear|text`, `/element/{}/displayed|enabled`,
-  `/source`, `/screenshot`, `/actions`.
-- `mobile/bridges_ios.v` — Simulator-first:
-  - Detect `xcrun simctl` (built into macOS).
-  - Build WDA against the Simulator runtime (`xcodebuild test-without-building`),
-    install the user app via `simctl install`, launch, the WDA server is
-    already on `localhost:8100`.
-  - For real device: detect `go-ios`, `ios install <wda.ipa>`,
-    `ios runwda --udid`, `ios forward 8100`.
-  - Graceful teardown (kill WDA, close session).
-- `mobile/locator.v` — `MobileLocator` mirroring web `Locator` shape.
-- `mobile/locators_ios.v` — XCUITest predicates: `by_accessibility_id`,
-  `by_class_chain`, `by_predicate`, `by_xpath`.
-- `mobile/actions.v` — `tap()`, `fill()`, `clear()`, `swipe_*()`,
-  `long_press()` via the W3C actions endpoint.
-- `mobile/screenshot.v` — `MobileSession.save_screenshot(path)`.
-- `examples/mobile/example_mob_ios.v` — drives the iOS Simulator Calculator
-  (preinstalled, accessibility-id'd buttons). Bit-identical in tone to the
-  existing web examples.
-- **Validation:** iOS Simulator on macOS. Free, fast, no signing required.
+`launch_ios` now spawns WebDriverAgent itself when you ask it to. The
+launch mode (`IOSLaunchMode`) selects the flow:
+
+- `.attach` (default, backward-compatible) — connect to an already-running
+  WDA at `wda_url`.
+- `.simulator` — `xcrun simctl boot <udid>` (idempotent) then
+  `xcodebuild test-without-building -xctestrun <path> -destination …`,
+  polled until `/status` answers.
+- `.device` — `go-ios install` (idempotent), `go-ios runwda`, and
+  `go-ios forward 8100 8100`, polled until `/status` answers. Requires
+  `go-ios` on PATH and a signed WDA `.ipa`.
+
+`MobileSession.close()` tears down whatever the launcher spawned (one
+process for sim, two for device). Errors on non-macOS hosts surface
+cleanly with a "macOS host required" message before any spawn is
+attempted.
+
+The example `examples/mobile/example_mob_ios_sim.v` reads `IOS_SIM_UDID`
+and `WDA_XCTESTRUN` from the env so user-specific paths stay out of
+source. Compiles + errors-cleanly verified on Windows; live validation
+(actual xcodebuild + WDA spawn) needs a macOS run.
 
 ### **Mob-3 — Android UiAutomator2 client** (~2-3 weeks)
 
