@@ -155,24 +155,44 @@ the Sim, spawns xcodebuild, polls until WDA answers, drives the
 Settings flow, screenshots, and cleans up the xcodebuild process on
 close().
 
-### **Mob-3 — Android UiAutomator2 client** (~2-3 weeks)
+### **Mob-3 — Android UiAutomator2 client** ✅ shipped (pending live validation on Android Emulator)
 
-Symmetric to Mob-2, validated on the Android Emulator since the maintainer
-lacks Android devices.
+Symmetric to Mob-2 over `adb`. The HTTP wrappers, element commands,
+locator scaffolding, and gesture/assertion surfaces are all backend-
+agnostic, so Android picks up everything from Mob-2 / Mob-5 for free —
+only Android-specific session creation, selector factories, and bridge
+needed implementing.
 
-- `mobile/uia2.v` — UiAutomator2-server commands (wire shape is almost
-  identical to WDA, mostly copy-and-adapt from `wda.v`).
-- `mobile/bridges_android.v`:
-  - Detect `adb` on PATH (or via `ANDROID_HOME`/`ANDROID_SDK_ROOT`).
-  - Vendor pinned `appium-uiautomator2-server.apk` +
-    `appium-uiautomator2-server-test.apk`.
-  - `adb install -r <apk>`, `adb shell am instrument -w …`,
-    `adb forward tcp:6790 tcp:6790`.
-- `mobile/locators_android.v` — UIAutomator selectors: `text`,
-  `text_contains`, `resource_id`, `content_desc`, `class_name`.
-- `examples/mobile/example_mob_android.v` — same calculator-app idea against
-  the AOSP Calculator on an emulator.
-- **Validation:** Android Emulator from the SDK on macOS.
+- `mobile/uia2.v` — `new_android_session(base_url, app_package,
+  app_activity)`. Builds W3C capabilities with the `appium:` vendor
+  prefix UiA2 requires.
+- `mobile/uia2_locators.v` — `resource_id`, `class_name`, `uia2_selector`
+  (UiSelector DSL), `text`, `text_contains`. (`accessibility_id` and
+  `xpath` from `wda_locators.v` are W3C-standard names and work for
+  UiA2 too without modification.)
+- `mobile/uia2_bridge.v` — `detect_adb` (PATH, then `$ANDROID_HOME` /
+  `$ANDROID_SDK_ROOT`); `install_uia2`; `start_uia2_server` (spawns
+  `adb shell am instrument -w …`); `forward_port`; `check_uia2_reachable`;
+  `wait_for_uia2`.
+- `MobileSession` gained `on_close_cmds []string` — Android uses it to
+  run `adb forward --remove` and `adb shell am force-stop` during
+  teardown. iOS still doesn't need any.
+- `mobile/launcher.v` — `AndroidLaunchMode` (`.attach` / `.spawn`),
+  extended `AndroidOptions`, real `launch_android`. Both emulator and
+  real device use the `.spawn` path since adb handles them uniformly.
+- `examples/mobile/example_mob_android.v` — drives the AOSP Settings
+  app on an emulator. Reads `ANDROID_UDID`, `UIA2_SERVER_APK`,
+  `UIA2_SERVER_TEST_APK` from env. Demonstrates `find_elements` +
+  `mobile.expect()` on Android — same code path that worked on iOS.
+
+Verified on Windows that everything compiles and the example errors
+cleanly at `detect_adb` when adb isn't on PATH. Live validation
+(actual `adb install` / `am instrument` / port-forward / session
+on the Android Emulator) needs a macOS run with the SDK + an emulator.
+
+The two UiA2 APKs come from the
+[appium-uiautomator2-server releases](https://github.com/appium/appium-uiautomator2-server/releases).
+Auto-download / vendoring is a follow-up.
 
 ### **Mob-4 — Cross-platform selectors** (~1 week)
 

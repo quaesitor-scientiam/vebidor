@@ -33,17 +33,23 @@ pub:
 	session_id string
 	transport  webdriver.Transport = webdriver.HttpTransport{}
 pub mut:
-	// Bridge processes the launcher spawned. Simulator mode adds one
-	// (`xcodebuild test-without-building`); real-device mode adds two
-	// (`go-ios runwda` + `go-ios forward`); Android mode (Mob-3) will add
-	// `adb shell am instrument`. Empty when the session was opened against
-	// an already-running backend.
+	// Bridge processes the launcher spawned. iOS Simulator adds one
+	// (`xcodebuild test-without-building`); iOS real device adds two
+	// (`go-ios runwda` + `go-ios forward`); Android adds one
+	// (`adb shell am instrument`). Empty when the session was opened
+	// against an already-running backend.
 	bridge_procs []&os.Process
 	owns_bridge  bool
+
+	// Shell commands run during close() after bridge processes are killed.
+	// Android uses this to release `adb forward` and force-stop the
+	// UiAutomator2-server instrumentation. iOS doesn't need it.
+	on_close_cmds []string
 }
 
-// close ends the backend session (DELETE /session/{id}) and kills any bridge
-// processes the launcher spawned. Idempotent — safe to defer.
+// close ends the backend session (DELETE /session/{id}), kills any bridge
+// processes the launcher spawned, then runs the optional on_close_cmds
+// (for adb forward cleanup, etc.). Idempotent — safe to defer.
 pub fn (mut s MobileSession) close() {
 	if s.session_id.len > 0 {
 		s.delete_void('/session/${s.session_id}') or {}
@@ -54,5 +60,8 @@ pub fn (mut s MobileSession) close() {
 			p.wait()
 			p.close()
 		}
+	}
+	for cmd in s.on_close_cmds {
+		os.execute(cmd)
 	}
 }

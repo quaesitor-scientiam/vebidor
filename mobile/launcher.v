@@ -47,17 +47,45 @@ pub:
 	install_app bool
 }
 
+// AndroidLaunchMode selects how `launch_android` finds (or starts) the
+// UiAutomator2 server.
+//
+//   - `.attach` — connect to a UiA2 server already running at `uia2_url`.
+//                 Use this when you manage UiA2 yourself (CI, Appium-style
+//                 setups).
+//   - `.spawn`  — `adb install -r` both APKs, spawn `adb shell am
+//                 instrument -w …`, `adb forward tcp:<port> tcp:<port>`,
+//                 poll /status. Works for both emulators and real devices
+//                 (adb handles them uniformly). Requires `adb` on PATH or
+//                 `$ANDROID_HOME/platform-tools/adb`.
+pub enum AndroidLaunchMode {
+	attach
+	spawn
+}
+
 // AndroidOptions configures `launch_android`. `udid` matches what
 // `adb devices` reports. `app_package` and `app_activity` identify the
-// app under test; `apk_path` + `install_app` drive the install step in
-// the Mob-3 lifecycle.
+// app under test.
 pub struct AndroidOptions {
 pub:
+	mode         AndroidLaunchMode = .attach
 	udid         string
 	app_package  string
 	app_activity string
-	apk_path     string
-	install_app  bool
+
+	// Connection point. Used as-is by `.attach`; set automatically from
+	// `uia2_port` for `.spawn`.
+	uia2_url string = 'http://localhost:6790'
+
+	// `.spawn` configuration. The two APKs are from the
+	// appium/appium-uiautomator2-server GitHub releases.
+	uia2_port             int = 6790
+	uia2_server_apk       string // path to appium-uiautomator2-server.apk
+	uia2_server_test_apk  string // path to appium-uiautomator2-server-test.apk
+	uia2_ready_timeout_ms int = 60_000
+
+	apk_path    string
+	install_app bool
 }
 
 // launch_ios opens a session against WebDriverAgent and returns a
@@ -142,7 +170,66 @@ fn kill_all(mut procs []&os.Process) {
 }
 
 // launch_android opens a session against the UiAutomator2 server on an
-// Android device or emulator. Backend lands in Mob-3 (see MOBILE_PLAN.md).
+// Android device or emulator and returns a MobileSession. The launch
+// mode (attach / spawn) controls whether UiA2 is expected to be already
+// running or spawned by the launcher itself.
 pub fn launch_android(opts AndroidOptions) !MobileSession {
-	return error('vebidor.mobile.launch_android: Android backend lands in Mob-3 (UiAutomator2 client). See MOBILE_PLAN.md.')
+	match opts.mode {
+		.attach { return launch_android_attach(opts) }
+		.spawn { return launch_android_spawn(opts) }
+	}
+}
+
+// launch_android_attach connects to an already-running UiA2 server.
+fn launch_android_attach(opts AndroidOptions) !MobileSession {
+	uia2_url := if opts.uia2_url.len > 0 { opts.uia2_url } else { 'http://localhost:6790' }
+	check_uia2_reachable(uia2_url)!
+	return new_android_session(uia2_url, opts.app_package, opts.app_activity)
+}
+
+// launch_android_spawn installs the UiA2 APKs (if paths provided), starts
+// `am instrument`, sets up port forwarding, polls /status until UiA2
+// answers, then opens a session. The instrumentation subprocess is stored
+// on the returned MobileSession so close() kills it; `adb forward
+// --remove` runs from on_close_cmds.
+fn launch_android_spawn(opts AndroidOptions) !MobileSession {
+	if opts.udid == '' {
+		return error('AndroidOptions.udid required for .spawn mode (use `adb devices` to find one).')
+	}
+	port := if opts.uia2_port > 0 { opts.uia2_port } else { 6790 }
+
+	if opts.uia2_server_apk != '' && opts.uia2_server_test_apk != '' {
+		install_uia2(opts.udid, opts.uia2_server_apk, opts.uia2_server_test_apk)!
+	}
+
+	proc := start_uia2_server(opts.udid)!
+	mut procs := [proc]
+
+	forward_port(opts.udid, port) or {
+		kill_all(mut procs)
+		return error('adb forward failed: ${err.msg()}')
+	}
+
+	base_url := 'http://localhost:${port}'
+	wait_for_uia2(base_url, opts.uia2_ready_timeout_ms) or {
+		kill_all(mut procs)
+		return error('UiA2-server failed to come up on ${base_url}: ${err.msg()}')
+	}
+
+	mut s := new_android_session(base_url, opts.app_package, opts.app_activity) or {
+		kill_all(mut procs)
+		return err
+	}
+	s.bridge_procs = procs
+	s.owns_bridge = true
+
+	// On close: release the port forward and force-stop the UiA2 server
+	// on the device. Best-effort — failures here are not fatal because
+	// the kernel will reclaim everything when adb dies.
+	adb := detect_adb() or { 'adb' }
+	s.on_close_cmds = [
+		'${adb} -s ${opts.udid} forward --remove tcp:${port}',
+		'${adb} -s ${opts.udid} shell am force-stop ${uia2_server_pkg}',
+	]
+	return s
 }
