@@ -172,3 +172,21 @@ pub fn (s MobileSession) page_source() !string {
 	resp := s.get_request[string]('/session/${s.session_id}/source')!
 	return resp.value
 }
+
+// ElementRect is the on-screen bounding box of an element in CSS-pixel
+// coordinates, as returned by WDA's /element/{}/rect endpoint. Gestures
+// that act on element centers (long_press, swipe_*) use this to find the
+// midpoint.
+pub struct ElementRect {
+pub:
+	x      f64
+	y      f64
+	width  f64
+	height f64
+}
+
+// element_rect returns the on-screen rectangle of the element.
+pub fn (s MobileSession) element_rect(el webdriver.ElementRef) !ElementRect {
+	resp := s.get_request[ElementRect]('/session/${s.session_id}/element/${el.element_id}/rect')!
+	return resp.value
+}

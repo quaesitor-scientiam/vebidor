@@ -192,13 +192,38 @@ This is where the *vebidor* feel emerges — same V code drives both platforms.
     - Android: className `android.widget.Button`
 - `examples/mobile/example_mob_cross.v` — same V source against iOS + Android.
 
-### **Mob-5 — Assertions, scrolling, gestures** (~1 week)
+### **Mob-5 — Assertions + gestures** ✅ shipped (pending live validation on macOS)
 
-- `mobile/assertions.v` — `mobile.expect(loc).to_be_visible/hidden/...` —
-  delegates to `poll_until_true` from Mob-1.
-- `swipe_to(loc)` (scroll-into-view, essential because mobile lists are tall),
-  `pinch_in`/`pinch_out`, `drag_and_drop(from, to)`, `multi_touch`.
-- Tracer integration mirroring `bidi_trace.v`.
+`mobile/assertions.v` — `mobile.expect(loc)` Playwright-style polling
+assertions, delegating to `webdriver.poll_until_true` from Mob-1.
+Methods: `to_be_visible` / `to_be_hidden` / `to_be_enabled` /
+`to_be_disabled` / `to_have_text` / `to_contain_text` /
+`to_have_attribute` / `to_have_count`. `.not()` inverts; `.with_timeout(ms)`
+overrides the polling window. Imports `webdriver.WaitOptions` and
+`webdriver.poll_until_true` directly — no logic duplicated.
+
+`mobile/gestures.v` — W3C-actions-based touch gestures. Three element-
+relative (`long_press(ms)`, `swipe_up`/`down`/`left`/`right`, `drag_to`)
+that compute target coordinates from each element's rect, and three
+screen-relative (`tap_at`, `long_press_at`, `swipe`). `scroll_into_view`
+uses WDA's `scrollToVisible` extension because W3C actions can't
+express "scroll until X". Pure JSON-building helpers — no new structs
+exposed beyond `ElementRect`.
+
+`mobile/wda.v` gained `ElementRect` + `element_rect(el)` so gestures
+can find element centers and `expect(...).to_have_count(n)` can count
+matches via `find_elements`.
+
+The example `examples/mobile/example_mob_assertions.v` reuses the
+Sim-launch setup and demonstrates: `expect(label).to_be_visible()`,
+`expect(label).not().to_be_visible()`, `expect(label).with_timeout(ms).to_be_visible()`,
+`expect(label).to_contain_text(...)`, plus `swipe_up`, `long_press`, and
+`scroll_into_view` on Settings rows. Verified on Windows that it
+compiles and errors cleanly at boot_simulator; live validation
+(actual assertion polling + gestures against WDA) needs a macOS run.
+
+Tracer integration (mirror of `bidi_trace.v` for mobile commands)
+deferred to a follow-up.
 
 ### **Mob-6 — App management + device state** (~1 week)
 
