@@ -192,7 +192,7 @@ This is where the *vebidor* feel emerges — same V code drives both platforms.
     - Android: className `android.widget.Button`
 - `examples/mobile/example_mob_cross.v` — same V source against iOS + Android.
 
-### **Mob-5 — Assertions + gestures** ✅ shipped (pending live validation on macOS)
+### **Mob-5 — Assertions + gestures** ✅ shipped + verified live on iOS Simulator (`150cb5c`)
 
 `mobile/assertions.v` — `mobile.expect(loc)` Playwright-style polling
 assertions, delegating to `webdriver.poll_until_true` from Mob-1.
@@ -218,9 +218,9 @@ The example `examples/mobile/example_mob_assertions.v` reuses the
 Sim-launch setup and demonstrates: `expect(label).to_be_visible()`,
 `expect(label).not().to_be_visible()`, `expect(label).with_timeout(ms).to_be_visible()`,
 `expect(label).to_contain_text(...)`, plus `swipe_up`, `long_press`, and
-`scroll_into_view` on Settings rows. Verified on Windows that it
-compiles and errors cleanly at boot_simulator; live validation
-(actual assertion polling + gestures against WDA) needs a macOS run.
+`scroll_into_view` on Settings rows. Verified end-to-end on macOS
+against the iOS Simulator — every assertion path, every gesture, and
+the cross-module call to `webdriver.poll_until_true` all confirmed live.
 
 Tracer integration (mirror of `bidi_trace.v` for mobile commands)
 deferred to a follow-up.
